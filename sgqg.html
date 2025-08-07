@@ -12,7 +12,7 @@
     .main-container {
       display: flex;
       gap: 20px;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
     }
     .container {
@@ -158,7 +158,7 @@
       padding: 5px;
       margin: 0;
     }
-    .selected-items-container, .saved-results-container {
+    .selected-items-container, .saved-results-container, .player-ids-container {
       max-height: 900px;
       overflow-y: auto;
       margin-bottom: 15px;
@@ -289,6 +289,43 @@
     .hidden {
       display: none;
     }
+    /* 角色ID面板样式 */
+.player-id-item {
+  padding: 8px 12px;
+  margin: 4px 0;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 新增：垂直居中 */
+  min-height: 40px; /* 新增：设置最小高度 */
+}
+.player-id-item:hover {
+  background-color: #bbdefb;
+}
+.player-id-item .delete-btn {
+  color: white;
+  background-color: #f44336;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  width: auto;
+  font-size: 12px;
+}
+.player-id-item .delete-btn:hover {
+  background-color: #d32f2f;
+  transform: none;
+}
+
+    /* 新增角色模态框 */
+    #addPlayerModal .modal-content {
+      width: 350px;
+    }
+    #addPlayerModal label {
+      margin: 10px 0 5px;
+    }
   </style>
 </head>
 <body>
@@ -306,7 +343,7 @@
 
     <!-- 主操作区域 -->
     <div class="container">
-      <h2>上古情歌中控邮件道具添加工具</h2>
+      <h2>上古情歌·资源申请工具</h2>
 
       <div class="search-container">
         <label for="itemInput">道具名称</label>
@@ -334,7 +371,7 @@
       <div id="result" contenteditable="true" spellcheck="false"></div>
     </div>
 
-    <!-- 右侧保存结果面板 -->
+    <!-- 右侧常用方案面板 -->
     <div class="panel">
       <div class="panel-title">
         <h3>常用方案</h3>
@@ -348,6 +385,20 @@
       
       <div class="saved-results-container" id="savedResultsContainer">
         <!-- 保存的结果将在这里显示 -->
+      </div>
+    </div>
+    
+    <!-- 新增：角色ID面板 -->
+    <div class="panel">
+      <div class="panel-title">
+        <h3>常用角色ID</h3>
+        <span id="playerCount">0个</span>
+      </div>
+      
+      <button class="add-player-btn" onclick="openAddPlayerDialog()">新增角色</button>
+      
+      <div class="player-ids-container" id="playerIdsContainer">
+        <!-- 角色ID列表将在这里显示 -->
       </div>
     </div>
   </div>
@@ -374,6 +425,26 @@
       <div class="modal-buttons">
         <button onclick="document.getElementById('editNameModal').style.display = 'none'">取消</button>
         <button class="save-result-btn" onclick="updateSchemeName()">更新</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 新增角色模态框 -->
+  <div id="addPlayerModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">添加常用角色</div>
+      <label for="playerServer">区服</label>
+      <input type="number" id="playerServer" placeholder="输入区服数字...">
+      
+      <label for="playerName">角色名</label>
+      <input type="text" id="playerName" placeholder="输入角色名...">
+      
+      <label for="playerId">角色ID</label>
+      <input type="number" id="playerId" placeholder="输入角色ID...">
+      
+      <div class="modal-buttons">
+        <button onclick="document.getElementById('addPlayerModal').style.display = 'none'">取消</button>
+        <button class="save-result-btn" onclick="addPlayer()">添加</button>
       </div>
     </div>
   </div>
@@ -16210,6 +16281,7 @@ const combines = {
     let selectedItems = [];
     let selectedCombines = [];
     let savedResults = [];
+    let playerIds = []; // 新增：存储角色ID
     let currentEditId = null; // 当前正在编辑的方案ID
 
     // 显示Toast通知
@@ -16646,6 +16718,93 @@ const combines = {
         .catch(err => showToast('复制失败'));
     }
 
+    // 新增：打开添加角色对话框
+    function openAddPlayerDialog() {
+      document.getElementById('playerServer').value = '';
+      document.getElementById('playerName').value = '';
+      document.getElementById('playerId').value = '';
+      document.getElementById('addPlayerModal').style.display = 'flex';
+    }
+
+    // 新增：添加角色
+    function addPlayer() {
+      const server = document.getElementById('playerServer').value.trim();
+      const name = document.getElementById('playerName').value.trim();
+      const id = document.getElementById('playerId').value.trim();
+      
+      if (!server || !name || !id) {
+        showToast('请填写完整的角色信息');
+        return;
+      }
+      
+      if (!/^\d+$/.test(server)) {
+        showToast('区服必须为纯数字');
+        return;
+      }
+      
+      if (!/^\d+$/.test(id)) {
+        showToast('角色ID必须为纯数字');
+        return;
+      }
+      
+      // 检查是否已存在相同ID的角色
+      if (playerIds.some(p => p.id === id)) {
+        showToast('该角色ID已存在');
+        return;
+      }
+      
+      playerIds.push({
+        server: server,
+        name: name,
+        id: id,
+        time: new Date().toLocaleString()
+      });
+      
+      // 保存到localStorage
+      localStorage.setItem('sgqg_player_ids', JSON.stringify(playerIds));
+      
+      updatePlayerIdsPanel();
+      document.getElementById('addPlayerModal').style.display = 'none';
+      showToast('角色已添加');
+    }
+
+// 更新：更新角色ID面板
+function updatePlayerIdsPanel() {
+  const container = document.getElementById('playerIdsContainer');
+  container.innerHTML = '';
+  document.getElementById('playerCount').textContent = `${playerIds.length}个`;
+  
+  // 按添加时间倒序排序
+  const sortedPlayers = [...playerIds].sort((a, b) => new Date(b.time) - new Date(a.time));
+  
+  sortedPlayers.forEach(player => {
+    const div = document.createElement('div');
+    div.className = 'player-id-item';
+    div.innerHTML = `
+      <div class="player-id-info">${player.server}-${player.name}-${player.id}</div>
+      <button class="delete-btn" onclick="deletePlayer(event, '${player.id}')">删除</button>
+    `;
+    
+    div.onclick = () => {
+      navigator.clipboard.writeText(player.id)
+        .then(() => showToast(`已复制角色ID: ${player.id}`))
+        .catch(err => showToast('复制失败'));
+    };
+    
+    container.appendChild(div);
+  });
+}
+
+    // 新增：删除角色
+    function deletePlayer(event, playerId) {
+      event.stopPropagation(); // 阻止事件冒泡
+      
+      playerIds = playerIds.filter(p => p.id !== playerId);
+      localStorage.setItem('sgqg_player_ids', JSON.stringify(playerIds));
+      updatePlayerIdsPanel();
+      showToast('角色已删除');
+    }
+
     // 初始化
     window.addEventListener('load', () => {
       // 加载保存的结果
@@ -16656,6 +16815,17 @@ const combines = {
           updateSavedResultsPanel();
         } catch(e) {
           console.error('加载保存结果失败:', e);
+        }
+      }
+      
+      // 加载角色ID
+      const players = localStorage.getItem('sgqg_player_ids');
+      if (players) {
+        try {
+          playerIds = JSON.parse(players);
+          updatePlayerIdsPanel();
+        } catch(e) {
+          console.error('加载角色ID失败:', e);
         }
       }
       
@@ -16683,5 +16853,4 @@ const combines = {
     });
   </script>
 </body>
-
 </html>
