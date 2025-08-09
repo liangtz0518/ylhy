@@ -1280,12 +1280,25 @@ let savedUrls = {
         let currentTab = 'internal';
         let dragSrcEl = null;
 
-        function loadData() {
-            const saved = localStorage.getItem('savedUrls');
-            if (saved) savedUrls = JSON.parse(saved);
-            else saveData();
+function loadData() {
+    const saved = localStorage.getItem('savedUrls');
+    if (saved) {
+        try {
+            const savedObj = JSON.parse(saved);
+            // 如果本地的 internal 或 external 有数据就用本地的，否则用预设的
+            if (Array.isArray(savedObj.internal) && savedObj.internal.length > 0) {
+                savedUrls.internal = savedObj.internal;
+            }
+            if (Array.isArray(savedObj.external) && savedObj.external.length > 0) {
+                savedUrls.external = savedObj.external;
+            }
+        } catch (e) {
+            console.error('读取localStorage失败，使用预设数据', e);
         }
-
+    }
+    // 每次都更新本地存储为当前数据（确保预设写入本地）
+    saveData();
+}
         function saveData() {
             localStorage.setItem('savedUrls', JSON.stringify(savedUrls));
         }
