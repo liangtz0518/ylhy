@@ -14,6 +14,7 @@
       gap: 20px;
       max-width: 1400px;
       margin: 0 auto;
+      flex-wrap: wrap;
     }
     .container {
       background: #fff;
@@ -298,8 +299,8 @@
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 新增：垂直居中 */
-  min-height: 40px; /* 新增：设置最小高度 */
+  align-items: center;
+  min-height: 40px;
 }
 .player-id-item:hover {
   background-color: #bbdefb;
@@ -325,6 +326,49 @@
     }
     #addPlayerModal label {
       margin: 10px 0 5px;
+    }
+    
+    /* 新增：非常用方案区域 */
+    .uncommon-schemes-container {
+      width: 100%;
+      margin-top: 20px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .uncommon-schemes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .uncommon-schemes-content {
+      max-height: 1000000px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    /* 非常用方案展示框样式 */
+    #uncommonSavedResultsContainer .saved-result {
+      width: calc(50% - 5px); /* 默认一行显示2个，可根据需要调整 */
+      box-sizing: border-box;
+    }
+    /* 新增：保存方案类型选择 */
+    .save-type-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .save-type-buttons button {
+      flex: 1;
+    }
+    .save-common-btn {
+      background-color: #2196F3;
+    }
+    .save-uncommon-btn {
+      background-color: #9c27b0;
     }
   </style>
 </head>
@@ -359,7 +403,7 @@
 
       <div class="button-group">
         <button onclick="addSelectedItems()">添加已选择道具</button>
-        <button class="save-result-btn" onclick="openSaveDialog()">保存为常用方案</button>
+        <button class="save-result-btn" onclick="openSaveDialog()">保存方案</button>
       </div>
 
       <div class="button-group">
@@ -401,17 +445,32 @@
         <!-- 角色ID列表将在这里显示 -->
       </div>
     </div>
+    
+    <!-- 新增：非常用方案区域 -->
+    <div class="uncommon-schemes-container">
+      <div class="uncommon-schemes-header">
+        <h3>非常用方案</h3>
+        <span id="uncommonSavedCount">0个</span>
+      </div>
+      
+      <div class="uncommon-schemes-content" id="uncommonSavedResultsContainer">
+        <!-- 非常用方案将在这里显示 -->
+      </div>
+    </div>
   </div>
 
   <!-- 保存方案模态框 -->
   <div id="saveModal" class="modal">
     <div class="modal-content">
-      <div class="modal-title">保存常用方案</div>
+      <div class="modal-title">保存方案</div>
       <label for="schemeName">方案名称</label>
       <input type="text" id="schemeName" placeholder="输入方案名称..." value="未命名方案">
+      <div class="save-type-buttons">
+        <button class="save-common-btn" onclick="saveResult('common')">保存为常用方案</button>
+        <button class="save-uncommon-btn" onclick="saveResult('uncommon')">保存为非常用方案</button>
+      </div>
       <div class="modal-buttons">
         <button onclick="document.getElementById('saveModal').style.display = 'none'">取消</button>
-        <button class="save-result-btn" onclick="saveResult()">保存</button>
       </div>
     </div>
   </div>
@@ -16280,9 +16339,13 @@ const combines = {
 
     let selectedItems = [];
     let selectedCombines = [];
-    let savedResults = [];
-    let playerIds = []; // 新增：存储角色ID
-    let currentEditId = null; // 当前正在编辑的方案ID
+    let savedResults = { common: [], uncommon: [] };
+    let playerIds = [];
+    let currentEditId = null;
+    let currentEditType = null;
+    
+    // 非常用方案展示框宽度设置（可调整）
+    let uncommonSchemeWidth = 250; // 默认宽度，可根据需要修改
 
     // 显示Toast通知
     function showToast(message) {
@@ -16505,7 +16568,7 @@ const combines = {
     }
 
     // 保存当前结果
-    function saveResult() {
+    function saveResult(type) {
       const result = document.getElementById('result').textContent.trim();
       const name = document.getElementById('schemeName').value || '未命名方案';
       
@@ -16515,7 +16578,7 @@ const combines = {
       }
 
       const timestamp = new Date().toLocaleString();
-      savedResults.push({
+      savedResults[type].push({
         id: Date.now(),
         name: name,
         time: timestamp,
@@ -16527,18 +16590,39 @@ const combines = {
       
       updateSavedResultsPanel();
       document.getElementById('saveModal').style.display = 'none';
-      showToast('方案已保存');
+      showToast(`方案已保存为${type === 'common' ? '常用' : '非常用'}方案`);
     }
 
     // 更新保存结果面板
     function updateSavedResultsPanel() {
-      const container = document.getElementById('savedResultsContainer');
-      container.innerHTML = '';
-      document.getElementById('savedCount').textContent = `${savedResults.length}个`;
-
-      savedResults.forEach((result, index) => {
+      // 更新常用方案
+      const commonContainer = document.getElementById('savedResultsContainer');
+      commonContainer.innerHTML = '';
+      document.getElementById('savedCount').textContent = `${savedResults.common.length}个`;
+      
+      renderSavedResults(commonContainer, savedResults.common, 'common');
+      
+      // 更新非常用方案
+      const uncommonContainer = document.getElementById('uncommonSavedResultsContainer');
+      uncommonContainer.innerHTML = '';
+      document.getElementById('uncommonSavedCount').textContent = `${savedResults.uncommon.length}个`;
+      
+      renderSavedResults(uncommonContainer, savedResults.uncommon, 'uncommon');
+    }
+    
+    // 渲染保存的结果
+    function renderSavedResults(container, results, type) {
+      // 按添加时间倒序排序
+      const sortedResults = [...results].sort((a, b) => new Date(b.time) - new Date(a.time));
+      
+      sortedResults.forEach((result, index) => {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'saved-result';
+        
+        // 设置非常用方案的宽度
+        if(type === 'uncommon') {
+          resultDiv.style.width = `${uncommonSchemeWidth}px`;
+        }
         
         const header = document.createElement('div');
         header.className = 'saved-result-header';
@@ -16549,6 +16633,7 @@ const combines = {
         nameSpan.textContent = result.name;
         nameSpan.onclick = () => {
           currentEditId = result.id;
+          currentEditType = type;
           document.getElementById('editSchemeName').value = result.name;
           document.getElementById('editNameModal').style.display = 'flex';
         };
@@ -16595,7 +16680,7 @@ const combines = {
         deleteBtn.className = 'delete-saved-btn';
         deleteBtn.textContent = '删除';
         deleteBtn.onclick = () => {
-          savedResults = savedResults.filter(r => r.id !== result.id);
+          savedResults[type] = savedResults[type].filter(r => r.id !== result.id);
           // 更新localStorage
           localStorage.setItem('sgqg_saved_results', JSON.stringify(savedResults));
           updateSavedResultsPanel();
@@ -16615,10 +16700,10 @@ const combines = {
 
     // 更新方案名称
     function updateSchemeName() {
-      if (!currentEditId) return;
+      if (!currentEditId || !currentEditType) return;
       
       const newName = document.getElementById('editSchemeName').value || '未命名方案';
-      const result = savedResults.find(r => r.id === currentEditId);
+      const result = savedResults[currentEditType].find(r => r.id === currentEditId);
       
       if (result) {
         result.name = newName;
@@ -16630,19 +16715,25 @@ const combines = {
       
       document.getElementById('editNameModal').style.display = 'none';
       currentEditId = null;
+      currentEditType = null;
     }
 
     // 导出保存的方案
     function exportSavedResults() {
-      if (savedResults.length === 0) {
+      if (savedResults.common.length === 0 && savedResults.uncommon.length === 0) {
         showToast('没有可导出的方案');
         return;
       }
       
-      const dataStr = JSON.stringify(savedResults, null, 2);
+      const dataToExport = {
+        common: savedResults.common,
+        uncommon: savedResults.uncommon
+      };
+      
+      const dataStr = JSON.stringify(dataToExport, null, 2);
       const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
       
-      const exportFileDefaultName = '上古情歌常用方案.json';
+      const exportFileDefaultName = '上古情歌方案备份.json';
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
@@ -16666,22 +16757,30 @@ const combines = {
       reader.onload = function(e) {
         try {
           const imported = JSON.parse(e.target.result);
-          if (!Array.isArray(imported)) {
+          
+          // 检查导入的数据格式
+          if (!imported.common || !imported.uncommon) {
             throw new Error('无效的导入文件格式');
           }
           
-          // 合并方案（避免重复）
-          imported.forEach(item => {
-            // 检查是否已存在相同ID的方案
-            if (!savedResults.some(r => r.id === item.id)) {
-              savedResults.push(item);
+          // 合并常用方案
+          imported.common.forEach(item => {
+            if (!savedResults.common.some(r => r.id === item.id)) {
+              savedResults.common.push(item);
+            }
+          });
+          
+          // 合并非常用方案
+          imported.uncommon.forEach(item => {
+            if (!savedResults.uncommon.some(r => r.id === item.id)) {
+              savedResults.uncommon.push(item);
             }
           });
           
           // 更新localStorage
           localStorage.setItem('sgqg_saved_results', JSON.stringify(savedResults));
           updateSavedResultsPanel();
-          showToast(`成功导入 ${imported.length} 个方案`);
+          showToast(`成功导入 ${imported.common.length} 个常用方案和 ${imported.uncommon.length} 个非常用方案`);
           
         } catch (error) {
           console.error('导入失败:', error);
@@ -16768,32 +16867,32 @@ const combines = {
       showToast('角色已添加');
     }
 
-// 更新：更新角色ID面板
-function updatePlayerIdsPanel() {
-  const container = document.getElementById('playerIdsContainer');
-  container.innerHTML = '';
-  document.getElementById('playerCount').textContent = `${playerIds.length}个`;
-  
-  // 按添加时间倒序排序
-  const sortedPlayers = [...playerIds].sort((a, b) => new Date(b.time) - new Date(a.time));
-  
-  sortedPlayers.forEach(player => {
-    const div = document.createElement('div');
-    div.className = 'player-id-item';
-    div.innerHTML = `
-      <div class="player-id-info">${player.server}-${player.name}-${player.id}</div>
-      <button class="delete-btn" onclick="deletePlayer(event, '${player.id}')">删除</button>
-    `;
-    
-    div.onclick = () => {
-      navigator.clipboard.writeText(player.id)
-        .then(() => showToast(`已复制角色ID: ${player.id}`))
-        .catch(err => showToast('复制失败'));
-    };
-    
-    container.appendChild(div);
-  });
-}
+    // 更新：更新角色ID面板
+    function updatePlayerIdsPanel() {
+      const container = document.getElementById('playerIdsContainer');
+      container.innerHTML = '';
+      document.getElementById('playerCount').textContent = `${playerIds.length}个`;
+      
+      // 按添加时间倒序排序
+      const sortedPlayers = [...playerIds].sort((a, b) => new Date(b.time) - new Date(a.time));
+      
+      sortedPlayers.forEach(player => {
+        const div = document.createElement('div');
+        div.className = 'player-id-item';
+        div.innerHTML = `
+          <div class="player-id-info">${player.server}-${player.name}-${player.id}</div>
+          <button class="delete-btn" onclick="deletePlayer(event, '${player.id}')">删除</button>
+        `;
+        
+        div.onclick = () => {
+          navigator.clipboard.writeText(player.id)
+            .then(() => showToast(`已复制角色ID: ${player.id}`))
+            .catch(err => showToast('复制失败'));
+        };
+        
+        container.appendChild(div);
+      });
+    }
 
     // 新增：删除角色
     function deletePlayer(event, playerId) {
@@ -16812,6 +16911,11 @@ function updatePlayerIdsPanel() {
       if (saved) {
         try {
           savedResults = JSON.parse(saved);
+          // 兼容旧版本数据（数组格式）
+          if (Array.isArray(savedResults)) {
+            savedResults = { common: savedResults, uncommon: [] };
+            localStorage.setItem('sgqg_saved_results', JSON.stringify(savedResults));
+          }
           updateSavedResultsPanel();
         } catch(e) {
           console.error('加载保存结果失败:', e);
@@ -16827,6 +16931,13 @@ function updatePlayerIdsPanel() {
         } catch(e) {
           console.error('加载角色ID失败:', e);
         }
+      }
+      
+      // 加载非常用方案宽度设置
+      const savedWidth = localStorage.getItem('uncommonSchemeWidth');
+      if (savedWidth) {
+        adjustUncommonWidth(savedWidth);
+        document.getElementById('uncommonWidthControl').value = savedWidth;
       }
       
       document.getElementById('itemList').style.display = 'none';
