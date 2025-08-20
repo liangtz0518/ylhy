@@ -81,6 +81,12 @@
             border: 1px solid #e1e4e8;
         }
         
+        /* 调整角色ID面板宽度 */
+        .panel.roles-panel {
+            flex: 0.7; /* 比其他面板窄一些 */
+            max-width: 300px; /* 设置最大宽度 */
+        }
+        
         .panel:hover {
             transform: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -528,6 +534,11 @@
                 gap: 20px;
             }
             
+            .panel.roles-panel {
+                flex: 1;
+                max-width: none;
+            }
+            
             header h1 {
                 font-size: 1.8rem;
             }
@@ -551,8 +562,8 @@
         </header>
         
         <div class="panels">
-            <!-- 常用角色ID面板 -->
-            <div class="panel">
+            <!-- 常用角色ID面板 - 添加了roles-panel类以控制宽度 -->
+            <div class="panel roles-panel">
                 <h2 class="panel-title"><i class="fas fa-users"></i> 常用角色ID</h2>
                 
                 <button class="btn" onclick="openAddRoleModal()"><i class="fas fa-plus"></i> 添加常用角色</button>
@@ -641,7 +652,7 @@
             <h3><i class="fas fa-user-plus"></i> 添加常用角色</h3>
             <div class="form-group">
                 <label for="server">区服</label>
-                <input type="text" id="server" placeholder="输入所在区服">
+                <input type="text" id="server" placeholder="例如：S1">
             </div>
             <div class="form-group">
                 <label for="roleName">角色名</label>
@@ -11292,3 +11303,4 @@ ${itemsCode}
     </script>
 </body>
 </html>
+    
