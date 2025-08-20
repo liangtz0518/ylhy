@@ -25,7 +25,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1700px;
             margin: 0 auto;
         }
         
@@ -79,10 +79,8 @@
             flex: 1;
             min-width: 300px;
             border: 1px solid #e1e4e8;
-            /* 取消悬浮效果的过渡动画 */
         }
         
-        /* 移除面板悬浮效果 */
         .panel:hover {
             transform: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -247,10 +245,12 @@
             align-items: center;
             justify-content: space-between;
             border: 1px solid #e1e4e8;
-            /* 取消悬浮效果 */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
         }
         
         .selected-item:hover {
+            background-color: #f1f3f5;
             transform: none;
             box-shadow: none;
         }
@@ -322,7 +322,6 @@
             border-radius: 8px;
             margin-bottom: 12px;
             border: 1px solid #e1e4e8;
-            /* 取消悬浮效果 */
         }
         
         .preset-item:hover {
@@ -364,7 +363,7 @@
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
-            display: none; /* 默认隐藏，解决刷新显示问题 */
+            display: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards;
@@ -397,7 +396,6 @@
             }
         }
         
-        /* 模态窗口样式 */
         .modal {
             display: none;
             position: fixed;
@@ -451,7 +449,6 @@
             font-size: 1.3rem;
         }
         
-        /* 套装选项样式 */
         .package-option {
             padding: 15px;
             border: 1px solid #e1e4e8;
@@ -554,6 +551,17 @@
         </header>
         
         <div class="panels">
+            <!-- 常用角色ID面板 -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-users"></i> 常用角色ID</h2>
+                
+                <button class="btn" onclick="openAddRoleModal()"><i class="fas fa-plus"></i> 添加常用角色</button>
+                
+                <div id="frequentlyUsedRoles" style="margin-top: 20px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                    <div style="padding: 10px; color: #999;">暂无常用角色ID</div>
+                </div>
+            </div>
+            
             <div class="panel">
                 <h2 class="panel-title"><i class="fas fa-cogs"></i> 配置参数</h2>
                 
@@ -623,6 +631,29 @@
                 </div>
                 
                 <div id="generatedCode">// 点击"生成填充代码"按钮生成代码...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加角色模态窗口 -->
+    <div class="modal" id="addRoleModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-user-plus"></i> 添加常用角色</h3>
+            <div class="form-group">
+                <label for="server">区服</label>
+                <input type="text" id="server" placeholder="输入所在区服">
+            </div>
+            <div class="form-group">
+                <label for="roleName">角色名</label>
+                <input type="text" id="roleName" placeholder="输入角色名称">
+            </div>
+            <div class="form-group">
+                <label for="roleId">角色ID</label>
+                <input type="text" id="roleId" placeholder="输入角色ID">
+            </div>
+            <div style="text-align: right;">
+                <button class="btn btn-outline" onclick="closeAddRoleModal()"><i class="fas fa-times"></i> 取消</button>
+                <button class="btn" onclick="saveRole()"><i class="fas fa-save"></i> 保存</button>
             </div>
         </div>
     </div>
@@ -10569,10 +10600,106 @@
         let currentPackageType = "";
         let selectedPackageId = "";
         
-        // 初始化页面 - 移除了会导致通知弹出的代码
+        // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             renderCustomPresets();
+            renderFrequentlyUsedRoles();
         });
+        
+        // 常用角色ID管理功能
+        function getFrequentlyUsedRoles() {
+            const roles = localStorage.getItem('frequentlyUsedRoles');
+            return roles ? JSON.parse(roles) : [];
+        }
+        
+        function saveFrequentlyUsedRoles(roles) {
+            localStorage.setItem('frequentlyUsedRoles', JSON.stringify(roles));
+        }
+        
+        function renderFrequentlyUsedRoles() {
+            const roles = getFrequentlyUsedRoles();
+            const container = document.getElementById('frequentlyUsedRoles');
+            
+            if (roles.length === 0) {
+                container.innerHTML = '<div style="padding: 10px; color: #999;">暂无常用角色ID</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            roles.forEach(role => {
+                const div = document.createElement('div');
+                div.className = 'selected-item';
+                // 添加点击事件，点击整个ID框任意区域都能选中该ID
+                div.onclick = function(e) {
+                    // 如果点击的是删除按钮，则不执行ID选择
+                    if (!e.target.closest('.btn-danger')) {
+                        setRoleIdToInput(role.id);
+                    }
+                };
+                div.innerHTML = `
+                    <div class="item-info">
+                        <span class="item-name">${role.server}-${role.name}</span>
+                        <span class="item-id">${role.id}</span>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger" onclick="deleteRole('${role.id}')" style="padding: 4px 8px;"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function openAddRoleModal() {
+            document.getElementById('server').value = '';
+            document.getElementById('roleName').value = '';
+            document.getElementById('roleId').value = '';
+            document.getElementById('addRoleModal').style.display = 'flex';
+        }
+        
+        function closeAddRoleModal() {
+            document.getElementById('addRoleModal').style.display = 'none';
+        }
+        
+        function saveRole() {
+            const server = document.getElementById('server').value.trim();
+            const name = document.getElementById('roleName').value.trim();
+            const id = document.getElementById('roleId').value.trim();
+            
+            if (!server || !name || !id) {
+                showNotification('请填写完整的角色信息', 'error');
+                return;
+            }
+            
+            const roles = getFrequentlyUsedRoles();
+            
+            // 检查是否已存在相同ID的角色
+            const existingIndex = roles.findIndex(role => role.id === id);
+            if (existingIndex !== -1) {
+                roles[existingIndex] = { server, name, id };
+            } else {
+                roles.push({ server, name, id });
+            }
+            
+            saveFrequentlyUsedRoles(roles);
+            renderFrequentlyUsedRoles();
+            closeAddRoleModal();
+            showNotification('角色添加成功');
+        }
+        
+        function deleteRole(id) {
+            const roles = getFrequentlyUsedRoles();
+            const newRoles = roles.filter(role => role.id !== id);
+            saveFrequentlyUsedRoles(newRoles);
+            renderFrequentlyUsedRoles();
+            showNotification('角色已删除');
+        }
+        
+        // 修改为设置ID而不是添加ID，覆盖原有内容
+        function setRoleIdToInput(id) {
+            const playerIdsInput = document.getElementById('playerIds');
+            playerIdsInput.value = id;
+            showNotification(`已选择角色ID: ${id}`);
+        }
         
         // 打开套装选择窗口
         function openPackageModal(type) {
@@ -11165,6 +11292,3 @@ ${itemsCode}
     </script>
 </body>
 </html>
-
-
-
