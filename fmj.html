@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>伏魔诀邮件道具ID填充</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(58, 90, 159, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(211, 47, 47, 0.05) 0%, transparent 20%);
             color: #333;
             padding: 20px;
             line-height: 1.6;
+            min-height: 100vh;
         }
         
         .container {
@@ -26,168 +31,517 @@
         
         header {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #3a5a9f;
-            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a90e2 0%, #3a5a9f 100%);
+            border-radius: 12px;
             color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1" fill="white" opacity="0.2"/></svg>');
+            opacity: 0.3;
         }
         
         header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
         }
         
         .panels {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             flex-wrap: wrap;
         }
         
         .panel {
             background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             flex: 1;
             min-width: 300px;
+            border: 1px solid #e1e4e8;
+            /* 取消悬浮效果的过渡动画 */
+        }
+        
+        /* 移除面板悬浮效果 */
+        .panel:hover {
+            transform: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
         .panel-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title i {
             color: #3a5a9f;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.95rem;
         }
         
         input, textarea, select {
             width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
             font-size: 1rem;
+            background: white;
+            color: #2d3748;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        
+        textarea {
+            min-height: 0px;
+            resize: vertical;
         }
         
         .btn {
-            background: #3a5a9f;
+            background: linear-gradient(135deg, #3a5a9f 0%, #4a90e2 100%);
             color: white;
             border: none;
-            padding: 10px 10px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             margin-right: 10px;
             margin-bottom: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(58, 90, 159, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(58, 90, 159, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(58, 90, 159, 0.2);
         }
         
         .btn-outline {
-            background: white;
+            background: transparent;
             border: 1px solid #3a5a9f;
             color: #3a5a9f;
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(58, 90, 159, 0.05);
+            box-shadow: none;
         }
         
         .btn-danger {
-            background: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f 0%, #e57373 100%);
+            box-shadow: 0 2px 6px rgba(211, 47, 47, 0.2);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
         }
         
         .search-results {
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
             margin-top: 10px;
             display: none;
+            background: white;
+        }
+        
+        .search-results::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .search-results::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+        
+        .search-results::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 8px;
         }
         
         .result-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f1f1;
             cursor: pointer;
-        }
-        
-        .result-item.selected {
-            background-color: #e8f0fe;
-        }
-        
-        .selected-item {
-            padding: 8px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            transition: background 0.2s ease;
             display: flex;
-            align-items: center;
             justify-content: space-between;
         }
         
+        .result-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .result-item.selected {
+            background-color: rgba(74, 144, 226, 0.1);
+            border-left: 3px solid #4a90e2;
+        }
+        
+        .result-item .item-id {
+            color: #3a5a9f;
+            font-family: monospace;
+            margin-right: 10px;
+        }
+        
+        .result-item .item-name {
+            flex: 1;
+        }
+        
+        .selected-item {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e1e4e8;
+            /* 取消悬浮效果 */
+        }
+        
+        .selected-item:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .selected-item .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .selected-item .item-id {
+            color: #3a5a9f;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .selected-item .item-name {
+            font-size: 0.95rem;
+        }
+        
+        .selected-item .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
         .quantity-input {
-            width: 60px;
-            padding: 5px;
+            width: 100px;
+            padding: 6px;
             text-align: center;
+            border-radius: 4px;
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #2d3748;
         }
         
         #generatedCode {
             width: 100%;
-            height: 200px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            padding: 10px;
-            font-family: monospace;
+            height: 250px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
             white-space: pre-wrap;
             overflow: auto;
-            border: 1px solid #ddd;
+            border: 1px solid #e1e4e8;
+            color: #2d3748;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        #generatedCode::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        #generatedCode::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+        
+        #generatedCode::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 8px;
         }
         
         .preset-item {
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e1e4e8;
+            /* 取消悬浮效果 */
+        }
+        
+        .preset-item:hover {
+            background: #f1f3f5;
+            transform: none;
         }
         
         .preset-name {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 600;
+            margin-bottom: 8px;
             cursor: pointer;
             padding: 5px;
-            border-radius: 3px;
+            border-radius: 4px;
+            color: #2d3748;
+            transition: all 0.2s ease;
         }
         
         .preset-name:hover {
-            background-color: #e8f0fe;
+            background-color: rgba(74, 144, 226, 0.05);
+            color: #3a5a9f;
         }
         
         .preset-name-input {
             width: 100%;
-            padding: 5px;
-            margin-bottom: 5px;
+            padding: 8px;
+            margin-bottom: 8px;
             display: none;
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #2d3748;
+            border-radius: 4px;
         }
         
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #3a5a9f;
+            background: linear-gradient(135deg, #3a5a9f 0%, #4a90e2 100%);
             color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: none; /* 默认隐藏，解决刷新显示问题 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #d32f2f 0%, #e57373 100%);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        /* 模态窗口样式 */
+        .modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .modal-content {
+            background: white;
+            border: 1px solid #e1e4e8;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            animation: scaleIn 0.3s ease;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-size: 1.3rem;
+        }
+        
+        /* 套装选项样式 */
+        .package-option {
+            padding: 15px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .package-option:hover {
+            background-color: #f8f9fa;
+            border-color: #4a90e2;
+        }
+        
+        .package-option.selected {
+            background-color: rgba(74, 144, 226, 0.1);
+            border-color: #4a90e2;
+            position: relative;
+        }
+        
+        .package-option.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #4a90e2;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .package-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2d3748;
+        }
+        
+        .package-description {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .action-group {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .action-group-title {
+            width: 100%;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .help-text p {
+            margin-bottom: 8px;
+        }
+        
+        .help-text p:last-child {
+            margin-bottom: 0;
         }
         
         @media (max-width: 768px) {
             .panels {
                 flex-direction: column;
+                gap: 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .panel {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -201,7 +555,7 @@
         
         <div class="panels">
             <div class="panel">
-                <h2 class="panel-title">配置参数</h2>
+                <h2 class="panel-title"><i class="fas fa-cogs"></i> 配置参数</h2>
                 
                 <div class="form-group">
                     <label for="playerIds">角色ID (多个用逗号分隔)</label>
@@ -214,44 +568,47 @@
                     
                     <div class="search-results" id="searchResults"></div>
                     
-                    <div style="margin-top: 10px;">
-                        <button class="btn" onclick="selectAllResults()">全选</button>
-                        <button class="btn btn-outline" onclick="deselectAllResults()">全不选</button>
-                        <button class="btn" onclick="addSelectedResults()">添加选中道具</button>
+                    <div class="action-group">
+                        <div class="action-group-title">搜索结果操作</div>
+                        <button class="btn" onclick="selectAllResults()"><i class="fas fa-check-square"></i> 全选</button>
+                        <button class="btn btn-outline" onclick="deselectAllResults()"><i class="fas fa-square"></i> 全不选</button>
+                        <button class="btn" onclick="addSelectedResults()"><i class="fas fa-plus-circle"></i> 添加选中道具</button>
                     </div>
                     
-                    <div style="display: flex; margin-top: 10px;">
+                    <div style="display: flex; margin-top: 10px; gap: 10px;">
                         <input type="number" id="bulkQuantity" placeholder="批量设置数量" min="1" value="1" style="flex: 1;">
-                        <button class="btn" onclick="applyBulkQuantity()">应用</button>
+                        <button class="btn" onclick="applyBulkQuantity()"><i class="fas fa-sync-alt"></i> 应用</button>
                     </div>
                 </div>
                 
-                <div style="margin: 15px 0;">
-                    <h3 style="margin-bottom: 10px;">常用方案</h3>
-                    <button class="btn" onclick="loadPreset('单日500')">单日500</button>
-                    <button class="btn" onclick="loadPreset('单日1000')">单日1000</button>
-                    <button class="btn" onclick="loadPreset('单日3000')">单日3000</button>
-                    <button class="btn btn-outline" onclick="clearItems()">清空道具</button>
+                <div class="action-group">
+                    <div class="action-group-title">常用方案</div>
+                    <button class="btn" onclick="openPackageModal('单日500')"><i class="fas fa-calendar-day"></i> 单日500</button>
+                    <button class="btn" onclick="openPackageModal('单日1000')"><i class="fas fa-calendar-day"></i> 单日1000</button>
+                    <button class="btn" onclick="openPackageModal('单日3000')"><i class="fas fa-calendar-day"></i> 单日3000</button>
+                    <button class="btn btn-outline" onclick="clearItems()"><i class="fas fa-trash"></i> 清空道具</button>
                 </div>
                 
                 <div id="selectedItemsContainer"></div>
             </div>
             
             <div class="panel">
-                <h2 class="panel-title">预设管理</h2>
+                <h2 class="panel-title"><i class="fas fa-bookmark"></i> 预设管理</h2>
                 
-                <button class="btn" onclick="openSavePresetModal()">保存当前方案</button>
-                <button class="btn btn-outline" onclick="exportPresets()">导出预设</button>
-                <input type="file" id="importFile" accept=".json" onchange="importPresets(event)" style="display: none;">
-                <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">导入预设</button>
+                <div class="action-group">
+                    <button class="btn" onclick="openSavePresetModal()"><i class="fas fa-save"></i> 保存</button>
+                    <button class="btn btn-outline" onclick="exportPresets()"><i class="fas fa-download"></i> 导出</button>
+                    <input type="file" id="importFile" accept=".json" onchange="importPresets(event)" style="display: none;">
+                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> 导入</button>
+                </div>
                 
                 <div id="presetList" style="margin-top: 15px;"></div>
             </div>
             
             <div class="panel">
-                <h2 class="panel-title">生成代码</h2>
+                <h2 class="panel-title"><i class="fas fa-code"></i> 生成代码</h2>
                 
-                <div style="margin-bottom: 15px;">
+                <div class="help-text">
                     <p>1. 填写角色ID（多个用逗号分隔）</p>
                     <p>2. 搜索并添加需要的道具</p>
                     <p>3. 设置每个道具的数量</p>
@@ -259,24 +616,38 @@
                     <p>5. 复制生成的代码到伏魔诀中控执行</p>
                 </div>
                 
-                <button class="btn" onclick="generateCode()">生成填充代码</button>
-                <button class="btn btn-outline" onclick="copyCode()" id="copyBtn">复制代码</button>
-                <button class="btn btn-danger" onclick="clearAll()">重置所有</button>
+                <div class="action-group">
+                    <button class="btn" onclick="generateCode()"><i class="fas fa-magic"></i> 生成填充代码</button>
+                    <button class="btn btn-outline" onclick="copyCode()" id="copyBtn"><i class="fas fa-copy"></i> 复制代码</button>
+                    <button class="btn btn-danger" onclick="clearAll()"><i class="fas fa-redo"></i> 重置所有</button>
+                </div>
                 
                 <div id="generatedCode">// 点击"生成填充代码"按钮生成代码...</div>
             </div>
         </div>
     </div>
     
+    <!-- 套装选择模态窗口 -->
+    <div class="modal" id="packageModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-box-open"></i> 选择套装</h3>
+            <div id="packageOptionsContainer"></div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="closePackageModal()"><i class="fas fa-times"></i> 取消</button>
+                <button class="btn" onclick="confirmPackageSelection()"><i class="fas fa-check"></i> 确定</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="notification" id="notification"></div>
     
-    <div id="savePresetModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
-        <div style="background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px;">
-            <h3 style="margin-bottom: 15px;">保存预设方案</h3>
+    <div class="modal" id="savePresetModal">
+        <div class="modal-content">
+            <h3><i class="fas fa-bookmark-plus"></i> 保存预设方案</h3>
             <input type="text" id="presetName" placeholder="请输入预设名称" style="width: 100%; padding: 10px; margin-bottom: 15px;">
             <div style="text-align: right;">
-                <button class="btn btn-outline" onclick="closeSavePresetModal()">取消</button>
-                <button class="btn" onclick="saveCurrentPreset()">保存</button>
+                <button class="btn btn-outline" onclick="closeSavePresetModal()"><i class="fas fa-times"></i> 取消</button>
+                <button class="btn" onclick="saveCurrentPreset()"><i class="fas fa-save"></i> 保存</button>
             </div>
         </div>
     </div>
@@ -10008,17 +10379,270 @@
             {id: "31372", name: "羽化登仙·土", category: ""},
             {id: "31376", name: "羽化登仙·金", category: ""},
             {id: "31373", name: "羽化登仙·木", category: ""},
-            {id: "29264", name: "幻彩离龙-璃龙·龙爪", category: ""}
+            {id: "29264", name: "幻彩离龙-璃龙·龙爪", category: ""},
+            {id: "30470", name: "欢度国庆-天池", category: ""},
+            {id: "30472", name: "欢度国庆-千岛湖", category: ""},
+            {id: "30471", name: "欢度国庆-西湖", category: ""},
+            {id: "30473", name: "欢度国庆-洞庭湖", category: ""},
+            {id: "30474", name: "欢度国庆-鄱阳湖", category: ""},
+            {id: "30508", name: "欢度国庆-长江", category: ""},
+            {id: "30509", name: "欢度国庆-黄河", category: ""},
+            {id: "30465", name: "盛世华诞-恒山", category: ""},
+            {id: "30466", name: "盛世华诞-嵩山", category: ""},
+            {id: "30467", name: "盛世华诞-衡山", category: ""},
+            {id: "30468", name: "盛世华诞-华山", category: ""},
+            {id: "30469", name: "盛世华诞-泰山", category: ""},
+            {id: "30506", name: "盛世华诞-黄山", category: ""},
+            {id: "30507", name: "盛世华诞-庐山", category: ""}
         ];
+        
+        // 套装数据库
+        const packageDatabase = {
+            "单日500": [
+                {
+                    id: "5001",
+                    name: "佛怒炎莲",
+                    description: "单日500额外返利选神通-佛怒炎莲",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 50000},
+                        {id: "23027", name: "1000元真充卡", quantity: 10},
+                        {id: "23651", name: "10000仙玉卡", quantity: 10},
+                        {id: "29333", name: "佛·悟莲", quantity: 1},
+                        {id: "29334", name: "佛·慧莲", quantity: 1},
+                        {id: "29335", name: "佛·慈莲", quantity: 1},
+                        {id: "29336", name: "佛·执莲", quantity: 1},
+                        {id: "29337", name: "佛·韧莲", quantity: 1}
+                    ]
+                },
+                {
+                    id: "5002",
+                    name: "篮翔技校",
+                    description: "单日500额外返利选鸿蒙地藏-篮翔技校",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 50000},
+                        {id: "23027", name: "1000元真充卡", quantity: 10},
+                        {id: "20863", name: "篮翔技校-篮翔挖掘机", quantity: 1},
+                        {id: "21031", name: "篮翔技校-篮翔技校·羽翼", quantity: 1},
+                        {id: "21242", name: "篮翔技校-篮翔技校·法宝", quantity: 1},
+                        {id: "21428", name: "篮翔技校-篮翔技校·武", quantity: 1},
+                        {id: "21528", name: "篮翔技校-篮翔技校·衣", quantity: 1}
+                    ]
+                },
+                {
+                    id: "5003",
+                    name: "沧溟紫龙",
+                    description: "单日500额外返利选圣龙-沧溟紫龙",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 50000},
+                        {id: "23027", name: "1000元真充卡", quantity: 10},
+                        {id: "29535", name: "沧溟紫龙-紫龙·龙骨", quantity: 1},
+                        {id: "29536", name: "沧溟紫龙-紫龙·龙珠", quantity: 1},
+                        {id: "29537", name: "沧溟紫龙-紫龙·龙鳞", quantity: 1},
+                        {id: "29538", name: "沧溟紫龙-紫龙·龙角", quantity: 1},
+                        {id: "29539", name: "沧溟紫龙-紫龙·龙爪", quantity: 1}
+                    ]
+                },
+                {
+                    id: "5004",
+                    name: "贪狼星君",
+                    description: "单日500额外返利选灵将-贪狼星君",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 50000},
+                        {id: "23027", name: "1000元真充卡", quantity: 10},
+                        {id: "27647", name: "贪狼星君", quantity: 1}
+                    ]
+                }
+            ],
+            "单日1000": [
+                {
+                    id: "10001",
+                    name: "乾坤大挪移",
+                    description: "单日1000额外返利选神通-乾坤大挪移",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 100000},
+                        {id: "23027", name: "1000元真充卡", quantity: 20},
+                        {id: "23651", name: "1万仙玉卡", quantity: 105},
+                        {id: "38198", name: "1000定制称号", quantity: 1},
+                        {id: "29348", name: "乾坤·第一层", quantity: 1},
+                        {id: "29349", name: "乾坤·第二层", quantity: 1},
+                        {id: "29350", name: "乾坤·第三层", quantity: 1},
+                        {id: "29351", name: "乾坤·第四层", quantity: 1},
+                        {id: "29352", name: "乾坤·第五层", quantity: 1}
+                    ]
+                },
+                {
+                    id: "10002",
+                    name: "嗜战狂牛",
+                    description: "单日1000额外返利选灵将-嗜战狂牛",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 80000},
+                        {id: "23027", name: "1000元真充卡", quantity: 15},
+                        {id: "23651", name: "1万仙玉卡", quantity: 80},
+                        {id: "38198", name: "1000定制称号", quantity: 1},
+                        {id: "27644", name: "嗜战狂牛", quantity: 1}
+                    ]
+                },
+                {
+                    id: "10003",
+                    name: "太古剑阵",
+                    description: "单日1000额外返利选圣龙-太古剑阵",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 80000},
+                        {id: "23027", name: "1000元真充卡", quantity: 15},
+                        {id: "23651", name: "1万仙玉卡", quantity: 80},
+                        {id: "38198", name: "1000定制称号", quantity: 1},
+                        {id: "29243", name: "剑阵·诛仙剑", quantity: 1},
+                        {id: "29244", name: "剑阵·戮仙剑", quantity: 1},
+                        {id: "29245", name: "剑阵·陷仙剑", quantity: 1},
+                        {id: "29246", name: "剑阵·噬仙剑", quantity: 1},
+                        {id: "29247", name: "剑阵·绝仙剑", quantity: 1}
+                    ]
+                }
+            ],
+            "单日3000": [
+                {
+                    id: "30001",
+                    name: "枪出如龙",
+                    description: "包含大量仙币、充值卡和赵云系列道具",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 300000},
+                        {id: "23027", name: "1000元真充卡", quantity: 70},
+                        {id: "23651", name: "1万仙玉卡", quantity: 210},
+                        {id: "38200", name: "3000定制称号", quantity: 1},
+                        {id: "21416", name: "枪出如龙·武", quantity: 1},
+                        {id: "21522", name: "枪出如龙·衣", quantity: 1},
+                        {id: "26556", name: "无双赵云", quantity: 1},
+                        {id: "29374", name: "神将·赵云", quantity: 1},
+                        {id: "21203", name: "枪出如龙·法宝", quantity: 1}
+                    ]
+                },
+                {
+                    id: "30002",
+                    name: "武圣关羽",
+                    description: "包含顶级装备和稀有道具",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 500000},
+                        {id: "23027", name: "1000元真充卡", quantity: 50},
+                        {id: "23651", name: "1万仙玉卡", quantity: 300},
+                        {id: "38200", name: "3000定制称号", quantity: 1},
+                        {id: "29395", name: "武圣关羽", quantity: 2}
+                    ]
+                },
+                {
+                    id: "30003",
+                    name: "独孤九剑",
+                    description: "资源与装备均衡配置",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 400000},
+                        {id: "23027", name: "1000元真充卡", quantity: 60},
+                        {id: "23651", name: "1万仙玉卡", quantity: 250},
+                        {id: "38200", name: "3000定制称号", quantity: 1},
+                        {id: "29328", name: "独孤九剑-剑招·破剑式", quantity: 1},
+                        {id: "29329", name: "独孤九剑-剑招·破刀式", quantity: 1},
+                        {id: "29330", name: "独孤九剑-剑招·破枪式", quantity: 1},
+                        {id: "29331", name: "独孤九剑-剑招·破鞭式", quantity: 1},
+                        {id: "29332", name: "独孤九剑-剑招·破掌式", quantity: 1}
+                    ]
+                },
+                {
+                    id: "30004",
+                    name: "祈梦祝龙",
+                    description: "资源与装备均衡配置",
+                    items: [
+                        {id: "26001", name: "万能仙币", quantity: 400000},
+                        {id: "23027", name: "1000元真充卡", quantity: 60},
+                        {id: "23651", name: "1万仙玉卡", quantity: 250},
+                        {id: "38200", name: "3000定制称号", quantity: 1},
+                        {id: "29500", name: "祈梦祝龙-祝龙·龙骨", quantity: 1},
+                        {id: "29501", name: "祈梦祝龙-祝龙·龙珠", quantity: 1},
+                        {id: "29502", name: "祈梦祝龙-祝龙·龙鳞", quantity: 1},
+                        {id: "29503", name: "祈梦祝龙-祝龙·龙角", quantity: 1},
+                        {id: "29504", name: "祈梦祝龙-祝龙·龙爪", quantity: 1}
+                    ]
+                }
+            ]
+        };
         
         let selectedItems = [];
         let searchResults = [];
         let selectedSearchItems = [];
+        let currentPackageType = "";
+        let selectedPackageId = "";
         
-        // 初始化页面
+        // 初始化页面 - 移除了会导致通知弹出的代码
         document.addEventListener('DOMContentLoaded', function() {
             renderCustomPresets();
         });
+        
+        // 打开套装选择窗口
+        function openPackageModal(type) {
+            currentPackageType = type;
+            const modal = document.getElementById('packageModal');
+            const container = document.getElementById('packageOptionsContainer');
+            container.innerHTML = '';
+            
+            // 获取对应类型的套装列表
+            const packages = packageDatabase[type] || [];
+            
+            if (packages.length === 0) {
+                container.innerHTML = '<div style="padding: 10px; color: #999;">暂无可用套装</div>';
+            } else {
+                // 默认选中第一个套装
+                selectedPackageId = packages[0].id;
+                
+                packages.forEach(pkg => {
+                    const div = document.createElement('div');
+                    div.className = `package-option ${pkg.id === selectedPackageId ? 'selected' : ''}`;
+                    div.dataset.packageId = pkg.id;
+                    div.innerHTML = `
+                        <div class="package-name">${pkg.name}</div>
+                        <div class="package-description">${pkg.description}</div>
+                        <div style="margin-top: 8px; font-size: 0.85rem; color: #3a5a9f;">
+                            包含 ${pkg.items.length} 个道具
+                        </div>
+                    `;
+                    div.onclick = function() {
+                        // 移除其他选中状态
+                        document.querySelectorAll('.package-option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        // 设置当前选中状态
+                        this.classList.add('selected');
+                        selectedPackageId = this.dataset.packageId;
+                    };
+                    container.appendChild(div);
+                });
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // 关闭套装选择窗口
+        function closePackageModal() {
+            document.getElementById('packageModal').style.display = 'none';
+            currentPackageType = "";
+            selectedPackageId = "";
+        }
+        
+        // 确认套装选择
+        function confirmPackageSelection() {
+            if (!currentPackageType || !selectedPackageId) {
+                showNotification('请选择一个套装', 'error');
+                return;
+            }
+            
+            // 查找选中的套装
+            const packages = packageDatabase[currentPackageType] || [];
+            const selectedPackage = packages.find(pkg => pkg.id === selectedPackageId);
+            
+            if (selectedPackage) {
+                selectedItems = [...selectedPackage.items];
+                renderSelectedItems();
+                showNotification(`已加载 ${currentPackageType} - ${selectedPackage.name}`);
+            }
+            
+            closePackageModal();
+        }
         
         // 搜索道具
         function searchItems() {
@@ -10057,7 +10681,11 @@
                     resultItem.classList.add('selected');
                 }
                 resultItem.innerHTML = `
-                    <div>${item.id} - ${item.name}</div>
+                    <div>
+                        <span class="item-id">${item.id}</span>
+                        <span class="item-name">${item.name}</span>
+                    </div>
+                    ${selectedSearchItems.includes(item.id) ? '<i class="fas fa-check text-primary"></i>' : ''}
                 `;
                 resultItem.onclick = function() {
                     toggleSelectItem(item.id);
@@ -10128,11 +10756,14 @@
                 const div = document.createElement('div');
                 div.className = 'selected-item';
                 div.innerHTML = `
-                    <div>${item.id} - ${item.name}</div>
-                    <div>
+                    <div class="item-info">
+                        <span class="item-id">${item.id}</span>
+                        <span class="item-name">${item.name}</span>
+                    </div>
+                    <div class="item-actions">
                         <input type="number" class="quantity-input" min="1" value="${item.quantity}" 
                             onchange="updateItemQuantity('${item.id}', this.value)">
-                        <button onclick="removeSelectedItem('${item.id}')" style="margin-left: 10px;">删除</button>
+                        <button class="btn btn-danger" onclick="removeSelectedItem('${item.id}')" style="padding: 4px 8px; margin-left: 5px;"><i class="fas fa-times"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -10163,58 +10794,6 @@
             
             renderSelectedItems();
             showNotification(`已设置所有道具数量为 ${quantity}`);
-        }
-        
-        // 加载预设
-        function loadPreset(type) {
-            let presetItems = [];
-            
-            switch(type) {
-                case '单日500':
-                    presetItems = [
-                        {id: "26001", name: "万能仙币", quantity: 50000},
-                        {id: "23027", name: "1000元真充卡", quantity: 10},
-                        {id: "23651", name: "10000仙玉卡", quantity: 10},
-                        {id: "29333", name: "佛·悟莲", quantity: 1},
-                        {id: "29334", name: "佛·慧莲", quantity: 1},
-                        {id: "29335", name: "佛·慈莲", quantity: 1},
-                        {id: "29336", name: "佛·执莲", quantity: 1},
-                        {id: "29337", name: "佛·韧莲", quantity: 1}
-                    ];
-                    break;
-                    
-                case '单日1000':
-                    presetItems = [
-                        {id: "26001", name: "万能仙币", quantity: 100000},
-                        {id: "23027", name: "1000元真充卡", quantity: 20},
-                        {id: "23651", name: "1万仙玉卡", quantity: 105},
-                        {id: "38198", name: "1000定制称号", quantity: 1},
-                        {id: "29348", name: "乾坤·第一层", quantity: 1},
-                        {id: "29349", name: "乾坤·第二层", quantity: 1},
-                        {id: "29350", name: "乾坤·第三层", quantity: 1},
-                        {id: "29351", name: "乾坤·第四层", quantity: 1},
-                        {id: "29352", name: "乾坤·第五层", quantity: 1}
-                    ];
-                    break;
-                    
-                case '单日3000':
-                    presetItems = [
-                        {id: "26001", name: "万能仙币", quantity: 300000},
-                        {id: "23027", name: "1000元真充卡", quantity: 70},
-                        {id: "23651", name: "1万仙玉卡", quantity: 210},
-                        {id: "38200", name: "3000定制称号", quantity: 1},
-                        {id: "21416", name: "枪出如龙·武", quantity: 1},
-                        {id: "21522", name: "枪出如龙·衣", quantity: 1},
-                        {id: "26556", name: "无双赵云", quantity: 1},
-                        {id: "29374", name: "神将·赵云", quantity: 1},
-                        {id: "21203", name: "枪出如龙·法宝", quantity: 1}
-                    ];
-                    break;
-            }
-            
-            selectedItems = [...presetItems];
-            renderSelectedItems();
-            showNotification(`已加载 ${type} 方案`);
         }
         
         // 清空道具
@@ -10341,9 +10920,9 @@ ${itemsCode}
             showNotification('代码已复制到剪贴板！');
             
             const copyBtn = document.getElementById('copyBtn');
-            copyBtn.textContent = '已复制';
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
             setTimeout(() => {
-                copyBtn.textContent = '复制代码';
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制代码';
             }, 2000);
         }
         
@@ -10365,9 +10944,15 @@ ${itemsCode}
         // 显示通知
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.background = type === 'error' ? '#d32f2f' : '#3a5a9f';
-            notification.style.display = 'block';
+            notification.className = type === 'error' ? 'notification error' : 'notification';
+            notification.innerHTML = type === 'error' ? `<i class="fas fa-exclamation-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
+            notification.style.display = 'flex';
+            
+            // 重置动画
+            notification.style.animation = 'none';
+            notification.offsetHeight; // 触发重绘
+            notification.style.animation = 'slideIn 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards';
+            
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
@@ -10403,10 +10988,10 @@ ${itemsCode}
                     <input type="text" class="preset-name-input" value="${preset.name}" 
                         onblur="finishEditPresetName(this, '${preset.id}')"
                         onkeypress="if(event.keyCode === 13) finishEditPresetName(this, '${preset.id}')">
-                    <div style="margin-bottom: 5px;">包含 ${preset.items.length} 个道具</div>
+                    <div style="margin-bottom: 5px; color: #6b7280; font-size: 0.9rem;">包含 ${preset.items.length} 个道具</div>
                     <div>
-                        <button onclick="loadCustomPreset('${preset.id}')" style="margin-right: 5px;">加载</button>
-                        <button onclick="deletePreset('${preset.id}')">删除</button>
+                        <button class="btn btn-outline" onclick="loadCustomPreset('${preset.id}')" style="padding: 5px 10px;"><i class="fas fa-download"></i> 加载</button>
+                        <button class="btn btn-danger" onclick="deletePreset('${preset.id}')" style="padding: 5px 10px;"><i class="fas fa-trash"></i> 删除</button>
                     </div>
                 `;
                 container.appendChild(div);
