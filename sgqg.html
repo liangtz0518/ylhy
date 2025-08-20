@@ -5,9 +5,10 @@
   <title>上古情歌中控道具ID</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: #f5f7fa;
       padding: 20px;
+      line-height: 1.5;
     }
     .main-container {
       display: flex;
@@ -20,57 +21,118 @@
       background: #fff;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       flex: 1;
+      transition: all 0.25s ease;
+    }
+    .container:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
     .panel {
       background: #fff;
       width: 250px;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
       position: relative;
+      transition: all 0.25s ease;
+    }
+    .panel:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
     h2, h3 {
       text-align: center;
-      color: #333;
+      color: #343a40;
       margin-bottom: 20px;
+      font-weight: 600;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin: 0 0 25px;
+      position: relative;
+      padding-bottom: 12px;
+    }
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #4361ee, #7209b7);
+      border-radius: 2px;
     }
     h3 {
       margin-bottom: 15px;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #e9ecef;
       padding-bottom: 8px;
       text-align: left;
+      font-size: 1.2rem;
+      color: #495057;
     }
     label {
       display: block;
-      margin: 15px 0 8px;
-      font-weight: 600;
-      color: #444;
+      margin: 18px 0 8px;
+      font-weight: 500;
+      color: #495057;
+      font-size: 14px;
     }
     input, select, button {
       width: 100%;
       padding: 10px 12px;
       margin: 6px 0 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #dee2e6;
       border-radius: 8px;
       font-size: 15px;
       box-sizing: border-box;
     }
+    input, select {
+      background-color: #f8f9fa;
+      transition: all 0.25s ease;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4361ee;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      background-color: #fff;
+    }
+    input::placeholder {
+      color: #adb5bd;
+      font-size: 14px;
+    }
     button {
-      background-color: #4CAF50;
       color: white;
       border: none;
       cursor: pointer;
-      transition: all 0.2s;
-      font-weight: 600;
+      transition: all 0.25s ease;
+      font-weight: 500;
       margin: 10px 0;
+      position: relative;
+      overflow: hidden;
     }
-    button:hover {
-      background-color: #3e8e41;
-      transform: translateY(-1px);
+    button:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+    button:hover:before {
+      left: 100%;
+    }
+    button:not(.save-result-btn):not(.clear-selected-btn):not(.export-btn):not(.import-btn):not(.copy-saved-btn):not(.delete-saved-btn):not(.add-player-btn):not(.save-common-btn):not(.save-uncommon-btn) {
+      background-color: #4361ee;
+    }
+    button:not(.save-result-btn):not(.clear-selected-btn):not(.export-btn):not(.import-btn):not(.copy-saved-btn):not(.delete-saved-btn):not(.add-player-btn):not(.save-common-btn):not(.save-uncommon-btn):hover {
+      background-color: #3a56d4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
     }
     .button-group {
       display: flex;
@@ -80,24 +142,34 @@
     #result {
       margin: 20px 0;
       padding: 15px;
-      background: #f9f9f9;
-      border: 1px solid #ddd;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
       border-radius: 8px;
       font-family: monospace;
       white-space: pre-wrap;
-      color: #333;
+      color: #343a40;
       min-height: 120px;
       outline: none;
+      font-size: 14px;
+      line-height: 1.6;
+      transition: all 0.25s ease;
+    }
+    #result:focus {
+      outline: none;
+      border-color: #4361ee;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      background-color: #fff;
     }
     #itemList, #combineList {
       display: none;
       width: 100%;
-      max-height: 350px;
+      max-height: 330px;
       overflow-y: auto;
-      border: 1px solid #ccc;
+      border: 1px solid #dee2e6;
       border-radius: 8px;
       margin: 5px 0;
       padding: 5px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     .search-container {
       position: relative;
@@ -106,48 +178,58 @@
       position: fixed;
       bottom: 25px;
       left: 50%;
-      transform: translateX(-50%);
-      background-color: #333;
+      transform: translate(-50%, 20px);
+      background-color: #343a40;
       color: white;
-      padding: 12px 25px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 30px;
       z-index: 100;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .show-toast {
       opacity: 1;
+      transform: translate(-50%, 0);
     }
     .item-option {
       padding: 8px 12px;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 6px;
       margin: 2px 0;
+      transition: all 0.25s ease;
     }
     .item-option:hover {
-      background-color: #f0f0f0;
+      background-color: rgba(67, 97, 238, 0.05);
+      padding-left: 15px;
     }
-    .selected {
-      background-color: #e1f5fe;
-      font-weight: bold;
+    .item-option.selected {
+      background-color: rgba(67, 97, 238, 0.1);
+      color: #4361ee;
+      font-weight: 500;
     }
     .selected-item {
       padding: 8px 12px;
       margin: 4px 0;
-      background-color: #e8f5e9;
+      background-color: rgba(67, 97, 238, 0.05);
       border-radius: 4px;
       display: flex;
       flex-direction: column;
+      border-left: 3px solid #4361ee;
+      transition: all 0.25s ease;
+    }
+    .selected-item:hover {
+      background-color: rgba(67, 97, 238, 0.1);
+      transform: translateX(3px);
     }
     .selected-item-header {
       display: flex;
       justify-content: space-between;
       margin-bottom: 5px;
       cursor: pointer;
-    }
-    .selected-item:hover {
-      background-color: #c8e6c9;
+      color: #495057;
+      font-weight: 500;
     }
     .selected-item-qty {
       display: flex;
@@ -160,7 +242,7 @@
       margin: 0;
     }
     .selected-items-container, .saved-results-container, .player-ids-container {
-      max-height: 600px;
+      max-height: 650px;
       overflow-y: auto;
       margin-bottom: 15px;
       flex: 1;
@@ -171,23 +253,49 @@
       right: 25px;
       width: auto;
       padding: 5px 10px;
-      background-color: #f44336;
+      background-color: #eb4f5b;
     }
     .clear-selected-btn:hover {
-      background-color: #d32f2f;
+      background-color: #d62828;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(230, 57, 70, 0.2);
     }
-    .save-result-btn {
-      background-color: #2196F3;
+    .save-result-btn, .save-common-btn {
+      background-color: #4361ee;
     }
-    .save-result-btn:hover {
-      background-color: #0b7dda;
+    .save-result-btn:hover, .save-common-btn:hover {
+      background-color: #3a56d4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
     }
     .saved-result {
       padding: 10px;
       margin: 8px 0;
-      background-color: #f5f5f5;
-      border-radius: 6px;
-      border: 1px solid #ddd;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .saved-result:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: #4361ee;
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+    .saved-result:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-color: #dee2e6;
+    }
+    .saved-result:hover:before {
+      opacity: 1;
     }
     .saved-result-header {
       display: flex;
@@ -198,8 +306,9 @@
     .saved-result-content {
       font-family: monospace;
       white-space: pre-wrap;
-      font-size: 13px;
-      color: #555;
+      font-size: 12px;
+      color: #6c757d;
+      line-height: 1.5;
     }
     .saved-result-actions {
       display: flex;
@@ -212,17 +321,22 @@
       margin: 0;
     }
     .copy-saved-btn {
-      background-color: #4CAF50;
+      background-color: #4361ee;
+    }
+    .copy-saved-btn:hover {
+      background-color: #3a56d4;
     }
     .delete-saved-btn {
-      background-color: #f44336;
+      background-color: #eb4f5b;
+    }
+    .delete-saved-btn:hover {
+      background-color: #d62828;
     }
     .panel-title {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    /* 新增样式 */
     .modal {
       display: none;
       position: fixed;
@@ -234,6 +348,11 @@
       z-index: 1000;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
+      opacity: 1;
     }
     .modal-content {
       background: white;
@@ -241,12 +360,18 @@
       border-radius: 12px;
       width: 400px;
       max-width: 90%;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .modal-title {
-      font-size: 20px;
+      font-size: 1.3rem;
       margin-bottom: 20px;
-      color: #333;
+      color: #4361ee;
+      font-weight: 600;
+      border-bottom: 1px solid #e9ecef;
+      padding-bottom: 10px;
     }
     .modal-buttons {
       display: flex;
@@ -261,9 +386,12 @@
       flex: 1;
       padding: 2px 5px;
       border-radius: 4px;
+      color: #4361ee;
+      transition: all 0.25s ease;
     }
     .saved-result-name:hover {
-      background-color: #e3f2fd;
+      background-color: rgba(67, 97, 238, 0.05);
+      color: #3a56d4;
     }
     .import-export-buttons {
       display: flex;
@@ -275,67 +403,78 @@
       padding: 8px;
       font-size: 14px;
     }
-    .export-btn {
-      background-color: #9c27b0;
+    .export-btn, .save-uncommon-btn {
+      background-color: #7209b7;
     }
-    .export-btn:hover {
-      background-color: #7b1fa2;
+    .export-btn:hover, .save-uncommon-btn:hover {
+      background-color: #5e0bad;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(114, 9, 183, 0.2);
     }
     .import-btn {
-      background-color: #ff9800;
+      background-color: #ffb703;
+      color: #343a40;
     }
     .import-btn:hover {
-      background-color: #ef6c00;
+      background-color: #fb8500;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(255, 183, 3, 0.2);
     }
     .hidden {
       display: none;
     }
-    /* 角色ID面板样式 */
-.player-id-item {
-  padding: 8px 12px;
-  margin: 4px 0;
-  background-color: #e3f2fd;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 40px;
-}
-.player-id-item:hover {
-  background-color: #bbdefb;
-}
-.player-id-item .delete-btn {
-  color: white;
-  background-color: #f44336;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: none;
-  width: auto;
-  font-size: 12px;
-}
-.player-id-item .delete-btn:hover {
-  background-color: #d32f2f;
-  transform: none;
-}
-
-    /* 新增角色模态框 */
+    .player-id-item {
+      padding: 8px 12px;
+      margin: 4px 0;
+      background-color: rgba(251, 133, 0, 0.05);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 40px;
+      border-left: 3px solid #ffb703;
+      transition: all 0.25s ease;
+    }
+    .player-id-item:hover {
+      background-color: rgba(251, 133, 0, 0.1);
+      transform: translateX(3px);
+    }
+    .player-id-item .delete-btn {
+      color: white;
+      background-color: #e63946;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: none;
+      width: auto;
+      font-size: 12px;
+    }
+    .player-id-item .delete-btn:hover {
+      background-color: #d32f2f;
+      transform: none;
+    }
+    .player-id-info {
+      color: #495057;
+      font-size: 14px;
+    }
     #addPlayerModal .modal-content {
       width: 350px;
     }
     #addPlayerModal label {
       margin: 10px 0 5px;
     }
-    
-    /* 新增：非常用方案区域 */
     .uncommon-schemes-container {
       width: 100%;
       margin-top: 0px;
       background: #fff;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.25s ease;
+    }
+    .uncommon-schemes-container:hover {
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
     .uncommon-schemes-header {
       display: flex;
@@ -350,12 +489,10 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    /* 非常用方案展示框样式 */
     #uncommonSavedResultsContainer .saved-result {
-      width: calc(50% - 5px); /* 默认一行显示2个，可根据需要调整 */
+      width: 250px;
       box-sizing: border-box;
     }
-    /* 新增：保存方案类型选择 */
     .save-type-buttons {
       display: flex;
       gap: 10px;
@@ -364,11 +501,63 @@
     .save-type-buttons button {
       flex: 1;
     }
-    .save-common-btn {
-      background-color: #2196F3;
+    .add-player-btn {
+      background-color: #ffb703;
+      color: #343a40;
     }
-    .save-uncommon-btn {
-      background-color: #9c27b0;
+    .add-player-btn:hover {
+      background-color: #fb8500;
+      transform: translateY(-2px);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f8f9fa;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ced4da;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #adb5bd;
+    }
+    @media (max-width: 1200px) {
+      .main-container {
+        justify-content: center;
+      }
+      .panel {
+        width: 100%;
+        max-width: 350px;
+      }
+      #uncommonSavedResultsContainer .saved-result {
+        width: 250px;
+      }
+    }
+    @media (max-width: 768px) {
+      #uncommonSavedResultsContainer .saved-result {
+        width: 250px;
+      }
+      .button-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+      body {
+        padding: 10px;
+      }
+      .container, .panel, .uncommon-schemes-container {
+        padding: 15px;
+      }
+    }
+    @media (max-width: 480px) {
+      #uncommonSavedResultsContainer .saved-result {
+        width: 100%;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -470,7 +659,7 @@
         <button class="save-uncommon-btn" onclick="saveResult('uncommon')">保存为非常用方案</button>
       </div>
       <div class="modal-buttons">
-        <button onclick="document.getElementById('saveModal').style.display = 'none'">取消</button>
+        <button onclick="closeModal('saveModal')">取消</button>
       </div>
     </div>
   </div>
@@ -482,7 +671,7 @@
       <label for="editSchemeName">方案名称</label>
       <input type="text" id="editSchemeName" placeholder="输入方案名称...">
       <div class="modal-buttons">
-        <button onclick="document.getElementById('editNameModal').style.display = 'none'">取消</button>
+        <button onclick="closeModal('editNameModal')">取消</button>
         <button class="save-result-btn" onclick="updateSchemeName()">更新</button>
       </div>
     </div>
@@ -502,7 +691,7 @@
       <input type="number" id="playerId" placeholder="输入角色ID...">
       
       <div class="modal-buttons">
-        <button onclick="document.getElementById('addPlayerModal').style.display = 'none'">取消</button>
+        <button onclick="closeModal('addPlayerModal')">取消</button>
         <button class="save-result-btn" onclick="addPlayer()">添加</button>
       </div>
     </div>
@@ -16035,8 +16224,8 @@ const combines = {
       {id: 37508, qty: 1}
     ] 
   },
-  怪物套装Set: { 
-    name: '怪物套装', 
+  怪物饕餮Set: { 
+    name: '怪物饕餮', 
     items: [
       {id: 37088, qty: 1},
       {id: 37777, qty: 1},
@@ -16106,8 +16295,8 @@ const combines = {
       {id: 28115, qty: 1}
     ] 
   },
-  寒风刺骨套装单日充值5KSet: { 
-    name: '寒风刺骨套装　单日充值5K', 
+  寒风刺骨套装Set: { 
+    name: '寒风刺骨套装', 
     items: [
       {id: 28116, qty: 1},
       {id: 28117, qty: 1},
@@ -16343,9 +16532,6 @@ const combines = {
     let playerIds = [];
     let currentEditId = null;
     let currentEditType = null;
-    
-    // 非常用方案展示框宽度设置（可调整）
-    let uncommonSchemeWidth = 250; // 默认宽度，可根据需要修改
 
     // 显示Toast通知
     function showToast(message) {
@@ -16564,7 +16750,16 @@ const combines = {
       }
       
       document.getElementById('schemeName').value = '未命名方案';
-      document.getElementById('saveModal').style.display = 'flex';
+      const modal = document.getElementById('saveModal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
+    }
+
+    // 关闭模态框
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('show');
+      setTimeout(() => modal.style.display = 'none', 300);
     }
 
     // 保存当前结果
@@ -16589,7 +16784,7 @@ const combines = {
       localStorage.setItem('sgqg_saved_results', JSON.stringify(savedResults));
       
       updateSavedResultsPanel();
-      document.getElementById('saveModal').style.display = 'none';
+      closeModal('saveModal');
       showToast(`方案已保存为${type === 'common' ? '常用' : '非常用'}方案`);
     }
 
@@ -16619,10 +16814,7 @@ const combines = {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'saved-result';
         
-        // 设置非常用方案的宽度
-        if(type === 'uncommon') {
-          resultDiv.style.width = `${uncommonSchemeWidth}px`;
-        }
+        // 移除了固定宽度设置，现在完全由CSS控制
         
         const header = document.createElement('div');
         header.className = 'saved-result-header';
@@ -16635,7 +16827,9 @@ const combines = {
           currentEditId = result.id;
           currentEditType = type;
           document.getElementById('editSchemeName').value = result.name;
-          document.getElementById('editNameModal').style.display = 'flex';
+          const modal = document.getElementById('editNameModal');
+          modal.style.display = 'flex';
+          setTimeout(() => modal.classList.add('show'), 10);
         };
         
         const timeSpan = document.createElement('span');
@@ -16713,7 +16907,7 @@ const combines = {
         showToast('方案名称已更新');
       }
       
-      document.getElementById('editNameModal').style.display = 'none';
+      closeModal('editNameModal');
       currentEditId = null;
       currentEditType = null;
     }
@@ -16817,15 +17011,17 @@ const combines = {
         .catch(err => showToast('复制失败'));
     }
 
-    // 新增：打开添加角色对话框
+    // 打开添加角色对话框
     function openAddPlayerDialog() {
       document.getElementById('playerServer').value = '';
       document.getElementById('playerName').value = '';
       document.getElementById('playerId').value = '';
-      document.getElementById('addPlayerModal').style.display = 'flex';
+      const modal = document.getElementById('addPlayerModal');
+      modal.style.display = 'flex';
+      setTimeout(() => modal.classList.add('show'), 10);
     }
 
-    // 新增：添加角色
+    // 添加角色
     function addPlayer() {
       const server = document.getElementById('playerServer').value.trim();
       const name = document.getElementById('playerName').value.trim();
@@ -16863,11 +17059,11 @@ const combines = {
       localStorage.setItem('sgqg_player_ids', JSON.stringify(playerIds));
       
       updatePlayerIdsPanel();
-      document.getElementById('addPlayerModal').style.display = 'none';
+      closeModal('addPlayerModal');
       showToast('角色已添加');
     }
 
-    // 更新：更新角色ID面板
+    // 更新角色ID面板
     function updatePlayerIdsPanel() {
       const container = document.getElementById('playerIdsContainer');
       container.innerHTML = '';
@@ -16894,7 +17090,7 @@ const combines = {
       });
     }
 
-    // 新增：删除角色
+    // 删除角色
     function deletePlayer(event, playerId) {
       event.stopPropagation(); // 阻止事件冒泡
       
@@ -16933,13 +17129,6 @@ const combines = {
         }
       }
       
-      // 加载非常用方案宽度设置
-      const savedWidth = localStorage.getItem('uncommonSchemeWidth');
-      if (savedWidth) {
-        adjustUncommonWidth(savedWidth);
-        document.getElementById('uncommonWidthControl').value = savedWidth;
-      }
-      
       document.getElementById('itemList').style.display = 'none';
       document.getElementById('combineList').style.display = 'none';
       
@@ -16957,7 +17146,7 @@ const combines = {
       modals.forEach(modal => {
         modal.addEventListener('click', function(e) {
           if (e.target === this) {
-            this.style.display = 'none';
+            closeModal(this.id);
           }
         });
       });
