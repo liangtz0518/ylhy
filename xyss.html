@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>资源申请助手</title>
+  <title>逍遥蜀山</title>
   <style>
     * {
       margin: 0;
@@ -630,6 +630,11 @@
     #tab2-content .help-text p:last-child {
       margin-bottom: 0;
     }
+#tab2-content .modal-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+}
     
     @keyframes slideIn {
       from {
@@ -710,7 +715,7 @@
 
 <div class="tabs-container">
   <div class="tabs">
-    <div class="tab active" data-tab="tab1">【逍遥蜀山】价格道具</div>
+    <div class="tab active" data-tab="tab1">【逍遥蜀山】道具筛查</div>
     <div class="tab" data-tab="tab2">【逍遥蜀山】资源申请</div>
   </div>
   
@@ -794,10 +799,15 @@
                 </div>
                 
                 <div class="action-group">
-                    <div class="action-group-title">常用方案</div>
-                    <button class="btn" onclick="openPackageModal('单日500')"><i class="fas fa-calendar-day"></i> 单日500</button>
-                    <button class="btn" onclick="openPackageModal('单日1000')"><i class="fas fa-calendar-day"></i> 单日1000</button>
-                    <button class="btn" onclick="openPackageModal('单日3000')"><i class="fas fa-calendar-day"></i> 单日3000</button>
+                    <div class="action-group-title">单日累充</div>
+                    <button class="btn" onclick="openPackageModal('第1天礼包')"><i class="fas fa-calendar-day"></i> 第1天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第2天礼包')"><i class="fas fa-calendar-day"></i> 第2天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第3天礼包')"><i class="fas fa-calendar-day"></i> 第3天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第4天礼包')"><i class="fas fa-calendar-day"></i> 第4天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第5天礼包')"><i class="fas fa-calendar-day"></i> 第5天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第6天礼包')"><i class="fas fa-calendar-day"></i> 第6天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第7天礼包')"><i class="fas fa-calendar-day"></i> 第7天礼包</button>
+                    <button class="btn" onclick="openPackageModal('第8天及以后礼包')"><i class="fas fa-calendar-day"></i> 第8天及以后礼包</button>
                     <button class="btn btn-outline" onclick="clearItems()"><i class="fas fa-trash"></i> 清空道具</button>
                 </div>
                 
@@ -1258,66 +1268,2100 @@ filterItems();
 // ====================== 第二个标签页 - 逍遥蜀山功能代码 ======================
 // 道具数据库
 const itemDatabase = [
-    {id: "17001", name: "绿模组-火控模组", category: ""},
-    {id: "17002", name: "蓝模组-火控模组", category: ""},
-    {id: "17003", name: "紫模组-火控模组", category: ""},
-    {id: "30507", name: "盛世华诞-庐山", category: ""}
+            {id: "38198", name: "定制称号", category: ""},
+            {id: "38199", name: "定制大称号", category: ""},
+            {id: "38200", name: "定制豪华称号", category: ""},
+            {id: "26001", name: "逍遥币", category: ""},
+            {id: "21102", name: "十方俱灭", category: ""},
+            {id: "30468", name: "神威圣枪", category: ""},
+            {id: "30467", name: "丈八神矛", category: ""},
+            {id: "30466", name: "赤壁神剑", category: ""},
+            {id: "30465", name: "虎威神锤", category: ""},
+            {id: "30475", name: "闭月之杖", category: ""},
+            {id: "30472", name: "青龙圣斧", category: ""},
+            {id: "30476", name: "三尖两刃", category: ""},
+            {id: "30471", name: "厄运魔琴", category: ""},
+            {id: "30469", name: "玲珑圣伞", category: ""},
+            {id: "30464", name: "狂吼王斧", category: ""},
+            {id: "30463", name: "追魂圣枪", category: ""},
+            {id: "30462", name: "清源圣仪", category: ""},
+            {id: "30426", name: "真君杨戬", category: ""},
+            {id: "30421", name: "九尾魅魔", category: ""},
+            {id: "30419", name: "真龙仙子", category: ""},
+            {id: "30414", name: "狮王大圣", category: ""},
+            {id: "30413", name: "极西神使", category: ""},
+            {id: "30412", name: "清源圣君", category: ""},
+            {id: "30411", name: "青羽真人", category: ""},
+            {id: "30410", name: "神魔双生", category: ""},
+            {id: "30409", name: "赤练仙子", category: ""},
+            {id: "30408", name: "赤阳真君", category: ""},
+            {id: "30692", name: "绝地暗语涂装", category: ""},
+            {id: "30691", name: "绝地钛晶涂装", category: ""},
+            {id: "30690", name: "绝地金属涂装", category: ""},
+            {id: "30689", name: "绝地星云涂装", category: ""},
+            {id: "30688", name: "绝地武士", category: ""},
+            {id: "30111", name: "血影暗语涂装", category: ""},
+            {id: "30110", name: "血影钛晶涂装", category: ""},
+            {id: "30109", name: "血影金属涂装", category: ""},
+            {id: "30108", name: "血影星云涂装", category: ""},
+            {id: "30107", name: "血影战神", category: ""},
+            {id: "30808", name: "苍隼暗语涂装", category: ""},
+            {id: "30807", name: "苍隼钛晶涂装", category: ""},
+            {id: "30806", name: "苍隼金属涂装", category: ""},
+            {id: "30805", name: "苍隼星云涂装", category: ""},
+            {id: "30804", name: "苍隼驰风", category: ""},
+            {id: "28820", name: "绯红暗语涂装", category: ""},
+            {id: "28819", name: "绯红钛晶涂装", category: ""},
+            {id: "28818", name: "绯红金属涂装", category: ""},
+            {id: "28817", name: "绯红星云涂装", category: ""},
+            {id: "28816", name: "绯红锋刃", category: ""},
+            {id: "29092", name: "拘灵遣将-拘灵遣将・仙", category: ""},
+            {id: "29093", name: "拘灵遣将-拘灵遣将・神", category: ""},
+            {id: "29094", name: "拘灵遣将-拘灵遣将・妖", category: ""},
+            {id: "29095", name: "拘灵遣将-拘灵遣将・魔", category: ""},
+            {id: "29096", name: "拘灵遣将-拘灵遣将・鬼", category: ""},
+            {id: "28976", name: "大罗洞观-大罗洞观・天", category: ""},
+            {id: "28977", name: "大罗洞观-大罗洞观・地", category: ""},
+            {id: "28978", name: "大罗洞观-大罗洞观・玄", category: ""},
+            {id: "28979", name: "大罗洞观-大罗洞观・黄", category: ""},
+            {id: "28980", name: "大罗洞观-大罗洞观・人", category: ""},
+            {id: "30019", name: "素雪银装-素雪银装・霜", category: ""},
+            {id: "30020", name: "素雪银装-素雪银装・寒", category: ""},
+            {id: "30021", name: "素雪银装-素雪银装・凇", category: ""},
+            {id: "30022", name: "素雪银装-素雪银装・寂", category: ""},
+            {id: "30023", name: "素雪银装-素雪银装・飘", category: ""},
+            {id: "29097", name: "炁体源流-炁体源流・金", category: ""},
+            {id: "29098", name: "炁体源流-炁体源流・木", category: ""},
+            {id: "29099", name: "炁体源流-炁体源流・水", category: ""},
+            {id: "29100", name: "炁体源流-炁体源流・火", category: ""},
+            {id: "29101", name: "炁体源流-炁体源流・土", category: ""},
+            {id: "29195", name: "枫林醉秋-枫林醉秋・晚", category: ""},
+            {id: "29196", name: "枫林醉秋-枫林醉秋・霞", category: ""},
+            {id: "29197", name: "枫林醉秋-枫林醉秋・落", category: ""},
+            {id: "29198", name: "枫林醉秋-枫林醉秋・叶", category: ""},
+            {id: "29199", name: "枫林醉秋-枫林醉秋・纷", category: ""},
+            {id: "30825", name: "幽邃深空-幽邃深空・暗", category: ""},
+            {id: "30826", name: "幽邃深空-幽邃深空・光", category: ""},
+            {id: "30827", name: "幽邃深空-幽邃深空・尘", category: ""},
+            {id: "30828", name: "幽邃深空-幽邃深空・云", category: ""},
+            {id: "30829", name: "幽邃深空-幽邃深空・柱", category: ""},
+            {id: "29190", name: "盛夏时光-盛夏时光・炎", category: ""},
+            {id: "29191", name: "盛夏时光-盛夏时光・阳", category: ""},
+            {id: "29192", name: "盛夏时光-盛夏时光・荷", category: ""},
+            {id: "29193", name: "盛夏时光-盛夏时光・蝉", category: ""},
+            {id: "29194", name: "盛夏时光-盛夏时光・萤火", category: ""},
+            {id: "30024", name: "幻灵魅影-幻灵魅影・仙", category: ""},
+            {id: "30025", name: "幻灵魅影-幻灵魅影・神", category: ""},
+            {id: "30026", name: "幻灵魅影-幻灵魅影・圣", category: ""},
+            {id: "30027", name: "幻灵魅影-幻灵魅影・影", category: ""},
+            {id: "30028", name: "幻灵魅影-幻灵魅影・迷", category: ""},
+            {id: "29185", name: "鲸域万里-鲸域万里・乘风", category: ""},
+            {id: "29186", name: "鲸域万里-鲸域万里・破浪", category: ""},
+            {id: "29187", name: "鲸域万里-鲸域万里・空游", category: ""},
+            {id: "29188", name: "鲸域万里-鲸域万里・入渊", category: ""},
+            {id: "29189", name: "鲸域万里-鲸域万里・凌霄", category: ""},
+            {id: "29200", name: "闪电皮卡丘-闪电皮卡・仙", category: ""},
+            {id: "29201", name: "闪电皮卡丘-闪电皮卡・神", category: ""},
+            {id: "29202", name: "闪电皮卡丘-闪电皮卡・圣", category: ""},
+            {id: "29203", name: "闪电皮卡丘-闪电皮卡・影", category: ""},
+            {id: "29204", name: "闪电皮卡丘-闪电皮卡・迷", category: ""},
+            {id: "30747", name: "彼岸花开-彼岸花・烬雪", category: ""},
+            {id: "30748", name: "彼岸花开-彼岸花・浮灯", category: ""},
+            {id: "30749", name: "彼岸花开-彼岸花・画骨", category: ""},
+            {id: "30750", name: "彼岸花开-彼岸花・空蝉", category: ""},
+            {id: "30751", name: "彼岸花开-彼岸花・薄暮", category: ""},
+            {id: "29338", name: "鬼影重重-鬼影重重・邪", category: ""},
+            {id: "29339", name: "鬼影重重-鬼影重重・恶", category: ""},
+            {id: "29340", name: "鬼影重重-鬼影重重・魔", category: ""},
+            {id: "29341", name: "鬼影重重-鬼影重重・幽", category: ""},
+            {id: "29342", name: "鬼影重重-鬼影重重・冥", category: ""},
+            {id: "30673", name: "佛怒炎莲-佛怒・悟莲", category: ""},
+            {id: "30674", name: "佛怒炎莲-佛怒・慧莲", category: ""},
+            {id: "30675", name: "佛怒炎莲-佛怒・慈莲", category: ""},
+            {id: "30676", name: "佛怒炎莲-佛怒・执莲", category: ""},
+            {id: "30677", name: "佛怒炎莲-佛怒・韧莲", category: ""},
+            {id: "29333", name: "打狗棍法-打狗棍・意", category: ""},
+            {id: "29334", name: "打狗棍法-打狗棍・形", category: ""},
+            {id: "29335", name: "打狗棍法-打狗棍・神", category: ""},
+            {id: "29336", name: "打狗棍法-打狗棍・蕴", category: ""},
+            {id: "29337", name: "打狗棍法-打狗棍・魂", category: ""},
+            {id: "30668", name: "通天神篆-神篆・玄灵真咒", category: ""},
+            {id: "30669", name: "通天神篆-神篆・金光神咒", category: ""},
+            {id: "30670", name: "通天神篆-神篆・净天地咒", category: ""},
+            {id: "30671", name: "通天神篆-神篆・祝香神咒", category: ""},
+            {id: "30672", name: "通天神篆-神篆・破地狱咒", category: ""},
+            {id: "29358", name: "万紫千红-万紫千红・五彩", category: ""},
+            {id: "29359", name: "万紫千红-万紫千红・斑斓", category: ""},
+            {id: "29360", name: "万紫千红-万紫千红・五色", category: ""},
+            {id: "29361", name: "万紫千红-万紫千红・缤纷", category: ""},
+            {id: "29362", name: "万紫千红-万紫千红・多彩", category: ""},
+            {id: "29353", name: "七宝琉璃塔-七宝琉璃塔・光", category: ""},
+            {id: "29354", name: "七宝琉璃塔-七宝琉璃塔・璃", category: ""},
+            {id: "29355", name: "七宝琉璃塔-七宝琉璃塔・层", category: ""},
+            {id: "29356", name: "七宝琉璃塔-七宝琉璃塔・供", category: ""},
+            {id: "29357", name: "七宝琉璃塔-七宝琉璃塔・宝", category: ""},
+            {id: "29348", name: "大风刮钱-大风刮钱・英镑", category: ""},
+            {id: "29349", name: "大风刮钱-大风刮钱・美刀", category: ""},
+            {id: "29350", name: "大风刮钱-大风刮钱・法郎", category: ""},
+            {id: "29351", name: "大风刮钱-大风刮钱・卢布", category: ""},
+            {id: "29352", name: "大风刮钱-大风刮钱・马克", category: ""},
+            {id: "30678", name: "鸡你太美-鸡你太美・唱", category: ""},
+            {id: "30679", name: "鸡你太美-鸡你太美・跳", category: ""},
+            {id: "30680", name: "鸡你太美-鸡你太美・约", category: ""},
+            {id: "30681", name: "鸡你太美-鸡你太美・噗", category: ""},
+            {id: "30682", name: "鸡你太美-鸡你太美・球", category: ""},
+            {id: "29328", name: "鱼跃龙门-鱼跃龙门・蓝", category: ""},
+            {id: "29329", name: "鱼跃龙门-鱼跃龙门・绿", category: ""},
+            {id: "29330", name: "鱼跃龙门-鱼跃龙门・紫", category: ""},
+            {id: "29331", name: "鱼跃龙门-鱼跃龙门・橙", category: ""},
+            {id: "29332", name: "鱼跃龙门-鱼跃龙门・红", category: ""},
+            {id: "29363", name: "加班狗-加班狗・无偿", category: ""},
+            {id: "29364", name: "加班狗-加班狗・工作", category: ""},
+            {id: "29365", name: "加班狗-加班狗・背包", category: ""},
+            {id: "29366", name: "加班狗-加班狗・猪脚饭", category: ""},
+            {id: "29367", name: "加班狗-加班狗・快乐水", category: ""},
+            {id: "29500", name: "血影烛龙-血影烛龙・龙骨", category: ""},
+            {id: "29501", name: "血影烛龙-血影烛龙・龙珠", category: ""},
+            {id: "29502", name: "血影烛龙-血影烛龙・龙鳞", category: ""},
+            {id: "29503", name: "血影烛龙-血影烛龙・龙角", category: ""},
+            {id: "29504", name: "血影烛龙-血影烛龙・龙尾", category: ""},
+            {id: "29268", name: "雪翼冰鸢-雪翼冰鸢・疾风", category: ""},
+            {id: "29269", name: "雪翼冰鸢-雪翼冰鸢・吉祥", category: ""},
+            {id: "29270", name: "雪翼冰鸢-雪翼冰鸢・云隐", category: ""},
+            {id: "29271", name: "雪翼冰鸢-雪翼冰鸢・翠羽", category: ""},
+            {id: "29272", name: "雪翼冰鸢-雪翼冰鸢・愈羽", category: ""},
+            {id: "29253", name: "虚空幻龙-虚空幻龙・炎狱", category: ""},
+            {id: "29254", name: "虚空幻龙-虚空幻龙・风啸", category: ""},
+            {id: "29255", name: "虚空幻龙-虚空幻龙・焰霜", category: ""},
+            {id: "29256", name: "虚空幻龙-虚空幻龙・圣光", category: ""},
+            {id: "29257", name: "虚空幻龙-虚空幻龙・绮织", category: ""},
+            {id: "29520", name: "红莲狱龙-红莲狱龙・角", category: ""},
+            {id: "29521", name: "红莲狱龙-红莲狱龙・鳞", category: ""},
+            {id: "29522", name: "红莲狱龙-红莲狱龙・爪", category: ""},
+            {id: "29523", name: "红莲狱龙-红莲狱龙・骨", category: ""},
+            {id: "29524", name: "红莲狱龙-红莲狱龙・珠", category: ""},
+            {id: "29515", name: "金猪献财-金猪献财・金砖", category: ""},
+            {id: "29516", name: "金猪献财-金猪献财・金条", category: ""},
+            {id: "29517", name: "金猪献财-金猪献财・金珠", category: ""},
+            {id: "29518", name: "金猪献财-金猪献财・金币", category: ""},
+            {id: "29519", name: "金猪献财-金猪献财・金像", category: ""},
+            {id: "29510", name: "琵琶舞女-琵琶舞女・古典", category: ""},
+            {id: "29511", name: "琵琶舞女-琵琶舞女・浪漫", category: ""},
+            {id: "29512", name: "琵琶舞女-琵琶舞女・爵士", category: ""},
+            {id: "29513", name: "琵琶舞女-琵琶舞女・流行", category: ""},
+            {id: "29514", name: "琵琶舞女-琵琶舞女・民族", category: ""},
+            {id: "29248", name: "鎏金神龙-鎏金神龙・金魂", category: ""},
+            {id: "29249", name: "鎏金神龙-鎏金神龙・木灵", category: ""},
+            {id: "29250", name: "鎏金神龙-鎏金神龙・水意", category: ""},
+            {id: "29251", name: "鎏金神龙-鎏金神龙・火根", category: ""},
+            {id: "29252", name: "鎏金神龙-鎏金神龙・土魄", category: ""},
+            {id: "29258", name: "苍穹霸主-苍穹霸主・龙角", category: ""},
+            {id: "29259", name: "苍穹霸主-苍穹霸主・龙肩", category: ""},
+            {id: "29260", name: "苍穹霸主-苍穹霸主・龙盔", category: ""},
+            {id: "29261", name: "苍穹霸主-苍穹霸主・龙甲", category: ""},
+            {id: "29262", name: "苍穹霸主-苍穹霸主・龙鳞", category: ""},
+            {id: "29263", name: "元素圣裁-元素圣裁・龙角", category: ""},
+            {id: "29264", name: "元素圣裁-元素圣裁・龙肩", category: ""},
+            {id: "29265", name: "元素圣裁-元素圣裁・龙盔", category: ""},
+            {id: "29266", name: "元素圣裁-元素圣裁・龙甲", category: ""},
+            {id: "29267", name: "元素圣裁-元素圣裁・龙鳞", category: ""},
+            {id: "29243", name: "寒冰霜翼-寒冰霜翼・龙骨", category: ""},
+            {id: "29244", name: "寒冰霜翼-寒冰霜翼・龙珠", category: ""},
+            {id: "29245", name: "寒冰霜翼-寒冰霜翼・龙背", category: ""},
+            {id: "29246", name: "寒冰霜翼-寒冰霜翼・龙爪", category: ""},
+            {id: "29247", name: "寒冰霜翼-寒冰霜翼・龙角", category: ""},
+            {id: "30220", name: "定制传闻・红桃杰克-红桃杰克：上线", category: ""},
+            {id: "30221", name: "定制传闻・红桃杰克-红桃杰克：进图", category: ""},
+            {id: "30222", name: "定制传闻・红桃杰克-红桃杰克：击杀", category: ""},
+            {id: "30223", name: "定制传闻・红桃杰克-红桃杰克：喇叭", category: ""},
+            {id: "30231", name: "定制传闻・红桃杰克-红桃杰克：名片", category: ""},
+            {id: "30216", name: "定制传闻・智周万物-智周万物：上线", category: ""},
+            {id: "30217", name: "定制传闻・智周万物-智周万物：进图", category: ""},
+            {id: "30218", name: "定制传闻・智周万物-智周万物：击杀", category: ""},
+            {id: "30219", name: "定制传闻・智周万物-智周万物：喇叭", category: ""},
+            {id: "30230", name: "定制传闻・智周万物-智周万物：名片", category: ""},
+            {id: "30224", name: "定制传闻・嫦娥奔月-嫦娥奔月：上线", category: ""},
+            {id: "30225", name: "定制传闻・嫦娥奔月-嫦娥奔月：进图", category: ""},
+            {id: "30226", name: "定制传闻・嫦娥奔月-嫦娥奔月：击杀", category: ""},
+            {id: "30227", name: "定制传闻・嫦娥奔月-嫦娥奔月：喇叭", category: ""},
+            {id: "30232", name: "定制传闻・嫦娥奔月-嫦娥奔月：名片", category: ""},
+            {id: "30212", name: "定制传闻・神龙降世-神龙降世：上线", category: ""},
+            {id: "30213", name: "定制传闻・神龙降世-神龙降世：进图", category: ""},
+            {id: "30214", name: "定制传闻・神龙降世-神龙降世：击杀", category: ""},
+            {id: "30215", name: "定制传闻・神龙降世-神龙降世：喇叭", category: ""},
+            {id: "30229", name: "定制传闻・神龙降世-神龙降世：名片", category: ""},
+            {id: "20881", name: "帝藏・炼狱三首-炼狱三首", category: ""},
+            {id: "21553", name: "帝藏・炼狱三首-炼狱三首・衣", category: ""},
+            {id: "21447", name: "帝藏・炼狱三首-炼狱三首・武", category: ""},
+            {id: "21069", name: "帝藏・炼狱三首-炼狱三首・羽翼", category: ""},
+            {id: "21262", name: "帝藏・炼狱三首-炼狱三首・法宝", category: ""},
+            {id: "21933", name: "帝藏・炼狱三首-炼狱三首・光环", category: ""},
+            {id: "21823", name: "帝藏・炼狱三首-炼狱三首・足迹", category: ""},
+            {id: "20880", name: "帝藏・紫霄天凰-紫霄天凰", category: ""},
+            {id: "21552", name: "帝藏・紫霄天凰-紫霄天凰・衣", category: ""},
+            {id: "21446", name: "帝藏・紫霄天凰-紫霄天凰・武", category: ""},
+            {id: "21068", name: "帝藏・紫霄天凰-紫霄天凰・羽翼", category: ""},
+            {id: "21261", name: "帝藏・紫霄天凰-紫霄天凰・法宝", category: ""},
+            {id: "21932", name: "帝藏・紫霄天凰-紫霄天凰・光环", category: ""},
+            {id: "21806", name: "帝藏・紫霄天凰-紫霄天凰・足迹", category: ""},
+            {id: "21544", name: "帝藏・赤焰魔龙-赤焰魔龙・衣", category: ""},
+            {id: "21441", name: "帝藏・赤焰魔龙-赤焰魔龙・武", category: ""},
+            {id: "21058", name: "帝藏・赤焰魔龙-赤焰魔龙・羽翼", category: ""},
+            {id: "21245", name: "帝藏・赤焰魔龙-赤焰魔龙・法宝", category: ""},
+            {id: "22137", name: "帝藏・赤焰魔龙-赤焰魔龙・腰饰", category: ""},
+            {id: "20844", name: "帝藏・天下第一-天下至尊", category: ""},
+            {id: "21536", name: "帝藏・天下第一-天下至尊・衣", category: ""},
+            {id: "21433", name: "帝藏・天下第一-天下至尊・武", category: ""},
+            {id: "21046", name: "帝藏・天下第一-天下至尊・羽翼", category: ""},
+            {id: "21241", name: "帝藏・天下第一-天下至尊・法宝", category: ""},
+            {id: "22027", name: "帝藏・天下第一-天下至尊・面饰", category: ""},
+            {id: "30415", name: "帝藏・许褚-虎痴许褚", category: ""},
+            {id: "29377", name: "帝藏・许褚-许褚战魂", category: ""},
+            {id: "21522", name: "帝藏・许褚-虎痴许褚・衣", category: ""},
+            {id: "21421", name: "帝藏・许褚-虎痴许褚・武", category: ""},
+            {id: "21225", name: "帝藏・许褚-虎威天将・法宝", category: ""},
+            {id: "22008", name: "帝藏・许褚-虎痴许褚・面饰", category: ""},
+            {id: "30425", name: "帝藏・貂蝉-倾世貂蝉", category: ""},
+            {id: "29379", name: "帝藏・貂蝉-貂蝉圣魂", category: ""},
+            {id: "21508", name: "帝藏・貂蝉-倾世貂蝉・衣", category: ""},
+            {id: "21408", name: "帝藏・貂蝉-倾世貂蝉・武", category: ""},
+            {id: "21220", name: "帝藏・貂蝉-倾世貂蝉・法宝", category: ""},
+            {id: "22142", name: "帝藏・貂蝉-倾世貂蝉・腰饰", category: ""},
+            {id: "22117", name: "帝藏・赌王-赌王争霸・腰饰", category: ""},
+            {id: "21521", name: "帝藏・赌王-赌王争霸・衣", category: ""},
+            {id: "21420", name: "帝藏・赌王-赌王争霸・武", category: ""},
+            {id: "21224", name: "帝藏・赌王-赌王争霸・法宝", category: ""},
+            {id: "21031", name: "帝藏・赌王-赌王争霸・羽翼", category: ""},
+            {id: "20834", name: "帝藏・赌王-赌王争霸", category: ""},
+            {id: "30418", name: "帝藏・马超-西凉马超", category: ""},
+            {id: "29378", name: "帝藏・马超-马超神魂", category: ""},
+            {id: "21523", name: "帝藏・马超-西凉马超・衣", category: ""},
+            {id: "21422", name: "帝藏・马超-西凉马超・武", category: ""},
+            {id: "21226", name: "帝藏・马超-西凉先锋・法宝", category: ""},
+            {id: "22120", name: "帝藏・马超-西凉马超・腰饰", category: ""},
+            {id: "20885", name: "帝藏・天渊飞龙-天渊飞龙", category: ""},
+            {id: "21547", name: "帝藏・天渊飞龙-天渊飞龙・衣", category: ""},
+            {id: "21444", name: "帝藏・天渊飞龙-天渊飞龙・武", category: ""},
+            {id: "21063", name: "帝藏・天渊飞龙-天渊飞龙・羽翼", category: ""},
+            {id: "21250", name: "帝藏・天渊飞龙-天渊飞龙・法宝", category: ""},
+            {id: "22047", name: "帝藏・天渊飞龙-天渊飞龙・面具", category: ""},
+            {id: "30417", name: "帝藏・张飞-当阳张飞", category: ""},
+            {id: "29376", name: "帝藏・张飞-张飞神魂", category: ""},
+            {id: "21520", name: "帝藏・张飞-当阳张飞・衣", category: ""},
+            {id: "21419", name: "帝藏・张飞-当阳张飞・武", category: ""},
+            {id: "21223", name: "帝藏・张飞-当阳张飞・法宝", category: ""},
+            {id: "22116", name: "帝藏・张飞-当阳神威・腰饰", category: ""},
+            {id: "20833", name: "帝藏・帝豪私享-帝豪私享", category: ""},
+            {id: "21418", name: "帝藏・帝豪私享-帝豪私享・武", category: ""},
+            {id: "21519", name: "帝藏・帝豪私享-帝豪私享・衣", category: ""},
+            {id: "21030", name: "帝藏・帝豪私享-帝豪私享・羽翼", category: ""},
+            {id: "21222", name: "帝藏・帝豪私享-帝豪私享・法宝", category: ""},
+            {id: "22115", name: "帝藏・帝豪私享-帝豪私享・腰饰", category: ""},
+            {id: "21246", name: "智械危机-智械危机・法宝", category: ""},
+            {id: "22044", name: "智械危机-智械危机・面饰", category: ""},
+            {id: "21545", name: "智械危机-智械危机・衣", category: ""},
+            {id: "21442", name: "智械危机-智械危机・武", category: ""},
+            {id: "21059", name: "智械危机-智械危机・羽翼", category: ""},
+            {id: "20972", name: "智械危机-智械危机", category: ""},
+            {id: "22104", name: "合金弹头-合金弹头・腰饰", category: ""},
+            {id: "21200", name: "合金弹头-合金弹头・法宝", category: ""},
+            {id: "21001", name: "合金弹头-合金弹头・羽翼", category: ""},
+            {id: "21501", name: "合金弹头-合金弹头・衣", category: ""},
+            {id: "21401", name: "合金弹头-合金弹头・武", category: ""},
+            {id: "20804", name: "合金弹头-合金装甲", category: ""},
+            {id: "22053", name: "碧霄龙君-碧霄龙君・面具", category: ""},
+            {id: "21511", name: "碧霄龙君-碧霄龙君・衣", category: ""},
+            {id: "21410", name: "碧霄龙君-碧霄龙君・武", category: ""},
+            {id: "21073", name: "碧霄龙君-碧霄龙君・羽翼", category: ""},
+            {id: "21277", name: "碧霄龙君-碧霄龙君・法宝", category: ""},
+            {id: "20882", name: "碧霄龙君-碧霄龙君", category: ""},
+            {id: "21039", name: "动物乐园-童年礼物", category: ""},
+            {id: "20813", name: "动物乐园-闪电小貂", category: ""},
+            {id: "21010", name: "动物乐园-花香满翼", category: ""},
+            {id: "21209", name: "动物乐园-九雪环佩", category: ""},
+            {id: "28821", name: "【机甲】幻影流光-幻影流光", category: ""},
+            {id: "30693", name: "莱因哈特", category: ""},
+            {id: "23651", name: "1W仙玉", category: ""},
+            {id: "33007", name: "装备套装石*1", category: ""},
+            {id: "20820", name: "荒古凶兽", category: ""},
+            {id: "20829", name: "紫翼仙鸾", category: ""},
+            {id: "20839", name: "玄天狮鹫", category: ""},
+            {id: "21324", name: "八转乾坤", category: ""},
+            {id: "21040", name: "八荒镇魔", category: ""},
+            {id: "21006", name: "幽冥骨翼", category: ""},
+            {id: "21020", name: "洪荒骨翼", category: ""},
+            {id: "21219", name: "青龙护符", category: ""},
+            {id: "21229", name: "圣皇龙杯", category: ""},
+            {id: "21203", name: "天降甘霖", category: ""},
+            {id: "21314", name: "赤刃噬魂", category: ""},
+            {id: "21308", name: "暗藏杀机", category: ""},
+            {id: "29154", name: "真灵丹", category: ""},
+            {id: "29171", name: "真武灵丹", category: ""},
+            {id: "29176", name: "太祖丹灵", category: ""},
+            {id: "29157", name: "轮回丹", category: ""},
+            {id: "29159", name: "玄冰魔丹", category: ""},
+            {id: "29172", name: "玄元丹灵", category: ""},
+            {id: "29155", name: "菩提丹", category: ""},
+            {id: "29160", name: "赤火真丹", category: ""},
+            {id: "29178", name: "太初丹灵", category: ""},
+            {id: "29156", name: "涅槃丹", category: ""},
+            {id: "29161", name: "罗刹内丹", category: ""},
+            {id: "29179", name: "封神丹灵", category: ""},
+            {id: "26325", name: "8级长生宝石", category: ""},
+            {id: "26326", name: "9级长生宝石", category: ""},
+            {id: "26327", name: "10级长生宝石", category: ""},
+            {id: "26315", name: "8级攻击宝石", category: ""},
+            {id: "26316", name: "9级攻击宝石", category: ""},
+            {id: "26317", name: "10级攻击宝石", category: ""},
+            {id: "30212", name: "神龙降世-神龙降世：上线", category: ""},
+            {id: "30213", name: "神龙降世-神龙降世：进图", category: ""},
+            {id: "30214", name: "神龙降世-神龙降世：击杀", category: ""},
+            {id: "30215", name: "神龙降世-神龙降世：喇叭", category: ""},
+            {id: "30229", name: "神龙降世-神龙降世：名片", category: ""},
+            {id: "29520", name: "红莲狱龙-红莲狱龙・角", category: ""},
+            {id: "29521", name: "红莲狱龙-红莲狱龙・鳞", category: ""},
+            {id: "29522", name: "红莲狱龙-红莲狱龙・爪", category: ""},
+            {id: "29523", name: "红莲狱龙-红莲狱龙・骨", category: ""},
+            {id: "29524", name: "红莲狱龙-红莲狱龙・珠", category: ""},
+            {id: "22117", name: "赌王争霸-赌王争霸・腰饰", category: ""},
+            {id: "21521", name: "赌王争霸-赌王争霸・衣", category: ""},
+            {id: "21420", name: "赌王争霸-赌王争霸・武", category: ""},
+            {id: "21224", name: "赌王争霸-赌王争霸・法宝", category: ""},
+            {id: "21031", name: "赌王争霸-赌王争霸・羽翼", category: ""},
+            {id: "20834", name: "赌王争霸-赌王争霸", category: ""},
+            {id: "30425", name: "倾世貂蝉-倾世貂蝉", category: ""},
+            {id: "29379", name: "倾世貂蝉-貂蝉圣魂", category: ""},
+            {id: "21508", name: "倾世貂蝉-倾世貂蝉・衣", category: ""},
+            {id: "21408", name: "倾世貂蝉-倾世貂蝉・武", category: ""},
+            {id: "21220", name: "倾世貂蝉-倾世貂蝉・法宝", category: ""},
+            {id: "22142", name: "倾世貂蝉-倾世貂蝉・腰饰", category: ""},
+            {id: "29263", name: "元素圣裁-元素圣裁・龙角", category: ""},
+            {id: "29264", name: "元素圣裁-元素圣裁・龙肩", category: ""},
+            {id: "29265", name: "元素圣裁-元素圣裁・龙盔", category: ""},
+            {id: "29266", name: "元素圣裁-元素圣裁・龙甲", category: ""},
+            {id: "29267", name: "元素圣裁-元素圣裁・龙鳞", category: ""},
+            {id: "30678", name: "鸡你太美-鸡你太美・唱", category: ""},
+            {id: "30679", name: "鸡你太美-鸡你太美・跳", category: ""},
+            {id: "30680", name: "鸡你太美-鸡你太美・约", category: ""},
+            {id: "30681", name: "鸡你太美-鸡你太美・噗", category: ""},
+            {id: "30682", name: "鸡你太美-鸡你太美・球", category: ""},
+            {id: "29515", name: "金猪献财-金猪献财・金砖", category: ""},
+            {id: "29516", name: "金猪献财-金猪献财・金条", category: ""},
+            {id: "29517", name: "金猪献财-金猪献财・金珠", category: ""},
+            {id: "29518", name: "金猪献财-金猪献财・金币", category: ""},
+            {id: "29519", name: "金猪献财-金猪献财・金像", category: ""},
+            {id: "29258", name: "苍穹霸主-苍穹霸主・龙角", category: ""},
+            {id: "29259", name: "苍穹霸主-苍穹霸主・龙肩", category: ""},
+            {id: "29260", name: "苍穹霸主-苍穹霸主・龙盔", category: ""},
+            {id: "29261", name: "苍穹霸主-苍穹霸主・龙甲", category: ""},
+            {id: "29262", name: "苍穹霸主-苍穹霸主・龙鳞", category: ""},
+            {id: "20843", name: "青龙现世-青龙现世", category: ""},
+            {id: "21535", name: "青龙现世-青龙现世・衣", category: ""},
+            {id: "21432", name: "青龙现世-青龙现世・武", category: ""},
+            {id: "21045", name: "青龙现世-青龙现世・羽翼", category: ""},
+            {id: "21319", name: "青龙现世-青龙现世・剑灵", category: ""},
+            {id: "30422", name: "青龙现世-青龙尊者", category: ""},
+            {id: "21239", name: "青龙现世-青龙现世・法宝", category: ""},
+            {id: "29318", name: "青龙现世-青龙现世・罩", category: ""}
 ];
 
 // 套装数据库
 const packageDatabase = {
-    "单日500": [
-        {
-            id: "5001",
-            name: "佛怒炎莲",
-            description: "单日500额外返利选神通-佛怒炎莲",
-            items: [
-                {id: "26001", name: "万能仙币", quantity: 50000},
-                {id: "23027", name: "1000元真充卡", quantity: 10},
-                {id: "23651", name: "10000仙玉卡", quantity: 10},
-                {id: "29333", name: "佛·悟莲", quantity: 1},
-                {id: "29334", name: "佛·慧莲", quantity: 1},
-                {id: "29335", name: "佛·慈莲", quantity: 1},
-                {id: "29336", name: "佛·执莲", quantity: 1},
-                {id: "29337", name: "佛·韧莲", quantity: 1}
-            ]
-        },
+    "第1天礼包": [
+{
+"id": "130",
+"name": "第 1 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "160",
+"name": "第 1 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26274", "name": "坐骑进阶丹", "quantity": 100 },
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 4 },
+{ "id": "26300", "name": "坐骑技能书", "quantity": 2 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 2 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 2 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 2 }
+]
+},
+{
+"id": "198",
+"name": "第 1 天 - 98",
+"description": "",
+"items": [
+{ "id": "26274", "name": "坐骑进阶丹", "quantity": 200 },
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 8 },
+{ "id": "26300", "name": "坐骑技能书", "quantity": 2 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 4 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 4 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "1128",
+"name": "第 1 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "1198",
+"name": "第 1 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "1300",
+"name": "第 1 天 - 300",
+"description": "",
+"items": [
+{ "id": "26300", "name": "坐骑技能书", "quantity": 4 },
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 40 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 8 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 8 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "1500",
+"name": "第 1 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "1700",
+"name": "第 1 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "11000",
+"name": "第 1 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 100 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 16 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 16 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "12000",
+"name": "第 1 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "13000",
+"name": "第 1 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "15000",
+"name": "第 1 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 200 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 32 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 32 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "110000",
+"name": "第 1 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "120000",
+"name": "第 1 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26275", "name": "坐骑祝福卡", "quantity": 1000 },
+{ "id": "26276", "name": "玄麟精魄", "quantity": 64 },
+{ "id": "26277", "name": "冥虎精魄", "quantity": 64 },
+{ "id": "26278", "name": "伏龙精魄", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
     ],
-    "单日1000": [
-        {
-            id: "10001",
-            name: "乾坤大挪移",
-            description: "单日1000额外返利选神通-乾坤大挪移",
-            items: [
-                {id: "26001", name: "万能仙币", quantity: 100000},
-                {id: "23027", name: "1000元真充卡", quantity: 20},
-                {id: "23651", name: "1万仙玉卡", quantity: 105},
-                {id: "38198", name: "1000定制称号", quantity: 1},
-                {id: "29348", name: "乾坤·第一层", quantity: 1},
-                {id: "29349", name: "乾坤·第二层", quantity: 1},
-                {id: "29350", name: "乾坤·第三层", quantity: 1},
-                {id: "29351", name: "乾坤·第四层", quantity: 1},
-                {id: "29352", name: "乾坤·第五层", quantity: 1}
-            ]
-        },
+    "第2天礼包": [
+{
+"id": "230",
+"name": "第 2 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "260",
+"name": "第 2 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "28745", "name": "初级宠物升级丹", "quantity": 100 },
+{ "id": "28746", "name": "中级宠物升级丹", "quantity": 10 },
+{ "id": "28748", "name": "宠物进阶丹", "quantity": 100 },
+{ "id": "20753", "name": "橙色宠物蛋", "quantity": 2 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 100 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 100 }
+]
+},
+{
+"id": "298",
+"name": "第 2 天 - 98",
+"description": "",
+"items": [
+{ "id": "28745", "name": "初级宠物升级丹", "quantity": 200 },
+{ "id": "28746", "name": "中级宠物升级丹", "quantity": 20 },
+{ "id": "28748", "name": "宠物进阶丹", "quantity": 100 },
+{ "id": "#N/A", "name": "橙色宠物蛋", "quantity": 4 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 100 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 100 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "2128",
+"name": "第 2 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "2198",
+"name": "第 2 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "2300",
+"name": "第 2 天 - 300",
+"description": "",
+"items": [
+{ "id": "28748", "name": "宠物进阶丹", "quantity": 200 },
+{ "id": "28746", "name": "中级宠物升级丹", "quantity": 40 },
+{ "id": "20753", "name": "橙色宠物蛋", "quantity": 8 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 200 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 200 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "2500",
+"name": "第 2 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "2700",
+"name": "第 2 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "21000",
+"name": "第 2 天 - 1000",
+"description": "",
+"items": [
+{ "id": "28746", "name": "中级宠物升级丹", "quantity": 100 },
+{ "id": "20753", "name": "橙色宠物蛋", "quantity": 8 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 400 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 400 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "22000",
+"name": "第 2 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "23000",
+"name": "第 2 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "25000",
+"name": "第 2 天 - 5000",
+"description": "",
+"items": [
+{ "id": "28746", "name": "中级宠物升级丹", "quantity": 200 },
+{ "id": "20753", "name": "橙色宠物蛋", "quantity": 16 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 800 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 800 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "210000",
+"name": "第 2 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "220000",
+"name": "第 2 天 - 20000",
+"description": "",
+"items": [
+{ "id": "28747", "name": "高级宠物升级丹", "quantity": 200 },
+{ "id": "20753", "name": "橙色宠物蛋", "quantity": 16 },
+{ "id": "30900", "name": "灵宠秘钥", "quantity": 800 },
+{ "id": "30901", "name": "灵武秘钥", "quantity": 800 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
     ],
-    "单日3000": [
-        {
-            id: "30001",
-            name: "枪出如龙",
-            description: "单日3000额外返利选鸿蒙神藏-枪出如龙",
-            items: [
-                {id: "26001", name: "万能仙币", quantity: 300000},
-                {id: "23027", name: "1000元真充卡", quantity: 70},
-                {id: "23651", name: "1万仙玉卡", quantity: 210},
-                {id: "38200", name: "3000定制称号", quantity: 1},
-                {id: "21416", name: "枪出如龙·武", quantity: 1},
-                {id: "21522", name: "枪出如龙·衣", quantity: 1},
-                {id: "26556", name: "无双赵云", quantity: 1},
-                {id: "29374", name: "神将·赵云", quantity: 1},
-                {id: "21203", name: "枪出如龙·法宝", quantity: 1}
-            ]
-        },
+    "第3天礼包": [
+{
+"id": "330",
+"name": "第 3 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "360",
+"name": "第 3 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26256", "name": "初级羽翼精华", "quantity": 100 },
+{ "id": "26257", "name": "中级羽翼精华", "quantity": 10 },
+{ "id": "26296", "name": "羽翼技能书", "quantity": 2 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 2 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 2 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 2 }
+]
+},
+{
+"id": "398",
+"name": "第 3 天 - 98",
+"description": "",
+"items": [
+{ "id": "26256", "name": "初级羽翼精华", "quantity": 200 },
+{ "id": "26257", "name": "中级羽翼精华", "quantity": 20 },
+{ "id": "26296", "name": "羽翼技能书", "quantity": 2 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 4 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 4 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "3128",
+"name": "第 3 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "3198",
+"name": "第 3 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "3300",
+"name": "第 3 天 - 300",
+"description": "",
+"items": [
+{ "id": "26296", "name": "羽翼技能书", "quantity": 4 },
+{ "id": "26257", "name": "中级羽翼精华", "quantity": 40 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 8 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 8 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "3500",
+"name": "第 3 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "3700",
+"name": "第 3 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "31000",
+"name": "第 3 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26257", "name": "中级羽翼精华", "quantity": 100 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 16 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 16 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "32000",
+"name": "第 3 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "33000",
+"name": "第 3 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "35000",
+"name": "第 3 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26257", "name": "中级羽翼精华", "quantity": 200 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 32 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 32 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "310000",
+"name": "第 3 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "320000",
+"name": "第 3 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26258", "name": "高级羽翼精华", "quantity": 200 },
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 64 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 64 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
+    ],
+    "第4天礼包": [
+{
+"id": "430",
+"name": "第 4 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "460",
+"name": "第 4 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26262", "name": "初级法宝精华", "quantity": 100 },
+{ "id": "26263", "name": "中级法宝精华", "quantity": 10 },
+{ "id": "26297", "name": "法宝技能书", "quantity": 2 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 2 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 2 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 2 }
+]
+},
+{
+"id": "498",
+"name": "第 4 天 - 98",
+"description": "",
+"items": [
+{ "id": "26262", "name": "初级法宝精华", "quantity": 200 },
+{ "id": "26263", "name": "中级法宝精华", "quantity": 20 },
+{ "id": "26297", "name": "法宝技能书", "quantity": 2 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 4 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 4 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "4128",
+"name": "第 4 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "4198",
+"name": "第 4 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "4300",
+"name": "第 4 天 - 300",
+"description": "",
+"items": [
+{ "id": "26297", "name": "法宝技能书", "quantity": 4 },
+{ "id": "26263", "name": "中级法宝精华", "quantity": 40 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 8 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 8 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "4500",
+"name": "第 4 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "4700",
+"name": "第 4 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "41000",
+"name": "第 4 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26263", "name": "中级法宝精华", "quantity": 100 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 16 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 16 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "42000",
+"name": "第 4 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "43000",
+"name": "第 4 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "45000",
+"name": "第 4 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26263", "name": "中级法宝精华", "quantity": 200 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 32 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 32 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "410000",
+"name": "第 4 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "420000",
+"name": "第 4 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26264", "name": "高级法宝精华", "quantity": 200 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 64 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 64 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
+    ],
+    "第5天礼包": [
+{
+"id": "530",
+"name": "第 5 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "560",
+"name": "第 5 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "28730", "name": "初级麟甲晶石", "quantity": 100 },
+{ "id": "28727", "name": "初级麟武晶石", "quantity": 100 },
+{ "id": "28731", "name": "中级麟甲晶石", "quantity": 10 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 2 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 2 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 2 }
+]
+},
+{
+"id": "598",
+"name": "第 5 天 - 98",
+"description": "",
+"items": [
+{ "id": "28730", "name": "初级麟甲晶石", "quantity": 200 },
+{ "id": "28727", "name": "初级麟武晶石", "quantity": 200 },
+{ "id": "28731", "name": "中级麟甲晶石", "quantity": 20 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 4 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 4 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "5128",
+"name": "第 5 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "5198",
+"name": "第 5 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "5300",
+"name": "第 5 天 - 300",
+"description": "",
+"items": [
+{ "id": "28728", "name": "中级麟武晶石", "quantity": 40 },
+{ "id": "28731", "name": "中级麟甲晶石", "quantity": 40 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 8 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 8 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "5500",
+"name": "第 5 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "5700",
+"name": "第 5 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "51000",
+"name": "第 5 天 - 1000",
+"description": "",
+"items": [
+{ "id": "28731", "name": "中级麟甲晶石", "quantity": 100 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 16 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 16 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "52000",
+"name": "第 5 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "53000",
+"name": "第 5 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "55000",
+"name": "第 5 天 - 5000",
+"description": "",
+"items": [
+{ "id": "28731", "name": "中级麟甲晶石", "quantity": 200 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 32 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 32 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "510000",
+"name": "第 5 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "520000",
+"name": "第 5 天 - 20000",
+"description": "",
+"items": [
+{ "id": "28732", "name": "高级麟甲晶石", "quantity": 200 },
+{ "id": "28736", "name": "凶麟灵玉", "quantity": 64 },
+{ "id": "28737", "name": "天麟灵玉", "quantity": 64 },
+{ "id": "28738", "name": "圣麟灵玉", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
+    ],
+    "第6天礼包": [
+{
+"id": "630",
+"name": "第 6 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "660",
+"name": "第 6 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26268", "name": "初级神兵精华", "quantity": 100 },
+{ "id": "26269", "name": "中级神兵精华", "quantity": 10 },
+{ "id": "26298", "name": "神兵技能书", "quantity": 2 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 2 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 2 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 2 }
+]
+},
+{
+"id": "698",
+"name": "第 6 天 - 98",
+"description": "",
+"items": [
+{ "id": "26268", "name": "初级神兵精华", "quantity": 200 },
+{ "id": "26269", "name": "中级神兵精华", "quantity": 20 },
+{ "id": "26298", "name": "神兵技能书", "quantity": 2 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 4 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 4 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "6128",
+"name": "第 6 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "6198",
+"name": "第 6 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "6300",
+"name": "第 6 天 - 300",
+"description": "",
+"items": [
+{ "id": "26298", "name": "神兵技能书", "quantity": 4 },
+{ "id": "26269", "name": "中级神兵精华", "quantity": 40 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 8 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 8 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "6500",
+"name": "第 6 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "6700",
+"name": "第 6 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "61000",
+"name": "第 6 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26269", "name": "中级神兵精华", "quantity": 100 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 16 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 16 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "62000",
+"name": "第 6 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "63000",
+"name": "第 6 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "65000",
+"name": "第 6 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26269", "name": "中级神兵精华", "quantity": 200 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 32 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 32 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "610000",
+"name": "第 6 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "620000",
+"name": "第 6 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26270", "name": "高级神兵精华", "quantity": 200 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 64 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 64 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
+    ],
+    "第7天礼包": [
+{
+"id": "730",
+"name": "第 7 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "760",
+"name": "第 7 天 - 60",
+"description": "",
+"items": [
+{ "id": "20003", "name": "3 倍经验秘药", "quantity": 1 },
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26279", "name": "初级剑灵精华", "quantity": 100 },
+{ "id": "26280", "name": "中级剑灵精华", "quantity": 10 },
+{ "id": "26302", "name": "剑灵技能书", "quantity": 2 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 2 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 2 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 2 }
+]
+},
+{
+"id": "798",
+"name": "第 7 天 - 98",
+"description": "",
+"items": [
+{ "id": "26279", "name": "初级剑灵精华", "quantity": 200 },
+{ "id": "26280", "name": "中级剑灵精华", "quantity": 20 },
+{ "id": "26302", "name": "剑灵技能书", "quantity": 2 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 2 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 2 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 2 },
+{ "id": "26313", "name": "6 级攻击宝石", "quantity": 1 },
+{ "id": "26323", "name": "6 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "7128",
+"name": "第 7 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "7198",
+"name": "第 7 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "7300",
+"name": "第 7 天 - 300",
+"description": "",
+"items": [
+{ "id": "26302", "name": "剑灵技能书", "quantity": 4 },
+{ "id": "26280", "name": "中级剑灵精华", "quantity": 40 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 8 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 8 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 4 },
+{ "id": "26314", "name": "7 级攻击宝石", "quantity": 1 },
+{ "id": "26324", "name": "7 级长生宝石", "quantity": 1 },
+{ "id": "26157", "name": "中级神将元魄", "quantity": 40 }
+]
+},
+{
+"id": "7500",
+"name": "第 7 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "7700",
+"name": "第 7 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "71000",
+"name": "第 7 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26280", "name": "中级剑灵精华", "quantity": 100 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 16 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 16 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 8 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "72000",
+"name": "第 7 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "73000",
+"name": "第 7 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "75000",
+"name": "第 7 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26280", "name": "中级剑灵精华", "quantity": 200 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 32 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 32 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 16 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "710000",
+"name": "第 7 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "720000",
+"name": "第 7 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26281", "name": "高级剑灵精华", "quantity": 200 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 64 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 64 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 32 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
+    ],
+    "第8天及以后礼包": [
+{
+"id": "830",
+"name": "第 8 天 - 30",
+"description": "",
+"items": [
+{"id": "20003", "name": "3 倍经验秘药", "quantity": 1},
+{ "id": "20472", "name": "经验秘境卷轴", "quantity": 1 },
+{ "id": "26023", "name": "BOSS 召唤卡", "quantity": 5 },
+{ "id": "26024", "name": "跨服 BOSS 召唤卡", "quantity": 2 },
+{ "id": "20459", "name": "仙力药水", "quantity": 2 },
+{ "id": "20161", "name": "500 万金币", "quantity": 1 },
+{ "id": "26311", "name": "4 级攻击宝石", "quantity": 1 },
+{ "id": "26321", "name": "4 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "860",
+"name": "第 8 天 - 60",
+"description": "",
+"items": [
+{ "id": "34086", "name": "装备套装石", "quantity": 20 },
+{ "id": "26030", "name": "强化石", "quantity": 20 },
+{ "id": "26150", "name": "洗炼石", "quantity": 20 },
+{ "id": "26093", "name": "炼魂石", "quantity": 20 },
+{ "id": "26127", "name": "升品石", "quantity": 20 },
+{ "id": "26031", "name": "强化石・仙器", "quantity": 20 },
+{ "id": "28725", "name": "天麟石", "quantity": 10 },
+{ "id": "26101", "name": "熔炼石", "quantity": 10 }
+]
+},
+{
+"id": "898",
+"name": "第 8 天 - 98",
+"description": "",
+"items": [
+{ "id": "26259", "name": "翠灵翎羽", "quantity": 10 },
+{ "id": "26260", "name": "碧鸾翎羽", "quantity": 10 },
+{ "id": "26265", "name": "噬血法珠", "quantity": 10 },
+{ "id": "26266", "name": "追魂法珠", "quantity": 10 },
+{ "id": "26271", "name": "斩龙剑魂", "quantity": 10 },
+{ "id": "26272", "name": "七星剑魂", "quantity": 10 },
+{ "id": "26282", "name": "金涛剑灵", "quantity": 10 },
+{ "id": "26283", "name": "赤雷剑灵", "quantity": 10 }
+]
+},
+{
+"id": "8128",
+"name": "第 8 天 - 128",
+"description": "",
+"items": [
+{ "id": "29136", "name": "大力丸", "quantity": 5 },
+{ "id": "29137", "name": "清心丹", "quantity": 5 },
+{ "id": "29138", "name": "风云丸", "quantity": 5 },
+{ "id": "29139", "name": "练气丹", "quantity": 5 },
+{ "id": "29140", "name": "健心丸", "quantity": 5 },
+{ "id": "29141", "name": "雨露丸", "quantity": 5 },
+{ "id": "29142", "name": "养神丹", "quantity": 5 },
+{ "id": "29143", "name": "无垠丹", "quantity": 5 }
+]
+},
+{
+"id": "8198",
+"name": "第 8 天 - 198",
+"description": "",
+"items": [
+{ "id": "26428", "name": "莲花心法", "quantity": 3 },
+{ "id": "26429", "name": "浑天心法", "quantity": 3 },
+{ "id": "26430", "name": "五行心法", "quantity": 3 },
+{ "id": "26431", "name": "无双心法", "quantity": 3 },
+{ "id": "26432", "name": "太阴心法", "quantity": 3 },
+{ "id": "26433", "name": "归元心法", "quantity": 3 },
+{ "id": "26434", "name": "嗜血心法", "quantity": 3 },
+{ "id": "26435", "name": "伏魔心法", "quantity": 3 }
+]
+},
+{
+"id": "8300",
+"name": "第 8 天 - 300",
+"description": "",
+"items": [
+{ "id": "26296", "name": "羽翼技能书", "quantity": 4 },
+{ "id": "26297", "name": "法宝技能书", "quantity": 4 },
+{ "id": "26298", "name": "神兵技能书", "quantity": 4 },
+{ "id": "26302", "name": "剑灵技能书", "quantity": 4 },
+{ "id": "26261", "name": "金凤翎羽", "quantity": 4 },
+{ "id": "26267", "name": "摄魂法珠", "quantity": 4 },
+{ "id": "26273", "name": "天琊剑魂", "quantity": 4 },
+{ "id": "26284", "name": "烈日剑灵", "quantity": 4 }
+]
+},
+{
+"id": "8500",
+"name": "第 8 天 - 500",
+"description": "",
+"items": [
+{ "id": "29157", "name": "轮回丹", "quantity": 2 },
+{ "id": "29156", "name": "涅槃丹", "quantity": 2 },
+{ "id": "29155", "name": "菩提丹", "quantity": 2 },
+{ "id": "29154", "name": "真灵丹", "quantity": 2 },
+{ "id": "29160", "name": "赤火真丹", "quantity": 2 },
+{ "id": "29161", "name": "罗刹内丹", "quantity": 2 },
+{ "id": "29159", "name": "玄冰魔丹", "quantity": 2 },
+{ "id": "29158", "name": "真武灵丹", "quantity": 2 }
+]
+},
+{
+"id": "8700",
+"name": "第 8 天 - 700",
+"description": "",
+"items": [
+{ "id": "26976", "name": "开阳星石", "quantity": 1 },
+{ "id": "26973", "name": "天玑星石", "quantity": 1 },
+{ "id": "26974", "name": "天权星石", "quantity": 1 },
+{ "id": "26971", "name": "天枢星石", "quantity": 1 },
+{ "id": "26972", "name": "天璇星石", "quantity": 1 },
+{ "id": "26977", "name": "摇光星石", "quantity": 1 },
+{ "id": "26975", "name": "玉衡星石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 }
+]
+},
+{
+"id": "81000",
+"name": "第 8 天 - 1000",
+"description": "",
+"items": [
+{ "id": "26531", "name": "神饰・披挂 SS", "quantity": 1 },
+{ "id": "26532", "name": "神饰・头冠 SS", "quantity": 1 },
+{ "id": "26533", "name": "神饰・护臂 SS", "quantity": 1 },
+{ "id": "26534", "name": "神饰・灵戒 SS", "quantity": 1 },
+{ "id": "26149", "name": "兽源石・粉", "quantity": 2 },
+{ "id": "30136", "name": "粉色神魔石", "quantity": 2 },
+{ "id": "26226", "name": "粉色仙石", "quantity": 2 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 }
+]
+},
+{
+"id": "82000",
+"name": "第 8 天 - 2000",
+"description": "",
+"items": [
+{ "id": "26227", "name": "金色仙石", "quantity": 2 },
+{ "id": "27451", "name": "完美套装石", "quantity": 5 },
+{ "id": "38052", "name": "饰品套装石自选", "quantity": 2 },
+{ "id": "38633", "name": "完美饰品套装石自选", "quantity": 1 },
+{ "id": "26327", "name": "10 级长生宝石", "quantity": 1 },
+{ "id": "26317", "name": "10 级攻击宝石", "quantity": 1 },
+{ "id": "26229", "name": "升星图・仙戒", "quantity": 1 },
+{ "id": "26230", "name": "升星图・仙链", "quantity": 1 }
+]
+},
+{
+"id": "83000",
+"name": "第 8 天 - 3000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 1 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 1 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 1 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 1 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 1 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 1 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 1 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 1 }
+]
+},
+{
+"id": "85000",
+"name": "第 8 天 - 5000",
+"description": "",
+"items": [
+{ "id": "26398", "name": "11 级防御玉石", "quantity": 1 },
+{ "id": "26328", "name": "11 级攻击宝石", "quantity": 1 },
+{ "id": "26388", "name": "11 级攻击玉石", "quantity": 1 },
+{ "id": "26338", "name": "11 级长生宝石", "quantity": 1 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 1 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 2 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 2 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 2 }
+]
+},
+{
+"id": "810000",
+"name": "第 8 天 - 10000",
+"description": "",
+"items": [
+{ "id": "29173", "name": "赤火丹灵", "quantity": 3 },
+{ "id": "29172", "name": "玄冰丹灵", "quantity": 3 },
+{ "id": "29171", "name": "真武丹灵", "quantity": 3 },
+{ "id": "29175", "name": "风雷丹灵", "quantity": 3 },
+{ "id": "29176", "name": "太祖丹灵", "quantity": 3 },
+{ "id": "29177", "name": "轩辕丹灵", "quantity": 3 },
+{ "id": "29178", "name": "太初丹灵", "quantity": 3 },
+{ "id": "29179", "name": "封神丹灵", "quantity": 3 }
+]
+},
+{
+"id": "820000",
+"name": "第 8 天 - 20000",
+"description": "",
+"items": [
+{ "id": "26400", "name": "13 级防御玉石", "quantity": 1 },
+{ "id": "26330", "name": "13 级攻击宝石", "quantity": 1 },
+{ "id": "26390", "name": "13 级攻击玉石", "quantity": 1 },
+{ "id": "26340", "name": "13 级长生宝石", "quantity": 1 },
+{ "id": "38287", "name": "粉色三属性灵纹自选", "quantity": 2 },
+{ "id": "38565", "name": "超级麟 IV 神装自选", "quantity": 4 },
+{ "id": "26231", "name": "神宝灵戒石", "quantity": 4 },
+{ "id": "26232", "name": "神宝灵链石", "quantity": 4 }
+]
+}
     ]
 };
 
@@ -1335,12 +3379,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 常用角色ID管理功能
 function getFrequentlyUsedRoles() {
-    const roles = localStorage.getItem('frequentlyUsedRoles');
+    const roles = localStorage.getItem('frequentlyUsedRoles2');
     return roles ? JSON.parse(roles) : [];
 }
 
 function saveFrequentlyUsedRoles(roles) {
-    localStorage.setItem('frequentlyUsedRoles', JSON.stringify(roles));
+    localStorage.setItem('frequentlyUsedRoles2', JSON.stringify(roles));
 }
 
 function renderFrequentlyUsedRoles() {
@@ -1790,12 +3834,12 @@ function showXiaoyaoNotification(message, type = 'success') {
 
 // 预设管理功能
 function getCustomPresets() {
-    const presets = localStorage.getItem('customPresets');
+    const presets = localStorage.getItem('customPresets2');
     return presets ? JSON.parse(presets) : [];
 }
 
 function saveCustomPresets(presets) {
-    localStorage.setItem('customPresets', JSON.stringify(presets));
+    localStorage.setItem('customPresets2', JSON.stringify(presets));
 }
 
 function renderCustomPresets() {
