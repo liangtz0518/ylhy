@@ -808,6 +808,7 @@
                     <button class="btn" onclick="openPackageModal('第6天礼包')"><i class="fas fa-calendar-day"></i> 第6天礼包</button>
                     <button class="btn" onclick="openPackageModal('第7天礼包')"><i class="fas fa-calendar-day"></i> 第7天礼包</button>
                     <button class="btn" onclick="openPackageModal('第8天及以后礼包')"><i class="fas fa-calendar-day"></i> 第8天及以后礼包</button>
+                    <button class="btn" onclick="openPackageModal('其他')"><i class="fas fa-calendar-day"></i> 其他</button>
                     <button class="btn btn-outline" onclick="clearItems()"><i class="fas fa-trash"></i> 清空道具</button>
                 </div>
                 
@@ -1843,11 +1844,84 @@ const itemDatabase = [
             {id: "29109", name: "【圣域】万物复苏·花", category: ""},
             {id: "29110", name: "【圣域】万物复苏·草", category: ""},
             {id: "29111", name: "【圣域】万物复苏·香", category: ""},
-            {id: "30404", name: "【神将】雷音大圣", category: ""}
+            {id: "30404", name: "【神将】雷音大圣", category: ""},
+            {id: "35986", name: "7阶红3星装备", category: ""},
+            {id: "35987", name: "8阶红3星装备", category: ""},
+            {id: "35988", name: "9阶红3星装备", category: ""},
+            {id: "35989", name: "10阶红3星装备", category: ""},
+            {id: "35990", name: "11阶红3星装备", category: ""},
+            {id: "35991", name: "12阶红3星装备", category: ""},
+            {id: "35992", name: "13阶红3星装备", category: ""},
+            {id: "35993", name: "14阶红3星装备", category: ""},
+            {id: "35994", name: "15阶红3星装备", category: ""},
+            {id: "38078", name: "7阶红3星饰品自选", category: ""},
+            {id: "38079", name: "8阶红3星饰品自选", category: ""},
+            {id: "38080", name: "9阶红3星饰品自选", category: ""},
+            {id: "38081", name: "10阶红3星饰品自选", category: ""},
+            {id: "38082", name: "11阶红3星饰品自选", category: ""},
+            {id: "38083", name: "12阶红3星饰品自选", category: ""},
+            {id: "38084", name: "13阶红3星饰品自选", category: ""},
+            {id: "38085", name: "14阶红3星饰品自选", category: ""},
+            {id: "38086", name: "15阶红3星饰品自选", category: ""},
+            {id: "38125", name: "16阶红色3星自选", category: ""},
+            {id: "38126", name: "17阶红色3星自选", category: ""},
+            {id: "38127", name: "18阶红色3星自选", category: ""},
+            {id: "38128", name: "19阶红色3星自选", category: ""},
+            {id: "38129", name: "20阶红色3星自选", category: ""},
+            {id: "38130", name: "16阶红3星饰品自选", category: ""},
+            {id: "38131", name: "17阶红3星饰品自选", category: ""},
+            {id: "38132", name: "18阶红3星饰品自选", category: ""},
+            {id: "38133", name: "19阶红3星饰品自选", category: ""},
+            {id: "38134", name: "20阶红3星饰品自选", category: ""},
+            {id: "30965", name: "天麟帝晶", category: ""},
+            {id: "38663", name: "天麟帝装自选", category: ""},
+            {id: "30960", name: "天麟帝装·甲", category: ""},
+            {id: "30959", name: "天麟帝装·武", category: ""},
+            {id: "31024", name: "高级天麟帝晶", category: ""},
+            {id: "20808", name: "蓝翼暴龙", category: ""},
+            {id: "30461", name: "清晖羽扇", category: ""},
+            {id: "26527", name: "神饰·披挂S", category: ""},
+            {id: "26528", name: "神饰·头冠S", category: ""},
+            {id: "26529", name: "神饰·护臂S", category: ""},
+            {id: "26530", name: "神饰·灵戒S", category: ""},
+            {id: "23661", name: "奔驰大G", category: ""},
+            {id: "20877", name: "帝藏・赤焰魔龙-赤焰魔龙·坐骑", category: ""},
+            {id: "33390", name: "红5星兽心", category: ""},
+            {id: "33391", name: "红5星兽爪", category: ""},
+            {id: "33392", name: "红5星兽甲", category: ""},
+            {id: "33389", name: "红5星兽鳞", category: ""},
+            {id: "33388", name: "红5星兽角", category: ""},
+            {id: "26515", name: "神饰·披挂C", category: ""},
+            {id: "26516", name: "神饰·头冠C", category: ""},
+            {id: "26517", name: "神饰·护臂C", category: ""},
+            {id: "26518", name: "神饰·灵戒C", category: ""},
+            {id: "26519", name: "神饰·披挂B", category: ""},
+            {id: "26520", name: "神饰·头冠B", category: ""},
+            {id: "26521", name: "神饰·护臂B", category: ""},
+            {id: "26522", name: "神饰·灵戒B", category: ""},
+            {id: "26523", name: "神饰·披挂A", category: ""},
+            {id: "26524", name: "神饰·头冠A", category: ""},
+            {id: "26525", name: "神饰-护臂A", category: ""},
+            {id: "26526", name: "神饰·灵戒A", category: ""}
+
 ];
 
 // 套装数据库
 const packageDatabase = {
+    "其他": [
+{
+"id": "qt",
+"name": "天麟特权",
+"description": "",
+"items": [
+{"id": "20003", "name": "天麟帝晶", "quantity": 130},
+{ "id": "20472", "name": "天麟帝装自选", "quantity": 9 },
+{ "id": "26023", "name": "天麟帝装·甲", "quantity": 3 },
+{ "id": "26024", "name": "天麟帝装·武", "quantity": 3 },
+{ "id": "26321", "name": "高级天麟帝晶", "quantity": 27 }
+]
+},
+],
     "第3天礼包": [
 {
 "id": "130",
@@ -3353,7 +3427,7 @@ const packageDatabase = {
 "name": "第 8 天 - 60",
 "description": "",
 "items": [
-{ "id": "34086", "name": "装备套装石", "quantity": 20 },
+{ "id": "33007", "name": "装备套装石", "quantity": 20 },
 { "id": "26030", "name": "强化石", "quantity": 20 },
 { "id": "26150", "name": "洗炼石", "quantity": 20 },
 { "id": "26093", "name": "炼魂石", "quantity": 20 },
