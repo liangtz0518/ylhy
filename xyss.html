@@ -3976,7 +3976,7 @@ titleInput.dispatchEvent(new Event('input', { bubbles: true }));
 titleInput.dispatchEvent(new Event('change', { bubbles: true }));
 titleInput.dispatchEvent(new Event('blur', { bubbles: true }));
 
-const contentInput = document.querySelector('textarea[placeholder="多服邮件内容"]');
+const contentInput = document.querySelector('textarea[placeholder="邮件内容"]');
 contentInput.value = "1";
 contentInput.dispatchEvent(new Event('input', { bubbles: true }));
 contentInput.dispatchEvent(new Event('change', { bubbles: true }));
@@ -4292,4 +4292,5 @@ function importPresets(event) {
 </script>
 </body>
 </html>
+
 
