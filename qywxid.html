@@ -4,125 +4,515 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
-    <title>企微添加记录</title>
+    <title>企业微信添加记录</title>
     <!-- 引入SheetJS用于导出Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        /* ---------- Apple 设计语言 · 精准复刻 ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+            background-color: #ffffff;
+            color: #1d1d1f;
+            line-height: 1.4705882353;
+            letter-spacing: -0.022em;
+            padding: 48px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 标题层级 */
+        h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #1d1d1f;
+            letter-spacing: -0.003em;
+        }
+
+        /* 按钮基座 */
+        button {
+            background-color: #f5f5f7;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #1d1d1f;
+            font-size: 15px;
+            font-weight: 400;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: background-color 0.1s ease, transform 0.05s ease;
+            font-family: inherit;
+        }
+        button:hover {
+            background-color: #e8e8ed;
+        }
+        button:active {
+            background-color: #d1d1d6;
+            transform: scale(0.98);
+        }
+
+        /* 主要按钮 (蓝色) */
+        .button-primary {
+            background-color: #000000;
+            color: white;
+        }
+        .button-primary:hover {
+            background-color: #0077ed;
+        }
+        .button-primary:active {
+            background-color: #005fc7;
+            transform: scale(0.98);
+        }
+
+        /* 危险按钮 (删除) */
+        .button-danger {
+            background-color: #ffffff;
+            border: 1px solid #d2d2d7;
+            color: #d70015;
+        }
+        .button-danger:hover {
+            background-color: #fdf0f0;
+            border-color: #d70015;
+        }
+        .button-danger:active {
+            background-color: #ffd7d7;
+            transform: scale(0.98);
+        }
+
+        /* 输入框 & 下拉框 */
+        input, select, textarea {
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 15px;
+            background-color: #ffffff;
+            color: #1d1d1f;
+            outline: none;
+            transition: border-color 0.1s ease, box-shadow 0.1s ease;
+            font-family: inherit;
+        }
+        input:focus, select:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+        }
+        input::placeholder {
+            color: #8e8e93;
+        }
+
+        /* 顶部工具栏 */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f0f0f3;
+        }
+
+        /* 自定义开关 (iOS风格) */
+        .switch-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            padding-left: 20px;
+            border-left: 1px solid #e9e9ed;
+        }
+        .switch-label span {
+            font-size: 15px;
+            color: #1d1d1f;
+        }
+        .switch-label small {
+            font-size: 13px;
+            color: #8e8e93;
+        }
+        .switch-checkbox {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background-color: #e9e9ed;
+            border-radius: 24px;
+            appearance: none;
+            cursor: pointer;
+            transition: background-color 0.1s ease;
+            border: none;
+            outline: none;
+        }
+        .switch-checkbox:checked {
+            background-color: #000000;
+        }
+        .switch-checkbox::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.1s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .switch-checkbox:checked::before {
+            transform: translateX(20px);
+        }
+
+        /* ---------- 筛选区域 (全新排版) ---------- */
+        .filter-section {
+            margin: 36px 0 40px;
+        }
+        .filter-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        .filter-bar {
+            background: #f9f9fb;
+            border-radius: 14px;
+            padding: 24px 28px;
+            border: 1px solid #f0f0f3;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px 32px;  /* 横向纵向间距 */
+        }
+        .filter-bar label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            color: #1d1d1f;
+        }
+        .filter-bar input, .filter-bar select {
+            background: white;
+            border: 1px solid #d9d9e3;
+            border-radius: 8px;
+            padding: 6px 12px;
+            min-width: 110px;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .record-count {
+            background: #ffffff;
+            border: 1px solid #e9e9ed;
+            border-radius: 30px;
+            padding: 8px 16px;
+            color: #6e6e73;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* 输入行卡片 */
+        .input-row {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin-bottom: 12px;
+            border: 1px solid #f0f0f3;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: box-shadow 0.2s ease;
+        }
+        .input-row:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+        .input-row select {
+            min-width: 120px;
+        }
+        .input-row .server-input {
+            width: 120px;
+        }
+        .input-row .id-input {
+            width: 150px;
+        }
+
+        /* 历史列表 */
+        .history-section {
+            margin-top: 56px;
+        }
+        .history-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+        .history-list {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #f0f0f3;
+            padding: 24px;
+            min-height: 150px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+        }
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f3;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .history-date {
+            color: #6e6e73;
+            font-size: 14px;
+            min-width: 90px;
+        }
+        .history-content {
+            font-weight: 500;
+            min-width: 220px;
+            color: #1d1d1f;
+        }
+        .history-note {
+            padding: 6px 12px;
+            width: 150px;
+            border-radius: 8px;
+            border: 1px solid #d9d9e3;
+            background: white;
+            font-size: 14px;
+        }
+        .history-actions {
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .history-actions button {
+            padding: 5px 18px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        /* 智能粘贴弹窗 (Apple 风格卡片) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-card {
+            background: white;
+            border-radius: 22px;
+            padding: 32px 40px;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            border: 1px solid #f0f0f3;
+            transform: scale(0.98);
+            animation: modalAppear 0.15s ease forwards;
+        }
+        @keyframes modalAppear {
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h4 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            line-height: 1;
+            cursor: pointer;
+            color: #8e8e93;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 44px;
+            transition: background-color 0.1s ease;
+        }
+        .close-btn:hover {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+        .clipboard-preview {
+            background: #f9f9fb;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 28px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1d1d1f;
+            text-align: center;
+            word-break: break-all;
+            border: 1px solid #e9e9ed;
+        }
+        .game-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0 8px;
+        }
+        .game-buttons button {
+            padding: 12px 30px;
+            font-size: 17px;
+            background-color: #f5f5f7;
+            border-radius: 10px;
+            flex: 1 1 auto;
+            min-width: 130px;
+        }
+        .game-buttons button:hover {
+            background-color: #e8e8ed;
+        }
+
+        /* 提示 toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1d1d1f;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 3000;
+            white-space: nowrap;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #f0f0f3;
+            margin: 32px 0;
+        }
+    </style>
 </head>
 <body>
     <h3>参数</h3>
 
-    <!-- 第一行：新增按钮 + 导入导出按钮 + 智能粘贴开关 -->
-    <div style="margin: 10px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-        <button id="addRowBtn">新增一行</button>
+    <!-- 工具栏：新增 + 导入导出 + 智能粘贴开关 -->
+    <div class="toolbar">
+        <button id="addRowBtn" class="button-primary">新增一行</button>
         <button id="exportBtn">导出列表 (txt)</button>
         <button id="exportExcelBtn">导出为excel</button>
         <button id="importBtn">导入列表 (txt)</button>
         <input type="file" id="importFile" accept=".txt,text/plain" style="display: none;">
         
-        <!-- 智能粘贴开关 -->
-        <label style="display: flex; align-items: center; gap: 5px; margin-left: 20px; border-left: 1px solid #ccc; padding-left: 20px;">
-            <input type="checkbox" id="smartPasteToggle" checked>
-            <span style="font-weight: bold; color: #2196F3;">智能粘贴</span>
-            <span style="font-size: 12px; color: #666;">(自动检测剪贴板)</span>
+        <label class="switch-label">
+            <span>智能粘贴</span>
+            <input type="checkbox" id="smartPasteToggle" class="switch-checkbox" checked>
+            <small>自动检测剪贴板</small>
         </label>
     </div>
 
     <!-- 动态生成的输入行区域 -->
-    <div id="inputRowsContainer" style="margin-top: 12px; border-bottom: 1px solid #aaa; padding-bottom: 10px;"></div>
+    <div id="inputRowsContainer" style="margin-bottom: 10px;"></div>
 
     <hr>
 
-    <!-- 筛选区域 -->
-    <div style="margin: 10px 0; padding: 8px; border: 1px solid #ccc; background: #f2f2f2; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-        <strong>筛选：</strong>
-        
-        <!-- 游戏下拉筛选 -->
-        <label>游戏： 
-            <select id="filterGameSelect">
-                <option value="">全部游戏</option>
-                <option value="蜀山2">蜀山2</option>
-                <option value="伏魔5">伏魔5</option>
-                <option value="上古6">上古6</option>
-            </select>
-        </label>
+    <!-- 筛选区域 (重新排版：标题独立) -->
+    <div class="filter-section">
+        <div class="filter-title">筛选</div>
+        <div class="filter-bar">
+            <label>游戏：
+                <select id="filterGameSelect">
+                    <option value="">全部游戏</option>
+                    <option value="蜀山2">蜀山2</option>
+                    <option value="伏魔5">伏魔5</option>
+                    <option value="上古6">上古6</option>
+                </select>
+            </label>
 
-        <!-- 区服筛选 -->
-        <label>区服：<input type="text" id="filterServer" placeholder="区服关键词" style="width:90px;"></label>
+            <label>区服：
+                <input type="text" id="filterServer" placeholder="关键词">
+            </label>
 
-        <!-- ID筛选 -->
-        <label>ID：<input type="text" id="filterId" placeholder="ID关键词" style="width:90px;"></label>
+            <label>ID：
+                <input type="text" id="filterId" placeholder="关键词">
+            </label>
 
-        <!-- 日期筛选 -->
-        <label>日期：<input type="date" id="filterDate"></label>
+            <label>日期：
+                <input type="date" id="filterDate">
+            </label>
 
-        <button id="clearFilterBtn">清除筛选</button>
-        <span style="margin-left:auto;">共 <span id="displayCount">0</span> 条</span>
-    </div>
-
-    <!-- 智能粘贴弹窗 - 简化版，只显示游戏按钮 -->
-    <div id="smartPasteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 25px; border-radius: 12px; min-width: 500px; max-width: 700px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h4 style="margin: 0; color: #333; font-size: 18px;">检测到剪贴板内容</h4>
-                <button id="closeModalBtn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
-            </div>
-            
-            <div style="margin-bottom: 20px; padding: 15px; background: #f0f7ff; border-radius: 8px; border: 1px solid #2196F3; word-break: break-all; font-size: 18px; font-weight: bold; color: #2196F3; text-align: center;" id="clipboardContent"></div>
-            
-            <div style="margin-bottom: 10px;">
-                <div style="font-weight: bold; margin-bottom: 15px; color: #555;">选择游戏粘贴到：</div>
-                <div id="gameButtonsContainer" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-                    <!-- 预设游戏按钮将在这里动态生成 -->
-                </div>
+            <div class="filter-actions">
+                <button id="clearFilterBtn">清除筛选</button>
+                <span class="record-count">共 <span id="displayCount">0</span> 条</span>
             </div>
         </div>
     </div>
 
+    <!-- 智能粘贴弹窗 -->
+    <div id="smartPasteModal" class="modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4>检测到剪贴板内容</h4>
+                <button id="closeModalBtn" class="close-btn">×</button>
+            </div>
+            <div id="clipboardContent" class="clipboard-preview"></div>
+            <div style="font-weight: 500; margin-bottom: 16px; color: #1d1d1f;">选择游戏粘贴到：</div>
+            <div id="gameButtonsContainer" class="game-buttons"></div>
+        </div>
+    </div>
+
     <!-- 已生成列表 -->
-    <div>
-        <strong>记录</strong>
-        <div id="historyList" style="margin-top: 8px; border: 1px solid #ccc; padding: 8px; min-height: 100px;"></div>
+    <div class="history-section">
+        <div class="history-title">记录</div>
+        <div id="historyList" class="history-list"></div>
     </div>
 
     <!-- 临时提示条 -->
-    <div id="toastMessage" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 4px 12px; border-radius: 16px; font-size: 13px; opacity: 0; transition: opacity 0.2s; pointer-events: none;">提示</div>
+    <div id="toastMessage" class="toast">提示</div>
 
     <script>
         (function() {
-            // ---------- 游戏列表 ----------
             const PRESET_GAMES = ['蜀山2', '伏魔5', '上古6'];
-
-            // ---------- 历史记录数组 ----------
             let historyItems = [];
-
-            // ---------- 缓存KEY ----------
             const STORAGE_KEY = 'game_server_id_history_v2';
             const SMART_PASTE_KEY = 'smart_paste_enabled';
+            let smartPasteEnabled = localStorage.getItem(SMART_PASTE_KEY) !== 'false';
 
-            // ---------- 智能粘贴开关状态 ----------
-            let smartPasteEnabled = localStorage.getItem(SMART_PASTE_KEY) !== 'false'; // 默认开启
-
-            // ---------- 加载本地缓存 ----------
             function loadFromStorage() {
                 const stored = localStorage.getItem(STORAGE_KEY);
                 if (stored) {
                     try {
                         const parsed = JSON.parse(stored);
-                        if (Array.isArray(parsed)) {
-                            historyItems = parsed;
-                        }
+                        if (Array.isArray(parsed)) historyItems = parsed;
                     } catch (e) {}
                 }
             }
-
             loadFromStorage();
 
-            // 获取容器
             const inputRowsContainer = document.getElementById('inputRowsContainer');
             const historyListEl = document.getElementById('historyList');
             const toastEl = document.getElementById('toastMessage');
             
-            // 筛选元素
             const filterGameSelect = document.getElementById('filterGameSelect');
             const filterServer = document.getElementById('filterServer');
             const filterId = document.getElementById('filterId');
@@ -130,33 +520,26 @@
             const clearFilterBtn = document.getElementById('clearFilterBtn');
             const displayCountSpan = document.getElementById('displayCount');
 
-            // 智能粘贴元素
             const smartPasteToggle = document.getElementById('smartPasteToggle');
             const smartPasteModal = document.getElementById('smartPasteModal');
             const clipboardContent = document.getElementById('clipboardContent');
             const gameButtonsContainer = document.getElementById('gameButtonsContainer');
             const closeModalBtn = document.getElementById('closeModalBtn');
 
-            // 导入导出
             const exportBtn = document.getElementById('exportBtn');
             const exportExcelBtn = document.getElementById('exportExcelBtn');
             const importBtn = document.getElementById('importBtn');
             const importFile = document.getElementById('importFile');
 
-            // 当前剪贴板内容
             let currentClipboardText = '';
 
-            // 初始化开关状态
             smartPasteToggle.checked = smartPasteEnabled;
-
-            // 开关事件
             smartPasteToggle.addEventListener('change', function(e) {
                 smartPasteEnabled = e.target.checked;
                 localStorage.setItem(SMART_PASTE_KEY, smartPasteEnabled);
                 showToast(smartPasteEnabled ? '智能粘贴已开启' : '智能粘贴已关闭');
             });
 
-            // 显示提示
             function showToast(text, duration = 1500) {
                 toastEl.textContent = text;
                 toastEl.style.opacity = '1';
@@ -166,7 +549,6 @@
                 }, duration);
             }
 
-            // 降级复制
             function fallbackCopy(text) {
                 const ta = document.createElement('textarea');
                 ta.value = text;
@@ -176,65 +558,29 @@
                 document.body.removeChild(ta);
             }
 
-            // 读取剪贴板 - 使用多种方法尝试，避免权限提示
             async function readClipboard() {
                 try {
                     if (navigator.clipboard && navigator.clipboard.readText) {
-                        const text = await navigator.clipboard.readText();
-                        return text;
+                        return await navigator.clipboard.readText();
                     }
-                } catch (err) {
-                    console.log('Clipboard API 读取失败');
-                }
+                } catch (err) {}
                 return null;
             }
 
-            // 创建游戏按钮
             function createGameButtons() {
                 gameButtonsContainer.innerHTML = '';
-                
                 PRESET_GAMES.forEach(game => {
-                    const button = document.createElement('button');
-                    button.textContent = game;
-                    button.style.padding = '15px 30px';
-                    button.style.background = '#2196F3';
-                    button.style.color = 'white';
-                    button.style.border = 'none';
-                    button.style.borderRadius = '8px';
-                    button.style.cursor = 'pointer';
-                    button.style.fontSize = '18px';
-                    button.style.fontWeight = 'bold';
-                    button.style.flex = '1 1 auto';
-                    button.style.minWidth = '120px';
-                    button.style.boxShadow = '0 4px 6px rgba(33, 150, 243, 0.3)';
-                    button.style.transition = 'all 0.2s';
-                    
-                    button.addEventListener('click', function() {
-                        pasteToGame(game, currentClipboardText);
-                    });
-                    
-                    button.addEventListener('mouseover', function() {
-                        this.style.background = '#1976D2';
-                        this.style.transform = 'translateY(-2px)';
-                        this.style.boxShadow = '0 6px 8px rgba(33, 150, 243, 0.4)';
-                    });
-                    
-                    button.addEventListener('mouseout', function() {
-                        this.style.background = '#2196F3';
-                        this.style.transform = 'translateY(0)';
-                        this.style.boxShadow = '0 4px 6px rgba(33, 150, 243, 0.3)';
-                    });
-                    
-                    gameButtonsContainer.appendChild(button);
+                    const btn = document.createElement('button');
+                    btn.textContent = game;
+                    btn.addEventListener('click', () => pasteToGame(game, currentClipboardText));
+                    gameButtonsContainer.appendChild(btn);
                 });
             }
 
-            // 粘贴到指定游戏
             function pasteToGame(game, content) {
                 const rows = document.querySelectorAll('#inputRowsContainer > div');
                 let targetRow = null;
                 let targetIndex = -1;
-                
                 for (let i = 0; i < rows.length; i++) {
                     const row = rows[i];
                     const gameSelect = row.querySelector('select');
@@ -244,11 +590,9 @@
                         break;
                     }
                 }
-                
                 if (!targetRow) {
                     targetRow = createInputRow();
                     inputRowsContainer.appendChild(targetRow);
-                    
                     const gameSelect = targetRow.querySelector('select');
                     if (gameSelect) {
                         for (let i = 0; i < gameSelect.options.length; i++) {
@@ -259,17 +603,12 @@
                         }
                     }
                 }
-                
                 const idInput = targetRow.querySelector('input[placeholder="ID"]');
-                if (idInput) {
-                    idInput.value = content;
-                }
-                
+                if (idInput) idInput.value = content;
                 hideSmartPasteModal();
                 showToast(`已粘贴到${game}${targetIndex === -1 ? '（新增行）' : ''}`);
             }
 
-            // 显示智能粘贴弹窗
             function showSmartPasteModal(content) {
                 currentClipboardText = content;
                 clipboardContent.textContent = content;
@@ -277,52 +616,35 @@
                 smartPasteModal.style.display = 'flex';
             }
 
-            // 隐藏智能粘贴弹窗
             function hideSmartPasteModal() {
                 smartPasteModal.style.display = 'none';
             }
 
-            // 监听窗口焦点事件
             let lastClipboardCheck = 0;
             let isCheckingClipboard = false;
-
             window.addEventListener('focus', async function() {
                 if (!smartPasteEnabled) return;
-                
                 const now = Date.now();
                 if (now - lastClipboardCheck < 2000) return;
                 lastClipboardCheck = now;
-                
                 if (isCheckingClipboard) return;
                 isCheckingClipboard = true;
-
                 try {
-                    const clipboardText = await readClipboard();
-                    
-                    if (clipboardText && clipboardText.trim()) {
-                        const trimmed = clipboardText.trim();
+                    const text = await readClipboard();
+                    if (text && text.trim()) {
+                        const trimmed = text.trim();
                         if (trimmed.length > 0 && trimmed.length < 50 && !trimmed.includes('\n') && !trimmed.includes('\r')) {
                             showSmartPasteModal(trimmed);
                         }
                     }
-                } catch (err) {
-                    console.log('剪贴板读取失败');
-                } finally {
+                } catch (err) {} finally {
                     isCheckingClipboard = false;
                 }
             });
 
-            // 关闭按钮
             closeModalBtn.addEventListener('click', hideSmartPasteModal);
+            smartPasteModal.addEventListener('click', (e) => { if (e.target === smartPasteModal) hideSmartPasteModal(); });
 
-            // 点击弹窗外部关闭
-            smartPasteModal.addEventListener('click', function(e) {
-                if (e.target === smartPasteModal) {
-                    hideSmartPasteModal();
-                }
-            });
-
-            // 获取筛选条件
             function getCurrentFilter() {
                 return {
                     game: filterGameSelect.value,
@@ -332,16 +654,14 @@
                 };
             }
 
-            // 判断记录是否符合筛选
             function matchFilter(item, filter) {
-                if (filter.game !== '' && item.game !== filter.game) return false;
-                if (filter.server !== '' && !item.server.toLowerCase().includes(filter.server)) return false;
-                if (filter.id !== '' && !item.id.toLowerCase().includes(filter.id)) return false;
-                if (filter.date !== '' && item.timestamp !== filter.date) return false;
+                if (filter.game && item.game !== filter.game) return false;
+                if (filter.server && !item.server.toLowerCase().includes(filter.server)) return false;
+                if (filter.id && !item.id.toLowerCase().includes(filter.id)) return false;
+                if (filter.date && item.timestamp !== filter.date) return false;
                 return true;
             }
 
-            // 删除记录
             function deleteHistoryItem(originalIndex) {
                 if (originalIndex >= 0 && originalIndex < historyItems.length) {
                     historyItems.splice(originalIndex, 1);
@@ -351,36 +671,28 @@
                 }
             }
 
-            // 渲染历史列表
             function renderHistory() {
                 if (!historyListEl) return;
-
                 const filter = getCurrentFilter();
                 const filteredItems = historyItems.filter(item => matchFilter(item, filter));
                 displayCountSpan.textContent = filteredItems.length;
 
                 if (filteredItems.length === 0) {
-                    historyListEl.innerHTML = '<span style="color: #888;">无记录</span>';
+                    historyListEl.innerHTML = '<span style="color: #8e8e93;">无记录</span>';
                     return;
                 }
 
                 let html = '';
-                filteredItems.forEach((item) => {
+                filteredItems.forEach(item => {
                     const originalIndex = historyItems.indexOf(item);
-                    
-                    html += `<div style="border-bottom: 1px dashed #aaa; padding: 8px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">`;
-                    
-                    html += `<span style="color: #555; min-width: 90px;">${item.timestamp || '无日期'}</span>`;
-                    
-                    html += `<span style="min-width:180px;"><strong>${item.game}</strong> - ${item.server} - ${item.id}</span>`;
-                    
-                    html += `<input type="text" placeholder="备注" value="${item.note ? item.note.replace(/"/g, '&quot;') : ''}" style="padding: 6px; width: 120px;" class="history-note" data-original-index="${originalIndex}">`;
-                    
+                    html += `<div class="history-item">`;
+                    html += `<span class="history-date">${item.timestamp || '无日期'}</span>`;
+                    html += `<span class="history-content"><strong>${item.game}</strong> - ${item.server} - ${item.id}</span>`;
+                    html += `<input type="text" class="history-note" placeholder="备注" value="${item.note ? item.note.replace(/"/g, '&quot;') : ''}" data-original-index="${originalIndex}">`;
+                    html += `<div class="history-actions">`;
                     html += `<button class="copy-single-btn" data-original-index="${originalIndex}">复制</button>`;
-                    
-                    html += `<button class="delete-single-btn" data-original-index="${originalIndex}" style="background: #fee; border: 1px solid #faa;">删除</button>`;
-                    
-                    html += `</div>`;
+                    html += `<button class="button-danger" data-original-index="${originalIndex}">删除</button>`;
+                    html += `</div></div>`;
                 });
                 historyListEl.innerHTML = html;
 
@@ -410,7 +722,7 @@
                     });
                 });
 
-                document.querySelectorAll('.delete-single-btn').forEach(btn => {
+                document.querySelectorAll('.button-danger').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         const idx = this.getAttribute('data-original-index');
                         if (idx !== null) deleteHistoryItem(parseInt(idx));
@@ -418,22 +730,11 @@
                 });
             }
 
-            // 创建新的一行输入
             function createInputRow() {
                 const rowDiv = document.createElement('div');
-                rowDiv.style.marginBottom = '12px';
-                rowDiv.style.border = '1px solid #ccc';
-                rowDiv.style.padding = '10px';
-                rowDiv.style.display = 'flex';
-                rowDiv.style.alignItems = 'center';
-                rowDiv.style.gap = '10px';
-                rowDiv.style.flexWrap = 'wrap';
-                rowDiv.style.background = '#f9f9f9';
+                rowDiv.className = 'input-row';
 
-                // 游戏下拉
                 const gameSelect = document.createElement('select');
-                gameSelect.style.minWidth = '90px';
-                gameSelect.style.padding = '4px';
                 const placeholderOption = document.createElement('option');
                 placeholderOption.value = '';
                 placeholderOption.textContent = '选择游戏';
@@ -447,69 +748,39 @@
                     gameSelect.appendChild(opt);
                 });
 
-                // 区服输入
                 const serverInput = document.createElement('input');
                 serverInput.type = 'text';
                 serverInput.placeholder = '区服';
-                serverInput.style.width = '90px';
-                serverInput.style.padding = '6px';
+                serverInput.className = 'server-input';
 
-                // ID输入
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.placeholder = 'ID';
-                idInput.style.width = '110px';
-                idInput.style.padding = '6px';
+                idInput.className = 'id-input';
 
-                // 复制按钮
                 const copyBtn = document.createElement('button');
                 copyBtn.textContent = '复制';
-                copyBtn.style.padding = '4px 10px';
-
-                // 直接使用外部变量，简化闭包
+                copyBtn.classList.add('button-primary');
                 copyBtn.addEventListener('click', function() {
                     const gameValue = gameSelect.value;
-                    if (!gameValue) {
-                        showToast('请选择游戏');
-                        return;
-                    }
-
+                    if (!gameValue) { showToast('请选择游戏'); return; }
                     const serverValue = serverInput.value.trim();
                     const idValue = idInput.value.trim();
-
-                    if (!serverValue || !idValue) {
-                        showToast('区服和ID不能为空');
-                        return;
-                    }
-
+                    if (!serverValue || !idValue) { showToast('区服和ID不能为空'); return; }
                     const combined = `${gameValue}-${serverValue}-${idValue}`;
-
-                    // 复制
                     try {
                         if (navigator.clipboard && navigator.clipboard.writeText) {
                             navigator.clipboard.writeText(combined).catch(() => fallbackCopy(combined));
                         } else {
                             fallbackCopy(combined);
                         }
-                    } catch (e) {
-                        fallbackCopy(combined);
-                    }
-
-                    // 当前日期
+                    } catch (e) { fallbackCopy(combined); }
                     const d = new Date();
                     const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-
-                    historyItems.push({
-                        game: gameValue,
-                        server: serverValue,
-                        id: idValue,
-                        note: '',
-                        timestamp: dateStr
-                    });
-
+                    historyItems.push({ game: gameValue, server: serverValue, id: idValue, note: '', timestamp: dateStr });
                     saveToStorage();
                     renderHistory();
-                    idInput.value = ''; // 只清空ID
+                    idInput.value = '';
                     showToast(`已复制: ${combined}`);
                 });
 
@@ -520,12 +791,10 @@
                 return rowDiv;
             }
 
-            // 新增按钮
             document.getElementById('addRowBtn').addEventListener('click', function() {
                 inputRowsContainer.appendChild(createInputRow());
             });
 
-            // 筛选事件
             filterGameSelect.addEventListener('change', renderHistory);
             filterServer.addEventListener('input', renderHistory);
             filterId.addEventListener('input', renderHistory);
@@ -538,12 +807,8 @@
                 renderHistory();
             });
 
-            // 导出txt
             exportBtn.addEventListener('click', function() {
-                if (historyItems.length === 0) {
-                    showToast('无记录可导出');
-                    return;
-                }
+                if (historyItems.length === 0) { showToast('无记录可导出'); return; }
                 const blob = new Blob([JSON.stringify(historyItems, null, 2)], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -554,36 +819,19 @@
                 showToast('导出成功');
             });
 
-            // 导出Excel
             exportExcelBtn.addEventListener('click', function() {
-                if (historyItems.length === 0) {
-                    showToast('无记录可导出');
-                    return;
-                }
-
+                if (historyItems.length === 0) { showToast('无记录可导出'); return; }
                 const excelData = [['日期', '游戏', '区服', 'ID', '备注']];
-                
                 historyItems.forEach(item => {
-                    excelData.push([
-                        item.timestamp || '',
-                        item.game,
-                        item.server,
-                        item.id,
-                        item.note || ''
-                    ]);
+                    excelData.push([item.timestamp || '', item.game, item.server, item.id, item.note || '']);
                 });
-
                 const wb = XLSX.utils.book_new();
                 const ws = XLSX.utils.aoa_to_sheet(excelData);
                 XLSX.utils.book_append_sheet(wb, ws, '记录');
-                
-                const fileName = `game_records_${new Date().toISOString().slice(0,10)}.xlsx`;
-                XLSX.writeFile(wb, fileName);
-                
+                XLSX.writeFile(wb, `game_records_${new Date().toISOString().slice(0,10)}.xlsx`);
                 showToast('导出Excel成功');
             });
 
-            // 导入
             importBtn.addEventListener('click', () => importFile.click());
             importFile.addEventListener('change', function(e) {
                 const file = e.target.files[0];
@@ -617,17 +865,14 @@
                 reader.readAsText(file);
             });
 
-            // 保存到本地
             function saveToStorage() {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(historyItems));
             }
 
-            // 初始化
             (function init() {
                 inputRowsContainer.appendChild(createInputRow());
                 renderHistory();
             })();
-
         })();
     </script>
 </body>
