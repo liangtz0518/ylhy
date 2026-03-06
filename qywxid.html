@@ -28,7 +28,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 标题层级 */
         h3 {
             font-size: 32px;
             font-weight: 600;
@@ -37,7 +36,6 @@
             letter-spacing: -0.003em;
         }
 
-        /* 按钮基座 */
         button {
             background-color: #f5f5f7;
             border: 1px solid transparent;
@@ -58,9 +56,8 @@
             transform: scale(0.98);
         }
 
-        /* 主要按钮 (蓝色) */
         .button-primary {
-            background-color: #000000;
+            background-color: #0071e3;
             color: white;
         }
         .button-primary:hover {
@@ -71,7 +68,6 @@
             transform: scale(0.98);
         }
 
-        /* 危险按钮 (删除) */
         .button-danger {
             background-color: #ffffff;
             border: 1px solid #d2d2d7;
@@ -86,7 +82,6 @@
             transform: scale(0.98);
         }
 
-        /* 输入框 & 下拉框 */
         input, select, textarea {
             border: 1px solid #d2d2d7;
             border-radius: 8px;
@@ -106,7 +101,6 @@
             color: #8e8e93;
         }
 
-        /* 顶部工具栏 */
         .toolbar {
             display: flex;
             gap: 12px;
@@ -117,7 +111,6 @@
             border-bottom: 1px solid #f0f0f3;
         }
 
-        /* 自定义开关 (iOS风格) */
         .switch-label {
             display: flex;
             align-items: center;
@@ -147,7 +140,7 @@
             outline: none;
         }
         .switch-checkbox:checked {
-            background-color: #000000;
+            background-color: #0077ed;
         }
         .switch-checkbox::before {
             content: '';
@@ -165,7 +158,6 @@
             transform: translateX(20px);
         }
 
-        /* ---------- 筛选区域 (全新排版) ---------- */
         .filter-section {
             margin: 36px 0 40px;
         }
@@ -184,7 +176,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 20px 32px;  /* 横向纵向间距 */
+            gap: 20px 32px;
         }
         .filter-bar label {
             display: flex;
@@ -215,7 +207,6 @@
             white-space: nowrap;
         }
 
-        /* 输入行卡片 */
         .input-row {
             background: #ffffff;
             border-radius: 14px;
@@ -242,7 +233,6 @@
             width: 150px;
         }
 
-        /* 历史列表 */
         .history-section {
             margin-top: 56px;
         }
@@ -300,7 +290,6 @@
             border-radius: 6px;
         }
 
-        /* 智能粘贴弹窗 (Apple 风格卡片) */
         .modal {
             display: none;
             position: fixed;
@@ -386,7 +375,6 @@
             background-color: #e8e8ed;
         }
 
-        /* 提示 toast */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -416,7 +404,6 @@
 <body>
     <h3>参数</h3>
 
-    <!-- 工具栏：新增 + 导入导出 + 智能粘贴开关 -->
     <div class="toolbar">
         <button id="addRowBtn" class="button-primary">新增一行</button>
         <button id="exportBtn">导出列表 (txt)</button>
@@ -431,12 +418,10 @@
         </label>
     </div>
 
-    <!-- 动态生成的输入行区域 -->
     <div id="inputRowsContainer" style="margin-bottom: 10px;"></div>
 
     <hr>
 
-    <!-- 筛选区域 (重新排版：标题独立) -->
     <div class="filter-section">
         <div class="filter-title">筛选</div>
         <div class="filter-bar">
@@ -448,19 +433,15 @@
                     <option value="上古6">上古6</option>
                 </select>
             </label>
-
             <label>区服：
                 <input type="text" id="filterServer" placeholder="关键词">
             </label>
-
             <label>ID：
                 <input type="text" id="filterId" placeholder="关键词">
             </label>
-
             <label>日期：
                 <input type="date" id="filterDate">
             </label>
-
             <div class="filter-actions">
                 <button id="clearFilterBtn">清除筛选</button>
                 <span class="record-count">共 <span id="displayCount">0</span> 条</span>
@@ -468,7 +449,6 @@
         </div>
     </div>
 
-    <!-- 智能粘贴弹窗 -->
     <div id="smartPasteModal" class="modal">
         <div class="modal-card">
             <div class="modal-header">
@@ -481,22 +461,67 @@
         </div>
     </div>
 
-    <!-- 已生成列表 -->
     <div class="history-section">
         <div class="history-title">记录</div>
         <div id="historyList" class="history-list"></div>
     </div>
 
-    <!-- 临时提示条 -->
     <div id="toastMessage" class="toast">提示</div>
 
     <script>
         (function() {
             const PRESET_GAMES = ['蜀山2', '伏魔5', '上古6'];
+
+            // ---------- 话术模板（支持多文本和多图片交错）----------
+            const TALK_TEMPLATES = {
+                '蜀山2': {
+                    // 每条消息可以是字符串（文本）或 {type:'image', file:'图片名'}
+                    messages: [
+                        "好啦~扶持特权已激活，328+专属的道具材料已发放邮件，注意查收哈",
+                        "●激活永久特权后每天邮件领取2000芫真充卡，永久有效",
+                        "●VIP等级在线直接领",
+                        "●线上任意充值都是0.05折",
+                        "●原价128 实际充值只需0.64",
+                        "●开局优先提战力 购买买直升100特权有送高阶装备",
+                        "●达到等级可以找妹妹领取额外的充值卡福利",
+                        "以上所有福利都是单独激活提供的",
+                        { type: 'image', file: '蜀山2_1.png' },
+                        { type: 'image', file: '蜀山2_2.png' },
+                        { type: 'image', file: '蜀山2_3.png' },
+                        "这个是比较耐玩的纯绿色服，建议您看看这个前期的小攻略，可以少走不少弯路哦，哪里不明白也可以直接问我哦，也有很划算的充值活动，有想法都可以找我哦~"
+                    ]
+                },
+                '伏魔5': {
+                    messages: [
+                        "好呢，扶持特权已激活，648+专属的道具材料已发放邮件，注意查收哈",
+                        "●并且激活永久特权后续每天永久领取邮件2000芫真充卡的专属特权福利的",
+                        "●VIP等级在线直接领",
+                        "●线上任意充值都是0.1折扣",
+                        "●原价128 实际充值只需1.28",
+                        "●开局优先提战力 购买买直升100特权有送高阶装备",
+                        "●达到等级可以找妹妹领取额外的充值卡福利",
+                        "以上所有福利都是单独激活提供的",
+                        { type: 'image', file: '伏魔5.png' },
+                        "这个是比较耐玩的纯绿色服，建议您看看这个前期的小攻略，可以少走不少弯路哦，哪里不明白也可以直接问我哦，也有很划算的充值活动，有想法都可以找我哦~"
+                    ]
+                },
+                '上古6': {
+                    messages: [
+                        "上古6",
+                        { type: 'image', file: '上古6_1.png' },
+                        { type: 'image', file: '上古6_2.png' },
+                        { type: 'image', file: '上古6_3.jpg' },
+                        "！"
+                    ]
+                }
+            };
+
             let historyItems = [];
             const STORAGE_KEY = 'game_server_id_history_v2';
             const SMART_PASTE_KEY = 'smart_paste_enabled';
             let smartPasteEnabled = localStorage.getItem(SMART_PASTE_KEY) !== 'false';
+
+            let lastClipboardContent = null;
 
             function loadFromStorage() {
                 const stored = localStorage.getItem(STORAGE_KEY);
@@ -558,13 +583,79 @@
                 document.body.removeChild(ta);
             }
 
-            async function readClipboard() {
-                try {
-                    if (navigator.clipboard && navigator.clipboard.readText) {
-                        return await navigator.clipboard.readText();
+            // 将单个图片文件转换为 Base64
+            function imageFileToBase64(filePath) {
+                return new Promise((resolve) => {
+                    fetch(filePath)
+                        .then(response => {
+                            if (!response.ok) throw new Error('图片不存在');
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = () => resolve(null);
+                            reader.readAsDataURL(blob);
+                        })
+                        .catch(() => {
+                            console.warn(`图片读取失败: ${filePath}`);
+                            resolve(null);
+                        });
+                });
+            }
+
+            // 根据消息数组生成 HTML 和纯文本
+            async function buildRichContent(messages) {
+                let html = '';
+                let plainText = '';
+                const imagePromises = [];
+
+                for (let msg of messages) {
+                    if (typeof msg === 'string') {
+                        // 文本段落
+                        html += `<div>${msg}</div>`;
+                        plainText += msg + '\n';
+                    } else if (msg.type === 'image') {
+                        // 图片：先存一个占位，后续替换为 Base64
+                        const index = imagePromises.length;
+                        imagePromises.push(imageFileToBase64(msg.file));
+                        // HTML 暂时用占位符，稍后替换
+                        html += `<!--IMAGE_PLACEHOLDER_${index}-->`;
+                        plainText += '[图片]\n';
                     }
-                } catch (err) {}
-                return null;
+                }
+
+                // 等待所有图片加载完成
+                const base64Images = await Promise.all(imagePromises);
+                // 替换 HTML 中的占位符
+                for (let i = 0; i < base64Images.length; i++) {
+                    const base64 = base64Images[i];
+                    const imgTag = base64 
+                        ? `<div><img src="${base64}" style="max-width:300px; margin:5px 0;"/></div>`
+                        : `<div>[图片]</div>`;
+                    html = html.replace(`<!--IMAGE_PLACEHOLDER_${i}-->`, imgTag);
+                }
+
+                return { html, plainText: plainText.trim() };
+            }
+
+            // 复制富文本
+            async function copyRichText(messages) {
+                const { html, plainText } = await buildRichContent(messages);
+                try {
+                    const blobHTML = new Blob([html], { type: 'text/html' });
+                    const blobText = new Blob([plainText], { type: 'text/plain' });
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            'text/html': blobHTML,
+                            'text/plain': blobText
+                        })
+                    ]);
+                    showToast('话术已复制（含图片）');
+                } catch (err) {
+                    fallbackCopy(plainText);
+                    showToast('话术复制（纯文本）');
+                }
             }
 
             function createGameButtons() {
@@ -633,7 +724,12 @@
                     const text = await readClipboard();
                     if (text && text.trim()) {
                         const trimmed = text.trim();
+                        if (trimmed === lastClipboardContent) {
+                            console.log('相同ID，忽略');
+                            return;
+                        }
                         if (trimmed.length > 0 && trimmed.length < 50 && !trimmed.includes('\n') && !trimmed.includes('\r')) {
+                            lastClipboardContent = trimmed;
                             showSmartPasteModal(trimmed);
                         }
                     }
@@ -730,6 +826,7 @@
                 });
             }
 
+            // 创建新的一行输入
             function createInputRow() {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'input-row';
@@ -758,6 +855,7 @@
                 idInput.placeholder = 'ID';
                 idInput.className = 'id-input';
 
+                // 复制按钮
                 const copyBtn = document.createElement('button');
                 copyBtn.textContent = '复制';
                 copyBtn.classList.add('button-primary');
@@ -784,10 +882,28 @@
                     showToast(`已复制: ${combined}`);
                 });
 
+                // 话术按钮
+                const talkBtn = document.createElement('button');
+                talkBtn.textContent = '话术';
+                talkBtn.addEventListener('click', async function() {
+                    const gameValue = gameSelect.value;
+                    if (!gameValue) {
+                        showToast('请先选择游戏');
+                        return;
+                    }
+                    const template = TALK_TEMPLATES[gameValue];
+                    if (!template || !template.messages) {
+                        showToast('该游戏无语术模板');
+                        return;
+                    }
+                    await copyRichText(template.messages);
+                });
+
                 rowDiv.appendChild(gameSelect);
                 rowDiv.appendChild(serverInput);
                 rowDiv.appendChild(idInput);
                 rowDiv.appendChild(copyBtn);
+                rowDiv.appendChild(talkBtn);
                 return rowDiv;
             }
 
@@ -809,7 +925,10 @@
 
             exportBtn.addEventListener('click', function() {
                 if (historyItems.length === 0) { showToast('无记录可导出'); return; }
-                const blob = new Blob([JSON.stringify(historyItems, null, 2)], { type: 'text/plain' });
+                const lines = historyItems.map(item => {
+                    return `${item.timestamp}-${item.game}-${item.server}-${item.id}-${item.note}`;
+                }).join('\n');
+                const blob = new Blob([lines], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -839,25 +958,39 @@
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     try {
-                        const imported = JSON.parse(ev.target.result);
-                        if (!Array.isArray(imported)) throw new Error();
-                        const valid = imported.filter(i => i && i.game && i.server && i.id)
-                            .map(i => ({
-                                game: String(i.game),
-                                server: String(i.server),
-                                id: String(i.id),
-                                note: i.note || '',
-                                timestamp: i.timestamp || new Date().toISOString().slice(0,10)
-                            }));
-                        if (valid.length) {
-                            historyItems.push(...valid);
+                        const content = ev.target.result;
+                        const lines = content.split('\n').filter(line => line.trim() !== '');
+                        const imported = [];
+                        lines.forEach(line => {
+                            const parts = line.split('-');
+                            if (parts.length < 6) return;
+                            const year = parts[0];
+                            const month = parts[1];
+                            const day = parts[2];
+                            const game = parts[3];
+                            const server = parts[4];
+                            const id = parts[5];
+                            const note = parts.slice(6).join('-');
+                            const timestamp = `${year}-${month}-${day}`;
+                            if (year && month && day && game && server && id) {
+                                imported.push({
+                                    game,
+                                    server,
+                                    id,
+                                    note: note || '',
+                                    timestamp
+                                });
+                            }
+                        });
+                        if (imported.length) {
+                            historyItems.push(...imported);
                             saveToStorage();
                             renderHistory();
-                            showToast(`导入 ${valid.length} 条`);
+                            showToast(`导入 ${imported.length} 条`);
                         } else {
                             showToast('无有效数据');
                         }
-                    } catch {
+                    } catch (err) {
                         showToast('文件格式错误');
                     }
                     importFile.value = '';
@@ -873,6 +1006,15 @@
                 inputRowsContainer.appendChild(createInputRow());
                 renderHistory();
             })();
+
+            async function readClipboard() {
+                try {
+                    if (navigator.clipboard && navigator.clipboard.readText) {
+                        return await navigator.clipboard.readText();
+                    }
+                } catch (err) {}
+                return null;
+            }
         })();
     </script>
 </body>
