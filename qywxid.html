@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>企业微信添加记录</title>
-    <!-- 引入SheetJS用于导出Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
-        /* ---------- Apple 设计语言 · 精准复刻 ---------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
             background-color: #ffffff;
@@ -27,7 +24,6 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-
         h3 {
             font-size: 32px;
             font-weight: 600;
@@ -35,7 +31,6 @@
             color: #1d1d1f;
             letter-spacing: -0.003em;
         }
-
         button {
             background-color: #f5f5f7;
             border: 1px solid transparent;
@@ -55,7 +50,6 @@
             background-color: #d1d1d6;
             transform: scale(0.98);
         }
-
         .button-primary {
             background-color: #0071e3;
             color: white;
@@ -67,7 +61,6 @@
             background-color: #005fc7;
             transform: scale(0.98);
         }
-
         .button-danger {
             background-color: #ffffff;
             border: 1px solid #d2d2d7;
@@ -81,7 +74,6 @@
             background-color: #ffd7d7;
             transform: scale(0.98);
         }
-
         input, select, textarea {
             border: 1px solid #d2d2d7;
             border-radius: 8px;
@@ -100,7 +92,6 @@
         input::placeholder {
             color: #8e8e93;
         }
-
         .toolbar {
             display: flex;
             gap: 12px;
@@ -110,7 +101,6 @@
             padding-bottom: 8px;
             border-bottom: 1px solid #f0f0f3;
         }
-
         .switch-label {
             display: flex;
             align-items: center;
@@ -157,7 +147,6 @@
         .switch-checkbox:checked::before {
             transform: translateX(20px);
         }
-
         .filter-section {
             margin: 36px 0 40px;
         }
@@ -206,7 +195,6 @@
             font-size: 14px;
             white-space: nowrap;
         }
-
         .input-row {
             background: #ffffff;
             border-radius: 14px;
@@ -232,7 +220,6 @@
         .input-row .id-input {
             width: 150px;
         }
-
         .history-section {
             margin-top: 56px;
         }
@@ -289,7 +276,6 @@
             font-size: 14px;
             border-radius: 6px;
         }
-
         .modal {
             display: none;
             position: fixed;
@@ -374,7 +360,6 @@
         .game-buttons button:hover {
             background-color: #e8e8ed;
         }
-
         .toast {
             position: fixed;
             bottom: 30px;
@@ -393,7 +378,6 @@
             white-space: nowrap;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-
         hr {
             border: none;
             border-top: 1px solid #f0f0f3;
@@ -403,25 +387,20 @@
 </head>
 <body>
     <h3>参数</h3>
-
     <div class="toolbar">
         <button id="addRowBtn" class="button-primary">新增一行</button>
         <button id="exportBtn">导出列表 (txt)</button>
         <button id="exportExcelBtn">导出为excel</button>
         <button id="importBtn">导入列表 (txt)</button>
         <input type="file" id="importFile" accept=".txt,text/plain" style="display: none;">
-        
         <label class="switch-label">
             <span>智能粘贴</span>
             <input type="checkbox" id="smartPasteToggle" class="switch-checkbox" checked>
-            <small>自动检测剪贴板</small>
+            <small>自动检测ID</small>
         </label>
     </div>
-
     <div id="inputRowsContainer" style="margin-bottom: 10px;"></div>
-
     <hr>
-
     <div class="filter-section">
         <div class="filter-title">筛选</div>
         <div class="filter-bar">
@@ -448,34 +427,27 @@
             </div>
         </div>
     </div>
-
     <div id="smartPasteModal" class="modal">
         <div class="modal-card">
             <div class="modal-header">
-                <h4>检测到剪贴板内容</h4>
+                <h4>检测到ID</h4>
                 <button id="closeModalBtn" class="close-btn">×</button>
             </div>
             <div id="clipboardContent" class="clipboard-preview"></div>
-            <div style="font-weight: 500; margin-bottom: 16px; color: #1d1d1f;">选择游戏粘贴到：</div>
+            <div style="font-weight: 500; margin-bottom: 16px; color: #1d1d1f;">选择游戏</div>
             <div id="gameButtonsContainer" class="game-buttons"></div>
         </div>
     </div>
-
     <div class="history-section">
         <div class="history-title">记录</div>
         <div id="historyList" class="history-list"></div>
     </div>
-
     <div id="toastMessage" class="toast">提示</div>
-
     <script>
         (function() {
             const PRESET_GAMES = ['蜀山2', '伏魔5', '上古6'];
-
-            // ---------- 话术模板（支持多文本和多图片交错）----------
             const TALK_TEMPLATES = {
                 '蜀山2': {
-                    // 每条消息可以是字符串（文本）或 {type:'image', file:'图片名'}
                     messages: [
                         "好啦~扶持特权已激活，328+专属的道具材料已发放邮件，注意查收哈",
                         "●激活永久特权后每天邮件领取2000芫真充卡，永久有效",
@@ -501,7 +473,8 @@
                         "●开局优先提战力 购买买直升100特权有送高阶装备",
                         "●达到等级可以找妹妹领取额外的充值卡福利",
                         "以上所有福利都是单独激活提供的",
-                        { type: 'image', file: '伏魔5.png' },
+                        { type: 'image', file: '伏魔5_1.png' },
+                        { type: 'image', file: '伏魔5_2.png' },                        
                         "这个是比较耐玩的纯绿色服，建议您看看这个前期的小攻略，可以少走不少弯路哦，哪里不明白也可以直接问我哦，也有很划算的充值活动，有想法都可以找我哦~"
                     ]
                 },
@@ -515,14 +488,11 @@
                     ]
                 }
             };
-
             let historyItems = [];
             const STORAGE_KEY = 'game_server_id_history_v2';
             const SMART_PASTE_KEY = 'smart_paste_enabled';
             let smartPasteEnabled = localStorage.getItem(SMART_PASTE_KEY) !== 'false';
-
-            let lastClipboardContent = null;
-
+            let lastTriggeredContent = null;
             function loadFromStorage() {
                 const stored = localStorage.getItem(STORAGE_KEY);
                 if (stored) {
@@ -533,38 +503,31 @@
                 }
             }
             loadFromStorage();
-
             const inputRowsContainer = document.getElementById('inputRowsContainer');
             const historyListEl = document.getElementById('historyList');
             const toastEl = document.getElementById('toastMessage');
-            
             const filterGameSelect = document.getElementById('filterGameSelect');
             const filterServer = document.getElementById('filterServer');
             const filterId = document.getElementById('filterId');
             const filterDate = document.getElementById('filterDate');
             const clearFilterBtn = document.getElementById('clearFilterBtn');
             const displayCountSpan = document.getElementById('displayCount');
-
             const smartPasteToggle = document.getElementById('smartPasteToggle');
             const smartPasteModal = document.getElementById('smartPasteModal');
             const clipboardContent = document.getElementById('clipboardContent');
             const gameButtonsContainer = document.getElementById('gameButtonsContainer');
             const closeModalBtn = document.getElementById('closeModalBtn');
-
             const exportBtn = document.getElementById('exportBtn');
             const exportExcelBtn = document.getElementById('exportExcelBtn');
             const importBtn = document.getElementById('importBtn');
             const importFile = document.getElementById('importFile');
-
             let currentClipboardText = '';
-
             smartPasteToggle.checked = smartPasteEnabled;
             smartPasteToggle.addEventListener('change', function(e) {
                 smartPasteEnabled = e.target.checked;
                 localStorage.setItem(SMART_PASTE_KEY, smartPasteEnabled);
                 showToast(smartPasteEnabled ? '智能粘贴已开启' : '智能粘贴已关闭');
             });
-
             function showToast(text, duration = 1500) {
                 toastEl.textContent = text;
                 toastEl.style.opacity = '1';
@@ -573,7 +536,6 @@
                     toastEl.style.opacity = '0';
                 }, duration);
             }
-
             function fallbackCopy(text) {
                 const ta = document.createElement('textarea');
                 ta.value = text;
@@ -582,8 +544,6 @@
                 document.execCommand('copy');
                 document.body.removeChild(ta);
             }
-
-            // 将单个图片文件转换为 Base64
             function imageFileToBase64(filePath) {
                 return new Promise((resolve) => {
                     fetch(filePath)
@@ -603,31 +563,22 @@
                         });
                 });
             }
-
-            // 根据消息数组生成 HTML 和纯文本
             async function buildRichContent(messages) {
                 let html = '';
                 let plainText = '';
                 const imagePromises = [];
-
                 for (let msg of messages) {
                     if (typeof msg === 'string') {
-                        // 文本段落
                         html += `<div>${msg}</div>`;
                         plainText += msg + '\n';
                     } else if (msg.type === 'image') {
-                        // 图片：先存一个占位，后续替换为 Base64
                         const index = imagePromises.length;
                         imagePromises.push(imageFileToBase64(msg.file));
-                        // HTML 暂时用占位符，稍后替换
                         html += `<!--IMAGE_PLACEHOLDER_${index}-->`;
                         plainText += '[图片]\n';
                     }
                 }
-
-                // 等待所有图片加载完成
                 const base64Images = await Promise.all(imagePromises);
-                // 替换 HTML 中的占位符
                 for (let i = 0; i < base64Images.length; i++) {
                     const base64 = base64Images[i];
                     const imgTag = base64 
@@ -635,11 +586,8 @@
                         : `<div>[图片]</div>`;
                     html = html.replace(`<!--IMAGE_PLACEHOLDER_${i}-->`, imgTag);
                 }
-
                 return { html, plainText: plainText.trim() };
             }
-
-            // 复制富文本
             async function copyRichText(messages) {
                 const { html, plainText } = await buildRichContent(messages);
                 try {
@@ -657,7 +605,6 @@
                     showToast('话术复制（纯文本）');
                 }
             }
-
             function createGameButtons() {
                 gameButtonsContainer.innerHTML = '';
                 PRESET_GAMES.forEach(game => {
@@ -667,7 +614,6 @@
                     gameButtonsContainer.appendChild(btn);
                 });
             }
-
             function pasteToGame(game, content) {
                 const rows = document.querySelectorAll('#inputRowsContainer > div');
                 let targetRow = null;
@@ -699,18 +645,15 @@
                 hideSmartPasteModal();
                 showToast(`已粘贴到${game}${targetIndex === -1 ? '（新增行）' : ''}`);
             }
-
             function showSmartPasteModal(content) {
                 currentClipboardText = content;
                 clipboardContent.textContent = content;
                 createGameButtons();
                 smartPasteModal.style.display = 'flex';
             }
-
             function hideSmartPasteModal() {
                 smartPasteModal.style.display = 'none';
             }
-
             let lastClipboardCheck = 0;
             let isCheckingClipboard = false;
             window.addEventListener('focus', async function() {
@@ -724,23 +667,20 @@
                     const text = await readClipboard();
                     if (text && text.trim()) {
                         const trimmed = text.trim();
-                        if (trimmed === lastClipboardContent) {
-                            console.log('相同ID，忽略');
+                        if (!/^\d+$/.test(trimmed)) return;
+                        if (lastTriggeredContent && trimmed.includes(lastTriggeredContent)) {
+                            console.log('包含上次触发内容，忽略');
                             return;
                         }
-                        if (trimmed.length > 0 && trimmed.length < 50 && !trimmed.includes('\n') && !trimmed.includes('\r')) {
-                            lastClipboardContent = trimmed;
-                            showSmartPasteModal(trimmed);
-                        }
+                        lastTriggeredContent = trimmed;
+                        showSmartPasteModal(trimmed);
                     }
                 } catch (err) {} finally {
                     isCheckingClipboard = false;
                 }
             });
-
             closeModalBtn.addEventListener('click', hideSmartPasteModal);
             smartPasteModal.addEventListener('click', (e) => { if (e.target === smartPasteModal) hideSmartPasteModal(); });
-
             function getCurrentFilter() {
                 return {
                     game: filterGameSelect.value,
@@ -749,7 +689,6 @@
                     date: filterDate.value
                 };
             }
-
             function matchFilter(item, filter) {
                 if (filter.game && item.game !== filter.game) return false;
                 if (filter.server && !item.server.toLowerCase().includes(filter.server)) return false;
@@ -757,7 +696,6 @@
                 if (filter.date && item.timestamp !== filter.date) return false;
                 return true;
             }
-
             function deleteHistoryItem(originalIndex) {
                 if (originalIndex >= 0 && originalIndex < historyItems.length) {
                     historyItems.splice(originalIndex, 1);
@@ -766,18 +704,15 @@
                     showToast('已删除');
                 }
             }
-
             function renderHistory() {
                 if (!historyListEl) return;
                 const filter = getCurrentFilter();
                 const filteredItems = historyItems.filter(item => matchFilter(item, filter));
                 displayCountSpan.textContent = filteredItems.length;
-
                 if (filteredItems.length === 0) {
                     historyListEl.innerHTML = '<span style="color: #8e8e93;">无记录</span>';
                     return;
                 }
-
                 let html = '';
                 filteredItems.forEach(item => {
                     const originalIndex = historyItems.indexOf(item);
@@ -791,7 +726,6 @@
                     html += `</div></div>`;
                 });
                 historyListEl.innerHTML = html;
-
                 document.querySelectorAll('.history-note').forEach(input => {
                     input.addEventListener('input', function(e) {
                         const idx = this.getAttribute('data-original-index');
@@ -801,7 +735,6 @@
                         }
                     });
                 });
-
                 document.querySelectorAll('.copy-single-btn').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         const idx = this.getAttribute('data-original-index');
@@ -817,7 +750,6 @@
                         }
                     });
                 });
-
                 document.querySelectorAll('.button-danger').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         const idx = this.getAttribute('data-original-index');
@@ -825,12 +757,9 @@
                     });
                 });
             }
-
-            // 创建新的一行输入
             function createInputRow() {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'input-row';
-
                 const gameSelect = document.createElement('select');
                 const placeholderOption = document.createElement('option');
                 placeholderOption.value = '';
@@ -844,18 +773,14 @@
                     opt.textContent = name;
                     gameSelect.appendChild(opt);
                 });
-
                 const serverInput = document.createElement('input');
                 serverInput.type = 'text';
                 serverInput.placeholder = '区服';
                 serverInput.className = 'server-input';
-
                 const idInput = document.createElement('input');
                 idInput.type = 'text';
                 idInput.placeholder = 'ID';
                 idInput.className = 'id-input';
-
-                // 复制按钮
                 const copyBtn = document.createElement('button');
                 copyBtn.textContent = '复制';
                 copyBtn.classList.add('button-primary');
@@ -881,8 +806,6 @@
                     idInput.value = '';
                     showToast(`已复制: ${combined}`);
                 });
-
-                // 话术按钮
                 const talkBtn = document.createElement('button');
                 talkBtn.textContent = '话术';
                 talkBtn.addEventListener('click', async function() {
@@ -898,7 +821,6 @@
                     }
                     await copyRichText(template.messages);
                 });
-
                 rowDiv.appendChild(gameSelect);
                 rowDiv.appendChild(serverInput);
                 rowDiv.appendChild(idInput);
@@ -906,11 +828,9 @@
                 rowDiv.appendChild(talkBtn);
                 return rowDiv;
             }
-
             document.getElementById('addRowBtn').addEventListener('click', function() {
                 inputRowsContainer.appendChild(createInputRow());
             });
-
             filterGameSelect.addEventListener('change', renderHistory);
             filterServer.addEventListener('input', renderHistory);
             filterId.addEventListener('input', renderHistory);
@@ -922,7 +842,6 @@
                 filterDate.value = '';
                 renderHistory();
             });
-
             exportBtn.addEventListener('click', function() {
                 if (historyItems.length === 0) { showToast('无记录可导出'); return; }
                 const lines = historyItems.map(item => {
@@ -937,7 +856,6 @@
                 URL.revokeObjectURL(url);
                 showToast('导出成功');
             });
-
             exportExcelBtn.addEventListener('click', function() {
                 if (historyItems.length === 0) { showToast('无记录可导出'); return; }
                 const excelData = [['日期', '游戏', '区服', 'ID', '备注']];
@@ -950,7 +868,6 @@
                 XLSX.writeFile(wb, `game_records_${new Date().toISOString().slice(0,10)}.xlsx`);
                 showToast('导出Excel成功');
             });
-
             importBtn.addEventListener('click', () => importFile.click());
             importFile.addEventListener('change', function(e) {
                 const file = e.target.files[0];
@@ -997,16 +914,13 @@
                 };
                 reader.readAsText(file);
             });
-
             function saveToStorage() {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(historyItems));
             }
-
             (function init() {
                 inputRowsContainer.appendChild(createInputRow());
                 renderHistory();
             })();
-
             async function readClipboard() {
                 try {
                     if (navigator.clipboard && navigator.clipboard.readText) {
