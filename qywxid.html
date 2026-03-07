@@ -917,10 +917,15 @@
             function saveToStorage() {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(historyItems));
             }
-            (function init() {
-                inputRowsContainer.appendChild(createInputRow());
-                renderHistory();
-            })();
+(function init() {
+    inputRowsContainer.appendChild(createInputRow());
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    filterDate.value = `${year}-${month}-${day}`;
+    renderHistory();
+})();
             async function readClipboard() {
                 try {
                     if (navigator.clipboard && navigator.clipboard.readText) {
@@ -933,3 +938,4 @@
     </script>
 </body>
 </html>
+
