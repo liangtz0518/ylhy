@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>万达大牢</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0c0a08;
+            font-family: 'Courier New', 'SF Mono', 'Fira Code', monospace;
+            padding: 20px 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ========= 动态背景：铁屑粒子Canvas ========= */
+        #prisonCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 主容器 */
+        .prison-app {
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 监狱铭牌头部 */
+        .header {
+            background: #16130ecc;
+            backdrop-filter: blur(2px);
+            border: 1px solid #6b5a42;
+            border-radius: 12px 12px 24px 24px;
+            padding: 16px 12px;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: 0 5px 0 #2f281c;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: #b8a06c;
+            text-shadow: 1px 1px 0 #3a2a1a;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 0.7rem;
+            color: #9c8a62;
+            background: #1f1b14;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 30px;
+            margin-top: 8px;
+            border-left: 1px solid #7e6844;
+            border-right: 1px solid #7e6844;
+        }
+
+        /* 双囚室卡片 */
+        .cell-card {
+            background: #1a1712e0;
+            backdrop-filter: blur(3px);
+            border: 1px solid #6a583c;
+            border-radius: 20px;
+            padding: 1.2rem 1rem;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 0 #2a241a;
+            transition: 0.1s linear;
+        }
+        .cell-card:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 卡片头部 */
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid #7f6844;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .card-title h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #c9af7a;
+            text-shadow: 0 1px 0 #2e251b;
+        }
+        .badge {
+            font-family: monospace;
+            background: #0f0e0a;
+            padding: 3px 12px;
+            border-radius: 40px;
+            font-size: 0.6rem;
+            color: #b39054;
+            border: 1px solid #5e4b2c;
+        }
+
+        /* 上下班时间条 */
+        .time-row {
+            background: #0e0c08aa;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            padding: 6px 14px;
+            border-radius: 40px;
+            margin-bottom: 18px;
+            color: #c0a86e;
+            border: 1px solid #52432a;
+        }
+        .time-value {
+            font-weight: bold;
+            color: #e6c48a;
+            letter-spacing: 1px;
+        }
+
+        /* 剩余刑期区块 */
+        .sentence-box {
+            background: #0c0a07b3;
+            border-radius: 20px;
+            padding: 14px 8px;
+            margin: 12px 0 12px;
+            text-align: center;
+            border: 1px solid #655536;
+            box-shadow: inset 0 0 4px #00000055;
+        }
+        .sentence-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #b69760;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .units-grid {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .unit-block {
+            background: #100e0a;
+            min-width: 70px;
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 16px;
+            border-bottom: 3px solid #856e42;
+            box-shadow: inset 0 1px 2px #00000055;
+        }
+        .unit-number {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: #f0cf8c;
+            text-shadow: 0 0 4px #7a5c2e;
+            line-height: 1.1;
+        }
+        .unit-name {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #aa9468;
+            letter-spacing: 1px;
+        }
+
+        /* 已服役区域 */
+        .served-block {
+            background: #12100caa;
+            border-radius: 40px;
+            padding: 6px 12px;
+            text-align: center;
+            border: 1px solid #6e583c;
+            margin-top: 8px;
+        }
+        .served-label {
+            font-size: 0.6rem;
+            color: #a5895a;
+            letter-spacing: 1px;
+        }
+        .served-value {
+            font-size: 0.9rem;
+            font-weight: bold;
+            font-family: monospace;
+            color: #ddbc78;
+            margin-top: 3px;
+        }
+
+        /* 底部工具栏 */
+        .footer-tool {
+            margin-top: 24px;
+            background: #16130ecc;
+            backdrop-filter: blur(2px);
+            border-radius: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 18px;
+            border: 1px solid #6d5a3c;
+        }
+        .live-clock {
+            font-family: monospace;
+            background: #080706;
+            padding: 4px 14px;
+            border-radius: 30px;
+            color: #dbbf7e;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .prison-quote {
+            font-size: 0.7rem;
+            color: #bfa56a;
+            font-style: italic;
+            max-width: 60%;
+            text-align: right;
+        }
+
+        /* 刑满释放特效（简洁光晕） */
+        .liberated {
+            border: 1px solid #e6bc6e;
+            background: #2a241ce6;
+            box-shadow: 0 0 12px #ad874a, inset 0 0 6px #a57d42;
+            transition: 0.2s;
+        }
+
+        /* 手机优化 */
+        @media (max-width: 500px) {
+            body { padding: 12px; }
+            .unit-number { font-size: 1.5rem; }
+            .unit-block { min-width: 58px; padding: 5px 2px; }
+            .card-title h2 { font-size: 1.2rem; }
+            .header h1 { font-size: 1.3rem; }
+            .units-grid { gap: 6px; }
+        }
+
+        /* 确保文字清晰 */
+        .cell-card, .header, .footer-tool {
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="prisonCanvas"></canvas>
+
+<div class="prison-app">
+    <div class="header">
+        <h1>⛓️ 年马关押室 ⛓️</h1>
+        <p>重刑犯·关押牢房</p>
+    </div>
+
+    <!-- 早班囚室 -->
+    <div class="cell-card" id="earlyCell">
+        <div class="card-title">
+            <h2>早班牢房</h2>
+            <div class="badge">#IN-915</div>
+        </div>
+        <div class="time-row">
+            <span>🔒 入狱时间</span>
+            <span class="time-value">10:30</span>
+            <span>🔓 假释时间</span>
+            <span class="time-value">21:00</span>
+        </div>
+        <div class="sentence-box">
+            <div class="sentence-label">⌛ 剩余刑期 ⌛</div>
+            <div class="units-grid" id="earlyUnits">
+                <!-- 动态年/月/周/日 -->
+            </div>
+        </div>
+        <div class="served-block">
+            <div class="served-label">📜 已服刑期（自入狱起）</div>
+            <div class="served-value" id="earlyServed">--年 --月 --周 --日</div>
+        </div>
+    </div>
+
+    <!-- 晚班囚室 -->
+    <div class="cell-card" id="lateCell">
+        <div class="card-title">
+            <h2>晚班牢房</h2>
+            <div class="badge">#IN-915</div>
+        </div>
+        <div class="time-row">
+            <span>🔒 入狱时间</span>
+            <span class="time-value">12:00</span>
+            <span>🔓 假释时间</span>
+            <span class="time-value">22:00</span>
+        </div>
+        <div class="sentence-box">
+            <div class="sentence-label">⌛ 剩余刑期 ⌛</div>
+            <div class="units-grid" id="lateUnits">
+                <!-- 动态 -->
+            </div>
+        </div>
+        <div class="served-block">
+            <div class="served-label">📜 已服刑期（自入狱起）</div>
+            <div class="served-value" id="lateServed">--年 --月 --周 --日</div>
+        </div>
+    </div>
+
+    <div class="footer-tool">
+        <div class="live-clock" id="liveClock">--:--:--</div>
+        <div class="prison-quote" id="quoteText">🔗 铁窗岁月，时如牢狱 🔗</div>
+    </div>
+</div>
+
+<script>
+    // ------------------------------
+    // 1. 核心换算逻辑 (剩余小时 -> 年/月/周/日)
+    // 1小时 = 1年 = 365天
+    // 月按30天计算（监狱风简化）
+    // ------------------------------
+    function hoursToYMWD(totalHours) {
+        if (totalHours <= 0) return { years: 0, months: 0, weeks: 0, days: 0 };
+        let totalDays = totalHours * 365;
+        const years = Math.floor(totalDays / 365);
+        let remainingDays = totalDays - (years * 365);
+        const months = Math.floor(remainingDays / 30);
+        remainingDays = remainingDays - (months * 30);
+        const weeks = Math.floor(remainingDays / 7);
+        const days = Math.floor(remainingDays % 7);
+        return { years, months, weeks, days };
+    }
+
+    // 格式化已服役字符串
+    function formatYMWD(hours) {
+        if (hours <= 0) return "0年 0月 0周 0日";
+        const u = hoursToYMWD(hours);
+        return `${u.years}年 ${u.months}月 ${u.weeks}周 ${u.days}日`;
+    }
+
+    // 班次时间 (当天)
+    function getWorkStart(shift) {
+        const now = new Date();
+        let hour = shift === 'early' ? 10 : 12;
+        let minute = shift === 'early' ? 30 : 0;
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0);
+    }
+    function getOffwork(shift) {
+        const now = new Date();
+        let hour = shift === 'early' ? 21 : 22;
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, 0, 0, 0);
+    }
+
+    // 剩余小时
+    function getRemainingHours(shift) {
+        const now = new Date();
+        const off = getOffwork(shift);
+        if (now >= off) return 0;
+        return (off - now) / (1000 * 3600);
+    }
+
+    // 已服役小时（从上班时间开始算，未上班为0，超过下班则全天）
+    function getServedHours(shift) {
+        const now = new Date();
+        const start = getWorkStart(shift);
+        const off = getOffwork(shift);
+        if (now < start) return 0;
+        if (now >= off) {
+            return (off - start) / (1000 * 3600);
+        }
+        return (now - start) / (1000 * 3600);
+    }
+
+    // 渲染年/月/周/日到容器
+    function renderUnits(containerId, hours) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const { years, months, weeks, days } = hoursToYMWD(hours);
+        container.innerHTML = `
+            <div class="unit-block"><div class="unit-number">${years}</div><div class="unit-name">年</div></div>
+            <div class="unit-block"><div class="unit-number">${months}</div><div class="unit-name">月</div></div>
+            <div class="unit-block"><div class="unit-number">${weeks}</div><div class="unit-name">周</div></div>
+            <div class="unit-block"><div class="unit-number">${days}</div><div class="unit-name">日</div></div>
+        `;
+    }
+
+    // 更新所有UI
+    let lastQuoteUpdate = 0;
+    const quotes = [
+        "🔒 铁窗之内，一日如一年。",
+        "⛓️ 刑期可视化。",
+        "📢 放风时间未到，继续服刑。",
+        "🚨 距离假释还剩 ... 年",
+        "🕯️ 墙上的刻痕，每道都是一年。",
+        "⚙️ 有没有好好拉收？",
+        "🧱 混凝土与铁锈，见证岁月。",
+        "🔑 钥匙生锈，自由尚远。",
+        "📖 囚徒日记：今日又老去一小时。",
+        "💀 刑期未满，无人能逃。"
+    ];
+
+    function updateAll() {
+        const now = new Date();
+        // 实时时钟
+        const clockEl = document.getElementById('liveClock');
+        if (clockEl) {
+            const hh = String(now.getHours()).padStart(2,'0');
+            const mm = String(now.getMinutes()).padStart(2,'0');
+            const ss = String(now.getSeconds()).padStart(2,'0');
+            clockEl.innerText = `${hh}:${mm}:${ss}`;
+        }
+
+        // 早班数据
+        const earlyRemain = getRemainingHours('early');
+        const earlyServed = getServedHours('early');
+        renderUnits('earlyUnits', earlyRemain);
+        document.getElementById('earlyServed').innerText = formatYMWD(earlyServed);
+        
+        // 晚班数据
+        const lateRemain = getRemainingHours('late');
+        const lateServed = getServedHours('late');
+        renderUnits('lateUnits', lateRemain);
+        document.getElementById('lateServed').innerText = formatYMWD(lateServed);
+
+        // 释放特效
+        const earlyCard = document.getElementById('earlyCell');
+        const lateCard = document.getElementById('lateCell');
+        if (earlyRemain <= 0) earlyCard.classList.add('liberated');
+        else earlyCard.classList.remove('liberated');
+        if (lateRemain <= 0) lateCard.classList.add('liberated');
+        else lateCard.classList.remove('liberated');
+
+        // 动态语录 (每13秒)
+        if (Date.now() - lastQuoteUpdate > 13000) {
+            const randomIdx = Math.floor(Math.random() * quotes.length);
+            const quoteSpan = document.getElementById('quoteText');
+            if (quoteSpan) quoteSpan.innerText = quotes[randomIdx];
+            lastQuoteUpdate = Date.now();
+        }
+
+        // 特殊释放提醒
+        const quoteSpan = document.getElementById('quoteText');
+        if (earlyRemain <= 0 && lateRemain <= 0) {
+            if (quoteSpan && !quoteSpan.innerText.includes("全员假释"))
+                quoteSpan.innerText = "🔓 全员假释 · 铁门开启 🔓";
+        } else if (earlyRemain <= 0) {
+            if (quoteSpan && !quoteSpan.innerText.includes("早班释放"))
+                quoteSpan.innerText = "🌑 早班囚犯已释放 · 晚班继续服役 ⛓️";
+        } else if (lateRemain <= 0) {
+            if (quoteSpan && !quoteSpan.innerText.includes("晚班释放"))
+                quoteSpan.innerText = "🌘 晚班重获自由 · 早班早已远去 🔑";
+        }
+    }
+
+    // 每秒更新
+    setInterval(updateAll, 1000);
+    updateAll();
+
+    // ========= 动态背景特效：铁屑粒子 + 缓慢移动探照光效 (监狱配色，不花哨) =========
+    const canvas = document.getElementById('prisonCanvas');
+    let ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    class IronParticle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.2 + 0.6;
+            this.speedX = (Math.random() - 0.5) * 0.25;
+            this.speedY = (Math.random() - 0.5) * 0.2 + 0.08;
+            this.alpha = Math.random() * 0.25 + 0.08;
+            this.gray = Math.floor(Math.random() * 60 + 40);
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${this.gray + 30}, ${this.gray + 20}, ${this.gray}, ${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        const count = Math.min(140, Math.floor(window.innerWidth / 8));
+        particles = [];
+        for (let i = 0; i < count; i++) {
+            particles.push(new IronParticle());
+        }
+    }
+
+    // 动态栅栏阴影 + 探照灯渐变 (移动光斑)
+    let lightAngle = 0;
+    function drawDynamicLights() {
+        if (!ctx) return;
+        // 添加一个半透明暗色覆盖层，让粒子更融合
+        ctx.fillStyle = 'rgba(8, 6, 4, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制粒子
+        for (let p of particles) {
+            p.update();
+            p.draw();
+        }
+        
+        // 移动探照灯效果 (冷色/暖色偏黄灰，监狱风)
+        lightAngle += 0.0025;
+        const centerX = canvas.width * (0.5 + Math.sin(lightAngle) * 0.25);
+        const centerY = canvas.height * (0.4 + Math.cos(lightAngle * 0.7) * 0.2);
+        const gradient = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, canvas.width * 0.7);
+        gradient.addColorStop(0, 'rgba(100, 80, 50, 0.12)');
+        gradient.addColorStop(0.5, 'rgba(60, 50, 35, 0.06)');
+        gradient.addColorStop(1, 'rgba(20, 18, 14, 0)');
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'source-over';
+        
+        // 再添加一层极淡的铁锈色雾气
+        ctx.fillStyle = 'rgba(50, 40, 25, 0.03)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function animateBackground() {
+        if (!ctx) return;
+        drawDynamicLights();
+        animationId = requestAnimationFrame(animateBackground);
+    }
+
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles();
+    });
+    resizeCanvas();
+    initParticles();
+    animateBackground();
+
+    // 控制台彩蛋
+    console.log("%c⛓️ 铁窗倒计时 | 重刑犯系统 | 1小时=1年 ⛓️", "color: #bd9e62; background:#1f1b12; padding:4px 10px; border-radius:6px;");
+</script>
+</body>
+</html>
