@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* 背景画布：新设计——金属网格+光影流动+尘埃 */
         #bgCanvas {
             position: fixed;
             top: 0;
@@ -86,6 +85,12 @@
         }
         .cell-card:last-child {
             margin-bottom: 0;
+        }
+
+        .cell-card.released {
+            border: 2px solid #ffcc66;
+            background: #2a241ce6;
+            box-shadow: 0 0 20px rgba(255, 200, 100, 0.4), inset 0 0 10px rgba(255, 200, 100, 0.2);
         }
 
         .card-title {
@@ -198,6 +203,21 @@
             margin-top: 3px;
         }
 
+        .next-sentence {
+            background: #0a0805cc;
+            border-radius: 30px;
+            padding: 8px 12px;
+            margin-top: 12px;
+            text-align: center;
+            border: 1px solid #6b5533;
+            font-size: 0.7rem;
+            color: #e6c48a;
+        }
+        .next-sentence span {
+            font-weight: bold;
+            color: #ffdd99;
+        }
+
         .footer-tool {
             margin-top: 24px;
             background: #14110ddd;
@@ -224,13 +244,6 @@
             font-style: italic;
             max-width: 60%;
             text-align: right;
-        }
-
-        .liberated {
-            border: 1px solid #f7cf82;
-            background: #322b20e0;
-            box-shadow: 0 0 14px #dba142, inset 0 0 8px #c9923a;
-            transition: 0.2s;
         }
 
         .copy-toast {
@@ -270,8 +283,8 @@
 
 <div class="prison-app">
     <div class="header">
-        <h1>⛓️ 铁窗岁月 ⛓️</h1>
-        <p>重刑犯·关押牢房</p>
+        <h1>⛓️ 万达大牢 ⛓️</h1>
+        <p>牛马·关押牢房</p>
     </div>
 
     <div class="cell-card" id="earlyCell">
@@ -293,12 +306,15 @@
             <div class="served-label">📜 已服刑期（自入狱起）</div>
             <div class="served-value" id="earlyServed">--年 --月 --周 --日</div>
         </div>
+        <div class="next-sentence" id="earlyNextSentence" style="display: none;">
+            🔄 下次入狱倒计时：<span id="earlyNextTime">--</span>
+        </div>
     </div>
 
     <div class="cell-card" id="lateCell">
         <div class="card-title">
             <h2>晚班牢房</h2>
-            <div class="badge">#IN-915</div>
+            <div class="badge">#IN-916</div>
         </div>
         <div class="time-row">
             <span>🔒 入狱时间</span>
@@ -314,6 +330,9 @@
             <div class="served-label">📜 已服刑期（自入狱起）</div>
             <div class="served-value" id="lateServed">--年 --月 --周 --日</div>
         </div>
+        <div class="next-sentence" id="lateNextSentence" style="display: none;">
+            🔄 下次入狱倒计时：<span id="lateNextTime">--</span>
+        </div>
     </div>
 
     <div class="footer-tool">
@@ -323,6 +342,186 @@
 </div>
 
 <script>
+    // ======================= 持续烟花系统 =======================
+    // 烟花粒子类
+    class FireParticle {
+        constructor(x, y, vx, vy, color, size) {
+            this.x = x;
+            this.y = y;
+            this.vx = vx;
+            this.vy = vy;
+            this.life = 1;
+            this.decay = 0.02 + Math.random() * 0.02;
+            this.color = color || `hsl(${30 + Math.random() * 40}, 85%, 60%)`;
+            this.size = size || 2 + Math.random() * 3;
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += 0.1;
+            this.life -= this.decay;
+            return this.life > 0;
+        }
+        
+        draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.life * 0.8;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+    
+    // 烟花爆炸效果：在指定位置生成一群粒子
+    function createExplosion(centerX, centerY, particleCount = 25) {
+        const particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 2 + Math.random() * 4;
+            const vx = Math.cos(angle) * speed;
+            const vy = Math.sin(angle) * speed - 1.5;
+            const color = `hsl(${30 + Math.random() * 40}, 85%, 65%)`;
+            particles.push(new FireParticle(centerX, centerY, vx, vy, color));
+        }
+        return particles;
+    }
+    
+    let fireworksParticles = [];
+    let fireworkCanvas = null;
+    let fireworkCtx = null;
+    let fireworkAnimationId = null;
+    let lastFireworkGen = 0;
+    const MAX_PARTICLES = 400;
+    
+    // 烟花模式
+    let currentFireworkMode = 'none'; // 'none', 'early', 'late', 'full'
+    let earlyCardRect = { x: 0, y: 0, width: 0, height: 0 };
+    let lateCardRect = { x: 0, y: 0, width: 0, height: 0 };
+    
+    function updateCardRects() {
+        const earlyCard = document.getElementById('earlyCell');
+        const lateCard = document.getElementById('lateCell');
+        if (earlyCard) {
+            const rect = earlyCard.getBoundingClientRect();
+            earlyCardRect = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
+        }
+        if (lateCard) {
+            const rect = lateCard.getBoundingClientRect();
+            lateCardRect = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
+        }
+    }
+    
+    function initFireworkCanvas() {
+        if (!fireworkCanvas) {
+            fireworkCanvas = document.createElement('canvas');
+            fireworkCanvas.style.position = 'fixed';
+            fireworkCanvas.style.top = '0';
+            fireworkCanvas.style.left = '0';
+            fireworkCanvas.style.width = '100%';
+            fireworkCanvas.style.height = '100%';
+            fireworkCanvas.style.pointerEvents = 'none';
+            fireworkCanvas.style.zIndex = '999';
+            document.body.appendChild(fireworkCanvas);
+            fireworkCtx = fireworkCanvas.getContext('2d');
+            resizeFireworkCanvas();
+            window.addEventListener('resize', () => {
+                resizeFireworkCanvas();
+                updateCardRects();
+            });
+            animateFireworks();
+        }
+    }
+    
+    function resizeFireworkCanvas() {
+        if (fireworkCanvas) {
+            fireworkCanvas.width = window.innerWidth;
+            fireworkCanvas.height = window.innerHeight;
+        }
+    }
+    
+    // 生成新的烟花粒子（根据当前模式）
+    function generateFireworks(now) {
+        if (currentFireworkMode === 'none') return;
+        
+        // 控制生成频率，每帧生成少量粒子，避免瞬间过多
+        // 每秒约60帧，每帧生成1-3个爆炸群
+        const shouldGen = Math.random() < 0.4; // 约40%的帧生成新烟花
+        if (!shouldGen) return;
+        
+        let explosionCount = 1;
+        let positions = [];
+        
+        if (currentFireworkMode === 'early') {
+            // 在早班卡片区域生成烟花
+            if (earlyCardRect.width > 0) {
+                const x = earlyCardRect.x + earlyCardRect.width * (0.2 + Math.random() * 0.6);
+                const y = earlyCardRect.y + earlyCardRect.height * (0.1 + Math.random() * 0.5);
+                positions.push({ x, y });
+            }
+        } else if (currentFireworkMode === 'late') {
+            // 在晚班卡片区域生成烟花
+            if (lateCardRect.width > 0) {
+                const x = lateCardRect.x + lateCardRect.width * (0.2 + Math.random() * 0.6);
+                const y = lateCardRect.y + lateCardRect.height * (0.1 + Math.random() * 0.5);
+                positions.push({ x, y });
+            }
+        } else if (currentFireworkMode === 'full') {
+            // 全屏随机位置生成多个烟花
+            explosionCount = 2 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < explosionCount; i++) {
+                const x = Math.random() * fireworkCanvas.width;
+                const y = Math.random() * fireworkCanvas.height * 0.7 + 50;
+                positions.push({ x, y });
+            }
+        }
+        
+        // 为每个位置生成爆炸粒子群
+        for (let pos of positions) {
+            const newParticles = createExplosion(pos.x, pos.y, 18 + Math.floor(Math.random() * 15));
+            fireworksParticles.push(...newParticles);
+        }
+        
+        // 限制总粒子数，移除旧的
+        if (fireworksParticles.length > MAX_PARTICLES) {
+            fireworksParticles = fireworksParticles.slice(-MAX_PARTICLES);
+        }
+    }
+    
+    function animateFireworks() {
+        if (!fireworkCtx) return;
+        
+        // 更新粒子
+        for (let i = fireworksParticles.length - 1; i >= 0; i--) {
+            const alive = fireworksParticles[i].update();
+            if (!alive) {
+                fireworksParticles.splice(i, 1);
+            }
+        }
+        
+        // 生成新烟花（根据当前模式）
+        generateFireworks();
+        
+        // 绘制
+        fireworkCtx.clearRect(0, 0, fireworkCanvas.width, fireworkCanvas.height);
+        for (let p of fireworksParticles) {
+            p.draw(fireworkCtx);
+        }
+        
+        fireworkAnimationId = requestAnimationFrame(animateFireworks);
+    }
+    
+    function setFireworkMode(mode) {
+        if (currentFireworkMode === mode) return;
+        currentFireworkMode = mode;
+        // 模式切换时不清除现有粒子，让它们自然消失，新烟花会按新模式生成
+        if (mode === 'none') {
+            // 如果关闭烟花，可以慢慢清除，不清空也行，但不会再生成新粒子
+        }
+        console.log(`烟花模式切换为: ${mode}`);
+    }
+    
     // ======================= 刑期核心逻辑 =======================
     function hoursToYMWD(totalHours) {
         if (totalHours <= 0) return { years: 0, months: 0, weeks: 0, days: 0 };
@@ -335,32 +534,43 @@
         const days = Math.floor(remainingDays % 7);
         return { years, months, weeks, days };
     }
-
+    
     function formatYMWD(hours) {
         if (hours <= 0) return "0年 0月 0周 0日";
         const u = hoursToYMWD(hours);
         return `${u.years}年 ${u.months}月 ${u.weeks}周 ${u.days}日`;
     }
-
+    
     function getWorkStart(shift) {
         const now = new Date();
         let hour = shift === 'early' ? 10 : 12;
         let minute = shift === 'early' ? 30 : 0;
         return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0, 0);
     }
+    
     function getOffwork(shift) {
         const now = new Date();
         let hour = shift === 'early' ? 21 : 22;
         return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, 0, 0, 0);
     }
-
+    
+    function getNextWorkStart(shift) {
+        const now = new Date();
+        let hour = shift === 'early' ? 10 : 12;
+        let minute = shift === 'early' ? 30 : 0;
+        const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, hour, minute, 0, 0);
+        return tomorrow;
+    }
+    
     function getRemainingHours(shift) {
         const now = new Date();
         const off = getOffwork(shift);
+        const start = getWorkStart(shift);
+        if (now < start) return 0;
         if (now >= off) return 0;
         return (off - now) / (1000 * 3600);
     }
-
+    
     function getServedHours(shift) {
         const now = new Date();
         const start = getWorkStart(shift);
@@ -369,7 +579,26 @@
         if (now >= off) return (off - start) / (1000 * 3600);
         return (now - start) / (1000 * 3600);
     }
-
+    
+    function isReleased(shift) {
+        const now = new Date();
+        const off = getOffwork(shift);
+        return now >= off;
+    }
+    
+    function getNextSentenceCountdown(shift) {
+        const now = new Date();
+        const nextStart = getNextWorkStart(shift);
+        return nextStart - now;
+    }
+    
+    function formatCountdown(ms) {
+        if (ms <= 0) return "0小时0分";
+        const hours = Math.floor(ms / (1000 * 3600));
+        const minutes = Math.floor((ms % (1000 * 3600)) / (1000 * 60));
+        return `${hours}小时${minutes}分`;
+    }
+    
     function renderUnits(containerId, hours) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -381,24 +610,24 @@
             <div class="unit-block"><div class="unit-number">${days}</div><div class="unit-name">日</div></div>
         `;
     }
-
+    
     let lastQuoteUpdate = 0;
     const quotes = [
         "⛓️ 铁窗之内，一日如一年。",
-        "⌛ 时光沙漏，刑期渐尽。",
+        "⌛ 有没有好好回访？。",
         "🌑 放风时间未到，继续服刑。",
         "🔑 钥匙生锈，自由尚远。",
-        "📖 钥匙生锈，自由尚远。",
+        "📖 铁窗岁月，时如牢狱。",
         "⚙️ 有没有好好拉收？",
         "🕯️ 墙上的刻痕，每道都是一年。",
-        "🔩 金属锈蚀，刑期未满。",
+        "🔩 今天的数据有点差。",
         "🌒 月升月落，铁窗依旧。",
         "⏳ 刑期未满，无人能逃。"
     ];
-
+    
     let currentEarlyRemain = 0;
     let currentLateRemain = 0;
-
+    
     function updateAll() {
         const now = new Date();
         const clockEl = document.getElementById('liveClock');
@@ -408,48 +637,136 @@
             const ss = String(now.getSeconds()).padStart(2,'0');
             clockEl.innerText = `${hh}:${mm}:${ss}`;
         }
-
-        const earlyRemain = getRemainingHours('early');
-        const earlyServed = getServedHours('early');
-        renderUnits('earlyUnits', earlyRemain);
-        document.getElementById('earlyServed').innerText = formatYMWD(earlyServed);
         
-        const lateRemain = getRemainingHours('late');
-        const lateServed = getServedHours('late');
-        renderUnits('lateUnits', lateRemain);
+        const earlyReleased = isReleased('early');
+        const lateReleased = isReleased('late');
+        
+        // 更新烟花模式
+        if (earlyReleased && lateReleased) {
+            setFireworkMode('full');
+        } else if (earlyReleased) {
+            setFireworkMode('early');
+        } else if (lateReleased) {
+            setFireworkMode('late');
+        } else {
+            setFireworkMode('none');
+        }
+        
+        // 更新卡片rect（用于烟花位置）
+        updateCardRects();
+        
+        // 早班逻辑
+        if (earlyReleased) {
+            currentEarlyRemain = 0;
+            const earlyCard = document.getElementById('earlyCell');
+            earlyCard.classList.add('released');
+            const nextDiv = document.getElementById('earlyNextSentence');
+            nextDiv.style.display = 'block';
+            const countdownMs = getNextSentenceCountdown('early');
+            const nextTimeSpan = document.getElementById('earlyNextTime');
+            if (nextTimeSpan) nextTimeSpan.innerText = formatCountdown(countdownMs);
+            const titleH2 = earlyCard.querySelector('.card-title h2');
+            if (titleH2 && !titleH2.innerText.includes('已出狱')) {
+                titleH2.innerHTML = '早班牢房 <span style="font-size:0.8rem; color:#ffaa66;">✨ 已出狱 ✨</span>';
+            }
+        } else {
+            const earlyCard = document.getElementById('earlyCell');
+            earlyCard.classList.remove('released');
+            const nextDiv = document.getElementById('earlyNextSentence');
+            nextDiv.style.display = 'none';
+            const titleH2 = earlyCard.querySelector('.card-title h2');
+            if (titleH2) titleH2.innerHTML = '早班牢房';
+        }
+        
+        // 晚班逻辑
+        if (lateReleased) {
+            currentLateRemain = 0;
+            const lateCard = document.getElementById('lateCell');
+            lateCard.classList.add('released');
+            const nextDiv = document.getElementById('lateNextSentence');
+            nextDiv.style.display = 'block';
+            const countdownMs = getNextSentenceCountdown('late');
+            const nextTimeSpan = document.getElementById('lateNextTime');
+            if (nextTimeSpan) nextTimeSpan.innerText = formatCountdown(countdownMs);
+            const titleH2 = lateCard.querySelector('.card-title h2');
+            if (titleH2 && !titleH2.innerText.includes('已出狱')) {
+                titleH2.innerHTML = '晚班牢房 <span style="font-size:0.8rem; color:#ffaa66;">✨ 已出狱 ✨</span>';
+            }
+        } else {
+            const lateCard = document.getElementById('lateCell');
+            lateCard.classList.remove('released');
+            const nextDiv = document.getElementById('lateNextSentence');
+            nextDiv.style.display = 'none';
+            const titleH2 = lateCard.querySelector('.card-title h2');
+            if (titleH2) titleH2.innerHTML = '晚班牢房';
+        }
+        
+        // 更新剩余刑期
+        if (!earlyReleased) {
+            const earlyRemain = getRemainingHours('early');
+            currentEarlyRemain = earlyRemain;
+            renderUnits('earlyUnits', earlyRemain);
+        } else {
+            renderUnits('earlyUnits', 0);
+        }
+        
+        if (!lateReleased) {
+            const lateRemain = getRemainingHours('late');
+            currentLateRemain = lateRemain;
+            renderUnits('lateUnits', lateRemain);
+        } else {
+            renderUnits('lateUnits', 0);
+        }
+        
+        // 已服刑期
+        const earlyServed = earlyReleased ? (() => {
+            const start = getWorkStart('early');
+            const off = getOffwork('early');
+            return (off - start) / (1000 * 3600);
+        })() : getServedHours('early');
+        const lateServed = lateReleased ? (() => {
+            const start = getWorkStart('late');
+            const off = getOffwork('late');
+            return (off - start) / (1000 * 3600);
+        })() : getServedHours('late');
+        
+        document.getElementById('earlyServed').innerText = formatYMWD(earlyServed);
         document.getElementById('lateServed').innerText = formatYMWD(lateServed);
-
-        currentEarlyRemain = earlyRemain;
-        currentLateRemain = lateRemain;
-
-        const earlyCard = document.getElementById('earlyCell');
-        const lateCard = document.getElementById('lateCell');
-        if (earlyRemain <= 0) earlyCard.classList.add('liberated');
-        else earlyCard.classList.remove('liberated');
-        if (lateRemain <= 0) lateCard.classList.add('liberated');
-        else lateCard.classList.remove('liberated');
-
+        
+        // 语录更新
         if (Date.now() - lastQuoteUpdate > 13000) {
             const randomIdx = Math.floor(Math.random() * quotes.length);
             const quoteSpan = document.getElementById('quoteText');
             if (quoteSpan) quoteSpan.innerText = quotes[randomIdx];
             lastQuoteUpdate = Date.now();
         }
-
+        
         const quoteSpan = document.getElementById('quoteText');
-        if (earlyRemain <= 0 && lateRemain <= 0) {
-            if (quoteSpan && !quoteSpan.innerText.includes("全员释放")) quoteSpan.innerText = "🔓 全员释放 · 铁门大开 🔓";
-        } else if (earlyRemain <= 0) {
-            if (quoteSpan && !quoteSpan.innerText.includes("早班释放")) quoteSpan.innerText = "🌑 早班已释放 · 晚班继续服刑 ⛓️";
-        } else if (lateRemain <= 0) {
-            if (quoteSpan && !quoteSpan.innerText.includes("晚班释放")) quoteSpan.innerText = "🌘 晚班获自由 · 早班早已远去 🔑";
+        if (earlyReleased && lateReleased) {
+            if (quoteSpan && !quoteSpan.innerText.includes("全屏烟花")) quoteSpan.innerText = "🎆 全城狂欢 · 烟花满园 🎆";
+        } else if (earlyReleased) {
+            if (quoteSpan && !quoteSpan.innerText.includes("早班烟花")) quoteSpan.innerText = "🌅 早班出狱 · 烟花庆贺 🌅";
+        } else if (lateReleased) {
+            if (quoteSpan && !quoteSpan.innerText.includes("晚班烟花")) quoteSpan.innerText = "🌙 晚班出狱 · 烟花灿烂 🌙";
         }
     }
-
+    
     setInterval(updateAll, 1000);
     updateAll();
-
-    // ======================= 复制功能：仅复制剩余刑期 =======================
+    
+    // 倒计时单独更新
+    setInterval(() => {
+        if (isReleased('early')) {
+            const nextSpan = document.getElementById('earlyNextTime');
+            if (nextSpan) nextSpan.innerText = formatCountdown(getNextSentenceCountdown('early'));
+        }
+        if (isReleased('late')) {
+            const nextSpan = document.getElementById('lateNextTime');
+            if (nextSpan) nextSpan.innerText = formatCountdown(getNextSentenceCountdown('late'));
+        }
+    }, 1000);
+    
+    // ======================= 复制功能 =======================
     function showCopyToast(message) {
         let toast = document.querySelector('.copy-toast');
         if (!toast) {
@@ -463,8 +780,20 @@
             toast.style.opacity = '0';
         }, 1800);
     }
-
-    async function copyRemainingTimeOnly(remainHours) {
+    
+    async function copyRemainingTimeOnly(remainHours, isReleasedFlag, shift) {
+        if (isReleasedFlag) {
+            const countdownMs = getNextSentenceCountdown(shift);
+            const countdownStr = formatCountdown(countdownMs);
+            const text = `已出狱，下次入狱时间：${countdownStr}`;
+            try {
+                await navigator.clipboard.writeText(text);
+                showCopyToast(`📋 已复制：${text}`);
+            } catch (err) {
+                showCopyToast(`❌ 复制失败`);
+            }
+            return;
+        }
         const { years, months, weeks, days } = hoursToYMWD(remainHours);
         const text = `剩余刑期：${years}年 ${months}月 ${weeks}周 ${days}日`;
         try {
@@ -474,29 +803,28 @@
             showCopyToast(`❌ 复制失败`);
         }
     }
-
+    
     document.getElementById('earlyCell').addEventListener('click', (e) => {
         e.stopPropagation();
-        copyRemainingTimeOnly(currentEarlyRemain);
+        copyRemainingTimeOnly(currentEarlyRemain, isReleased('early'), 'early');
     });
     document.getElementById('lateCell').addEventListener('click', (e) => {
         e.stopPropagation();
-        copyRemainingTimeOnly(currentLateRemain);
+        copyRemainingTimeOnly(currentLateRemain, isReleased('late'), 'late');
     });
-
-    // ======================= 全新背景：金属网格 + 浮动光尘 + 流动光影 =======================
+    
+    // ======================= 背景：金属网格 + 浮动光尘 + 流动光影 =======================
     const canvas = document.getElementById('bgCanvas');
     let ctx = canvas.getContext('2d');
-    let animationId = null;
+    let bgAnimationId = null;
     let particles = [];
     let lightAngle = 0;
-
+    
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     }
-
-    // 光尘粒子（悬浮微尘）
+    
     class DustParticle {
         constructor() {
             this.x = Math.random() * canvas.width;
@@ -521,19 +849,15 @@
             ctx.fill();
         }
     }
-
+    
     function initParticles() {
         const count = Math.min(120, Math.floor(window.innerWidth / 10));
         particles = [];
-        for (let i = 0; i < count; i++) {
-            particles.push(new DustParticle());
-        }
+        for (let i = 0; i < count; i++) particles.push(new DustParticle());
     }
-
-    // 绘制金属网格（斜线交叉，暗色质感）
+    
     function drawMetalGrid() {
-        const w = canvas.width;
-        const h = canvas.height;
+        const w = canvas.width, h = canvas.height;
         const spacing = 45;
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(100, 80, 55, 0.3)';
@@ -548,7 +872,6 @@
             ctx.lineTo(w, x);
             ctx.stroke();
         }
-        // 斜向细线，增加层次
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(140, 110, 70, 0.2)';
         ctx.lineWidth = 0.5;
@@ -563,8 +886,7 @@
             ctx.stroke();
         }
     }
-
-    // 绘制流动光影（缓慢扫过的光晕）
+    
     function drawMovingLight() {
         lightAngle += 0.002;
         const centerX = canvas.width * (0.5 + Math.sin(lightAngle) * 0.2);
@@ -576,75 +898,65 @@
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-
-    // 绘制铁锈质感噪点
+    
     function addRustNoise() {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         for (let i = 0; i < data.length; i += 4) {
             if (Math.random() < 0.02) {
                 const darken = Math.random() * 20;
-                data[i] = Math.max(0, data[i] - darken);     // R
-                data[i+1] = Math.max(0, data[i+1] - darken * 0.8); // G
-                data[i+2] = Math.max(0, data[i+2] - darken * 0.6); // B
+                data[i] = Math.max(0, data[i] - darken);
+                data[i+1] = Math.max(0, data[i+1] - darken * 0.8);
+                data[i+2] = Math.max(0, data[i+2] - darken * 0.6);
             }
         }
         ctx.putImageData(imageData, 0, 0);
     }
-
+    
     function drawBackground() {
         if (!ctx) return;
-        // 深邃基底
         ctx.fillStyle = '#050301';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // 金属网格
         drawMetalGrid();
-        
-        // 微粒尘埃
-        for (let p of particles) {
-            p.update();
-            p.draw();
-        }
-        
-        // 流动光影
+        for (let p of particles) { p.update(); p.draw(); }
         drawMovingLight();
-        
-        // 一层极淡的暗角
         const gradientVignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width*0.3, canvas.width/2, canvas.height/2, canvas.width*0.8);
         gradientVignette.addColorStop(0, 'rgba(0,0,0,0)');
         gradientVignette.addColorStop(1, 'rgba(0,0,0,0.35)');
         ctx.fillStyle = gradientVignette;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // 细微铁锈噪点
         addRustNoise();
     }
-
+    
     function animateBackground() {
         if (!ctx) return;
         drawBackground();
-        animationId = requestAnimationFrame(animateBackground);
+        bgAnimationId = requestAnimationFrame(animateBackground);
     }
-
+    
     function initBackground() {
         resizeCanvas();
         initParticles();
         animateBackground();
     }
-
+    
     window.addEventListener('resize', () => {
         resizeCanvas();
         initParticles();
+        if (fireworkCanvas) resizeFireworkCanvas();
+        updateCardRects();
     });
-
+    
     initBackground();
-
+    initFireworkCanvas(); // 启动烟花画布
+    updateCardRects();    // 初始获取卡片位置
+    
     window.addEventListener('beforeunload', () => {
-        if (animationId) cancelAnimationFrame(animationId);
+        if (bgAnimationId) cancelAnimationFrame(bgAnimationId);
+        if (fireworkAnimationId) cancelAnimationFrame(fireworkAnimationId);
     });
-
-    console.log("%c⛓️ 新背景：金属网格+光尘+流动光影 | 点击卡片复制剩余刑期 ⛓️", "color: #c2a15b; background:#201c14; padding:5px 12px; border-radius:30px;");
+    
+    console.log("%c🎆 万达大牢 | 持续烟花特效 | 双班全屏狂欢 🎆", "color: #ffaa66; background:#201c14; padding:5px 12px; border-radius:30px;");
 </script>
 </body>
 </html>
