@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>万达大牢</title>
+    <title>牢</title>
     <style>
         * {
             margin: 0;
@@ -14,14 +14,15 @@
 
         body {
             min-height: 100vh;
-            background: #0a0704;
+            background: #030201;
             font-family: 'Courier New', 'SF Mono', 'Fira Code', monospace;
             padding: 20px 16px;
             position: relative;
             overflow-x: hidden;
         }
 
-        #bgCanvas {
+        /* 文字背景层 */
+        .text-background {
             position: fixed;
             top: 0;
             left: 0;
@@ -29,7 +30,41 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            display: block;
+            overflow: hidden;
+        }
+
+        .floating-text {
+            position: absolute;
+            font-family: 'Courier New', 'SF Mono', monospace;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 0 8px currentColor;
+            z-index: 0;
+            animation: floatGlow 1s ease-out forwards;
+        }
+
+        @keyframes floatGlow {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) rotate(0deg);
+                filter: blur(2px);
+            }
+            30% {
+                opacity: 0.9;
+                transform: scale(1.05) rotate(1deg);
+                filter: blur(0px);
+            }
+            70% {
+                opacity: 0.9;
+                transform: scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8) rotate(-2deg);
+                filter: blur(2px);
+            }
         }
 
         .prison-app {
@@ -224,7 +259,7 @@
             backdrop-filter: blur(4px);
             border-radius: 60px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 8px 18px;
             border: 1px solid #7e6842;
@@ -237,13 +272,6 @@
             color: #eed6a0;
             font-weight: bold;
             font-size: 0.8rem;
-        }
-        .prison-quote {
-            font-size: 0.7rem;
-            color: #cfb579;
-            font-style: italic;
-            max-width: 60%;
-            text-align: right;
         }
 
         .copy-toast {
@@ -274,17 +302,18 @@
             .header h1 { font-size: 1.3rem; }
             .units-grid { gap: 6px; }
             .copy-toast { font-size: 0.7rem; padding: 6px 16px; white-space: nowrap; }
+            .floating-text { font-size: 14px; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
+<div class="text-background" id="textBackground"></div>
 
 <div class="prison-app">
     <div class="header">
-        <h1>⛓️ 万达大牢 ⛓️</h1>
-        <p>牛马·关押牢房</p>
+        <h1>⛓️ 牢 ⛓️</h1>
+
     </div>
 
     <div class="cell-card" id="earlyCell">
@@ -314,7 +343,7 @@
     <div class="cell-card" id="lateCell">
         <div class="card-title">
             <h2>晚班牢房</h2>
-            <div class="badge">#IN-916</div>
+            <div class="badge">#IN-915</div>
         </div>
         <div class="time-row">
             <span>🔒 入狱时间</span>
@@ -337,13 +366,143 @@
 
     <div class="footer-tool">
         <div class="live-clock" id="liveClock">--:--:--</div>
-        <div class="prison-quote" id="quoteText">⚙️ 光阴如铁，刑期如流 ⚙️</div>
     </div>
 </div>
 
 <script>
-    // ======================= 持续烟花系统 =======================
-    // 烟花粒子类
+    // ======================= 语录库（新） =======================
+    const normalQuotes = [
+        "铁窗之内，度时如年",
+        "有没有好好拉收？",
+        "为什么别人跑这么好？",
+        "今天的数据有点差",
+        "怎么付费率这么低？",
+        "有没有质检？",
+        "游戏支付有没有问题？",
+        "怎么流水这么低？",
+        "LTV好低啊",
+        "都要亏本了",
+        "ROI怎么回得来",
+        "成本太高了",
+        "饭都吃不起了",
+        "能不能再做细一点",
+        "肯定还有哪里没做好的",
+        "看看人家流水多高",
+        "GS是不是没有聊天",
+        "有没有好好带服",
+        "这批量没问题的",
+        "这批用户付费率正常的"
+    ];
+    const offWorkQuote = "老子下班了！";
+
+    // ======================= 文字背景 =======================
+    const textBg = document.getElementById('textBackground');
+    let textTimer = null;
+
+    // 获取当前双班是否都下班
+    function isBothReleased() {
+        const now = new Date();
+        const earlyOff = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 0, 0, 0);
+        const lateOff = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 22, 0, 0, 0);
+        return now >= earlyOff && now >= lateOff;
+    }
+
+    // 随机位置（避开中央卡片区域，但允许覆盖，不影响点击）
+    function getRandomPosition() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const x = 15 + Math.random() * (w - 30);
+        const y = 20 + Math.random() * (h - 40);
+        return { x, y };
+    }
+
+    // 随机字体大小 (范围 18~42px)
+    function getRandomFontSize() {
+        return 18 + Math.floor(Math.random() * 26);
+    }
+
+    // 浮夸颜色：高饱和度、高亮度，全色域随机
+    function getFlamboyantColor() {
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 80 + Math.floor(Math.random() * 20); // 80~100%
+        const lightness = 60 + Math.floor(Math.random() * 25);   // 60~85%
+        const alpha = 0.7 + Math.random() * 0.3;                 // 0.7~1.0
+        return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+    }
+
+    // 停留时间 1.5~3 秒
+    function getStayDuration() {
+        return 1500 + Math.random() * 1500;
+    }
+
+    // 创建一个浮动文字
+    function createFloatingText() {
+        // 判断双班是否都下班，决定使用什么文本
+        const bothReleased = isBothReleased();
+        let text;
+        if (bothReleased) {
+            text = offWorkQuote;
+        } else {
+            text = normalQuotes[Math.floor(Math.random() * normalQuotes.length)];
+        }
+        
+        const { x, y } = getRandomPosition();
+        const fontSize = getRandomFontSize();
+        const color = getFlamboyantColor();
+        
+        const div = document.createElement('div');
+        div.className = 'floating-text';
+        div.textContent = text;
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.style.fontSize = fontSize + 'px';
+        div.style.color = color;
+        div.style.textShadow = `0 0 12px ${color}`;
+        div.style.animation = `floatGlow 1s ease-out forwards`;
+        // 自定义动画时长与停留时间匹配（动画结束后隐藏）
+        div.style.animationDuration = `${getStayDuration() / 1000}s`;
+        textBg.appendChild(div);
+        
+        // 停留后移除元素（动画结束后自动移除）
+        setTimeout(() => {
+            if (div.parentNode) div.remove();
+        }, getStayDuration());
+        
+        return div;
+    }
+
+    // 生成一批文字 (3~6个)
+    function generateBatch() {
+        const count = 3 + Math.floor(Math.random() * 4); // 3~6
+        for (let i = 0; i < count; i++) {
+            createFloatingText();
+        }
+    }
+
+    // 启动循环：间隔 0.5~1 秒，每次生成一批
+    function startTextBackground() {
+        if (textTimer) clearTimeout(textTimer);
+        // 立即生成第一批
+        generateBatch();
+        // 随机间隔 500~1000ms
+        const scheduleNext = () => {
+            const delay = 500 + Math.random() * 500; // 0.5~1秒
+            textTimer = setTimeout(() => {
+                generateBatch();
+                scheduleNext();
+            }, delay);
+        };
+        scheduleNext();
+    }
+
+    // 清理定时器，防止页面关闭后继续运行
+    window.addEventListener('beforeunload', () => {
+        if (textTimer) clearTimeout(textTimer);
+    });
+
+    startTextBackground();
+
+    // ======================= 烟花系统（持续到上班，双班全屏） =======================
     class FireParticle {
         constructor(x, y, vx, vy, color, size) {
             this.x = x;
@@ -374,7 +533,6 @@
         }
     }
     
-    // 烟花爆炸效果：在指定位置生成一群粒子
     function createExplosion(centerX, centerY, particleCount = 25) {
         const particles = [];
         for (let i = 0; i < particleCount; i++) {
@@ -392,13 +550,10 @@
     let fireworkCanvas = null;
     let fireworkCtx = null;
     let fireworkAnimationId = null;
-    let lastFireworkGen = 0;
-    const MAX_PARTICLES = 400;
-    
-    // 烟花模式
-    let currentFireworkMode = 'none'; // 'none', 'early', 'late', 'full'
+    let currentFireworkMode = 'none';
     let earlyCardRect = { x: 0, y: 0, width: 0, height: 0 };
     let lateCardRect = { x: 0, y: 0, width: 0, height: 0 };
+    const MAX_PARTICLES = 400;
     
     function updateCardRects() {
         const earlyCard = document.getElementById('earlyCell');
@@ -441,35 +596,28 @@
         }
     }
     
-    // 生成新的烟花粒子（根据当前模式）
-    function generateFireworks(now) {
+    function generateFireworks() {
         if (currentFireworkMode === 'none') return;
         
-        // 控制生成频率，每帧生成少量粒子，避免瞬间过多
-        // 每秒约60帧，每帧生成1-3个爆炸群
-        const shouldGen = Math.random() < 0.4; // 约40%的帧生成新烟花
+        const shouldGen = Math.random() < 0.4;
         if (!shouldGen) return;
         
-        let explosionCount = 1;
         let positions = [];
         
         if (currentFireworkMode === 'early') {
-            // 在早班卡片区域生成烟花
             if (earlyCardRect.width > 0) {
                 const x = earlyCardRect.x + earlyCardRect.width * (0.2 + Math.random() * 0.6);
                 const y = earlyCardRect.y + earlyCardRect.height * (0.1 + Math.random() * 0.5);
                 positions.push({ x, y });
             }
         } else if (currentFireworkMode === 'late') {
-            // 在晚班卡片区域生成烟花
             if (lateCardRect.width > 0) {
                 const x = lateCardRect.x + lateCardRect.width * (0.2 + Math.random() * 0.6);
                 const y = lateCardRect.y + lateCardRect.height * (0.1 + Math.random() * 0.5);
                 positions.push({ x, y });
             }
         } else if (currentFireworkMode === 'full') {
-            // 全屏随机位置生成多个烟花
-            explosionCount = 2 + Math.floor(Math.random() * 3);
+            const explosionCount = 2 + Math.floor(Math.random() * 3);
             for (let i = 0; i < explosionCount; i++) {
                 const x = Math.random() * fireworkCanvas.width;
                 const y = Math.random() * fireworkCanvas.height * 0.7 + 50;
@@ -477,13 +625,11 @@
             }
         }
         
-        // 为每个位置生成爆炸粒子群
         for (let pos of positions) {
             const newParticles = createExplosion(pos.x, pos.y, 18 + Math.floor(Math.random() * 15));
             fireworksParticles.push(...newParticles);
         }
         
-        // 限制总粒子数，移除旧的
         if (fireworksParticles.length > MAX_PARTICLES) {
             fireworksParticles = fireworksParticles.slice(-MAX_PARTICLES);
         }
@@ -492,7 +638,6 @@
     function animateFireworks() {
         if (!fireworkCtx) return;
         
-        // 更新粒子
         for (let i = fireworksParticles.length - 1; i >= 0; i--) {
             const alive = fireworksParticles[i].update();
             if (!alive) {
@@ -500,10 +645,8 @@
             }
         }
         
-        // 生成新烟花（根据当前模式）
         generateFireworks();
         
-        // 绘制
         fireworkCtx.clearRect(0, 0, fireworkCanvas.width, fireworkCanvas.height);
         for (let p of fireworksParticles) {
             p.draw(fireworkCtx);
@@ -515,11 +658,6 @@
     function setFireworkMode(mode) {
         if (currentFireworkMode === mode) return;
         currentFireworkMode = mode;
-        // 模式切换时不清除现有粒子，让它们自然消失，新烟花会按新模式生成
-        if (mode === 'none') {
-            // 如果关闭烟花，可以慢慢清除，不清空也行，但不会再生成新粒子
-        }
-        console.log(`烟花模式切换为: ${mode}`);
     }
     
     // ======================= 刑期核心逻辑 =======================
@@ -611,20 +749,6 @@
         `;
     }
     
-    let lastQuoteUpdate = 0;
-    const quotes = [
-        "⛓️ 铁窗之内，一日如一年。",
-        "⌛ 有没有好好回访？。",
-        "🌑 放风时间未到，继续服刑。",
-        "🔑 钥匙生锈，自由尚远。",
-        "📖 铁窗岁月，时如牢狱。",
-        "⚙️ 有没有好好拉收？",
-        "🕯️ 墙上的刻痕，每道都是一年。",
-        "🔩 今天的数据有点差。",
-        "🌒 月升月落，铁窗依旧。",
-        "⏳ 刑期未满，无人能逃。"
-    ];
-    
     let currentEarlyRemain = 0;
     let currentLateRemain = 0;
     
@@ -652,10 +776,9 @@
             setFireworkMode('none');
         }
         
-        // 更新卡片rect（用于烟花位置）
         updateCardRects();
         
-        // 早班逻辑
+        // 早班
         if (earlyReleased) {
             currentEarlyRemain = 0;
             const earlyCard = document.getElementById('earlyCell');
@@ -678,7 +801,7 @@
             if (titleH2) titleH2.innerHTML = '早班牢房';
         }
         
-        // 晚班逻辑
+        // 晚班
         if (lateReleased) {
             currentLateRemain = 0;
             const lateCard = document.getElementById('lateCell');
@@ -701,7 +824,7 @@
             if (titleH2) titleH2.innerHTML = '晚班牢房';
         }
         
-        // 更新剩余刑期
+        // 剩余刑期
         if (!earlyReleased) {
             const earlyRemain = getRemainingHours('early');
             currentEarlyRemain = earlyRemain;
@@ -732,23 +855,6 @@
         
         document.getElementById('earlyServed').innerText = formatYMWD(earlyServed);
         document.getElementById('lateServed').innerText = formatYMWD(lateServed);
-        
-        // 语录更新
-        if (Date.now() - lastQuoteUpdate > 13000) {
-            const randomIdx = Math.floor(Math.random() * quotes.length);
-            const quoteSpan = document.getElementById('quoteText');
-            if (quoteSpan) quoteSpan.innerText = quotes[randomIdx];
-            lastQuoteUpdate = Date.now();
-        }
-        
-        const quoteSpan = document.getElementById('quoteText');
-        if (earlyReleased && lateReleased) {
-            if (quoteSpan && !quoteSpan.innerText.includes("全屏烟花")) quoteSpan.innerText = "🎆 全城狂欢 · 烟花满园 🎆";
-        } else if (earlyReleased) {
-            if (quoteSpan && !quoteSpan.innerText.includes("早班烟花")) quoteSpan.innerText = "🌅 早班出狱 · 烟花庆贺 🌅";
-        } else if (lateReleased) {
-            if (quoteSpan && !quoteSpan.innerText.includes("晚班烟花")) quoteSpan.innerText = "🌙 晚班出狱 · 烟花灿烂 🌙";
-        }
     }
     
     setInterval(updateAll, 1000);
@@ -813,150 +919,16 @@
         copyRemainingTimeOnly(currentLateRemain, isReleased('late'), 'late');
     });
     
-    // ======================= 背景：金属网格 + 浮动光尘 + 流动光影 =======================
-    const canvas = document.getElementById('bgCanvas');
-    let ctx = canvas.getContext('2d');
-    let bgAnimationId = null;
-    let particles = [];
-    let lightAngle = 0;
-    
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    
-    class DustParticle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 1.5 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.12;
-            this.speedY = (Math.random() - 0.5) * 0.08;
-            this.alpha = Math.random() * 0.3 + 0.1;
-        }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.x < 0) this.x = canvas.width;
-            if (this.y > canvas.height) this.y = 0;
-            if (this.y < 0) this.y = canvas.height;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(210, 180, 120, ${this.alpha * 0.6})`;
-            ctx.fill();
-        }
-    }
-    
-    function initParticles() {
-        const count = Math.min(120, Math.floor(window.innerWidth / 10));
-        particles = [];
-        for (let i = 0; i < count; i++) particles.push(new DustParticle());
-    }
-    
-    function drawMetalGrid() {
-        const w = canvas.width, h = canvas.height;
-        const spacing = 45;
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgba(100, 80, 55, 0.3)';
-        ctx.lineWidth = 0.8;
-        for (let x = 0; x < w + spacing; x += spacing) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, h);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(0, x);
-            ctx.lineTo(w, x);
-            ctx.stroke();
-        }
-        ctx.beginPath();
-        ctx.strokeStyle = 'rgba(140, 110, 70, 0.2)';
-        ctx.lineWidth = 0.5;
-        for (let i = -h; i < w + h; i += 70) {
-            ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i + h, h);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(i, h);
-            ctx.lineTo(i + h, 0);
-            ctx.stroke();
-        }
-    }
-    
-    function drawMovingLight() {
-        lightAngle += 0.002;
-        const centerX = canvas.width * (0.5 + Math.sin(lightAngle) * 0.2);
-        const centerY = canvas.height * (0.4 + Math.cos(lightAngle * 0.6) * 0.15);
-        const gradient = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, canvas.width * 0.8);
-        gradient.addColorStop(0, 'rgba(150, 120, 70, 0.08)');
-        gradient.addColorStop(0.6, 'rgba(70, 55, 35, 0.04)');
-        gradient.addColorStop(1, 'rgba(20, 18, 14, 0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-    
-    function addRustNoise() {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            if (Math.random() < 0.02) {
-                const darken = Math.random() * 20;
-                data[i] = Math.max(0, data[i] - darken);
-                data[i+1] = Math.max(0, data[i+1] - darken * 0.8);
-                data[i+2] = Math.max(0, data[i+2] - darken * 0.6);
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-    }
-    
-    function drawBackground() {
-        if (!ctx) return;
-        ctx.fillStyle = '#050301';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawMetalGrid();
-        for (let p of particles) { p.update(); p.draw(); }
-        drawMovingLight();
-        const gradientVignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width*0.3, canvas.width/2, canvas.height/2, canvas.width*0.8);
-        gradientVignette.addColorStop(0, 'rgba(0,0,0,0)');
-        gradientVignette.addColorStop(1, 'rgba(0,0,0,0.35)');
-        ctx.fillStyle = gradientVignette;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        addRustNoise();
-    }
-    
-    function animateBackground() {
-        if (!ctx) return;
-        drawBackground();
-        bgAnimationId = requestAnimationFrame(animateBackground);
-    }
-    
-    function initBackground() {
-        resizeCanvas();
-        initParticles();
-        animateBackground();
-    }
-    
-    window.addEventListener('resize', () => {
-        resizeCanvas();
-        initParticles();
-        if (fireworkCanvas) resizeFireworkCanvas();
-        updateCardRects();
-    });
-    
-    initBackground();
-    initFireworkCanvas(); // 启动烟花画布
-    updateCardRects();    // 初始获取卡片位置
+    // 初始化烟花
+    initFireworkCanvas();
+    updateCardRects();
     
     window.addEventListener('beforeunload', () => {
-        if (bgAnimationId) cancelAnimationFrame(bgAnimationId);
         if (fireworkAnimationId) cancelAnimationFrame(fireworkAnimationId);
+        if (textTimer) clearTimeout(textTimer);
     });
     
-    console.log("%c🎆 万达大牢 | 持续烟花特效 | 双班全屏狂欢 🎆", "color: #ffaa66; background:#201c14; padding:5px 12px; border-radius:30px;");
+    console.log("%c🎆 万达大牢 | 浮夸文字特效 | 双班下班专属语录 🎆", "color: #ffaa66; background:#201c14; padding:5px 12px; border-radius:30px;");
 </script>
 </body>
 </html>
