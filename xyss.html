@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>逍遥蜀山 - 资源申请</title>
+    <title>逍遥蜀山</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -212,7 +212,7 @@
         <div class="panel">
             <div class="panel-title"><i class="fas fa-code"></i> 生成代码</div>
             <div class="help-text">
-                <p>1. 填写区服和角色ID<br>2. 添加道具并设置数量<br>3. 点击生成代码，复制到游戏后台F12控制台执行<br>4. 道具超过10个自动分批，每次提交后自动继续</p>
+                <p>1. 填写区服和角色ID<br>2. 添加道具并设置数量<br>3. 点击生成代码，复制到游戏后台F12控制台执行<br>4. 道具超过10个自动分批，每次提交后自动继续<br>5. 全部完成后脚本自动停止</p>
             </div>
             <button class="btn" onclick="generateCode()">生成填充代码</button>
             <button class="btn btn-outline" onclick="copyCode()">复制代码</button>
@@ -1759,7 +1759,7 @@ function importPresets(event) {
     reader.readAsText(file);
 }
 
-// 生成代码 (分批脚本)
+// 生成代码 (最新完整版分批脚本，支持自动导航、完成后停止)
 function generateCode() {
     let server = document.getElementById('playerServer').value.trim();
     let ids = document.getElementById('playerIds').value.trim();
@@ -1767,72 +1767,293 @@ function generateCode() {
     if(!ids) return showMsg('请填写角色ID', true);
     if(!selectedItems.length) return showMsg('请添加道具', true);
     let itemsStr = selectedItems.map(i => `  ['${i.id}', ${i.quantity}]`).join(',\n');
-    let script = `// 邮件分批填充脚本（自动平台+区服选择，超过10个自动分批）
+    let script = `// 游戏道具邮件分批填充脚本（自动导航版，完成后自动停止）
 (function(){
-    const TARGET_SERVER='${server}';
-    const ROLE_ID='${ids}';
-    const MAIL_TITLE='1';
-    const MAIL_CONTENT='1';
-    const BATCH_SIZE=10;
-    const ITEMS=[
+    const TARGET_SERVER = '${server}';
+    const ROLE_ID = '${ids}';
+    const MAIL_TITLE = '1';
+    const MAIL_CONTENT = '1';
+    const BATCH_SIZE = 10;
+    const ITEMS = [
 ${itemsStr}
     ];
-    let currentIndex=0, submitListener=null, initialized=false;
-    function trigger(el){ if(!el)return; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); el.dispatchEvent(new Event('blur',{bubbles:true})); }
-    function selectServerExact(placeholder,keyword){
-        let input=document.querySelector(\`.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
-        if(!input) return false;
+
+    let currentIndex = 0;
+    let submitListener = null;
+    let isNavigating = false;
+    let completed = false;
+
+    function trigger(el) {
+        if (!el) return;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        el.dispatchEvent(new Event('blur', { bubbles: true }));
+    }
+
+    function saveProgress() {
+        if (completed) return;
+        localStorage.setItem('MailBatchProgress', JSON.stringify({
+            targetServer: TARGET_SERVER,
+            roleId: ROLE_ID,
+            items: ITEMS,
+            currentIndex: currentIndex
+        }));
+    }
+
+    function clearProgress() {
+        localStorage.removeItem('MailBatchProgress');
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem('MailBatchProgress');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                if (data.items && data.currentIndex !== undefined) {
+                    currentIndex = data.currentIndex;
+                    console.log(\`📀 恢复上次进度：\${currentIndex}/\${data.items.length}\`);
+                }
+            } catch (e) {}
+        }
+    }
+
+    function isSendPage() {
+        return !!document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
+    }
+
+    function navigateToPersonalMail() {
+        if (isNavigating || completed) return;
+        isNavigating = true;
+        console.log('📍 检测到在邮件列表页面，尝试返回个人邮件...');
+        const personalMail = Array.from(document.querySelectorAll('.el-menu-item')).find(el => el.innerText.includes('个人邮件'));
+        if (personalMail) {
+            personalMail.click();
+            console.log('✅ 已点击个人邮件，等待页面加载...');
+            setTimeout(() => {
+                isNavigating = false;
+                if (!completed && isSendPage()) {
+                    console.log('✅ 已回到发送页面，继续填充下一批...');
+                    continueFilling();
+                } else if (!completed) {
+                    console.warn('未检测到发送页面，请手动确认');
+                    isNavigating = false;
+                }
+            }, 1500);
+        } else {
+            console.warn('未找到个人邮件菜单');
+            isNavigating = false;
+        }
+    }
+
+    async function selectServerExact(placeholder, keyword) {
+        const input = document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
+        if (!input) return false;
         input.click();
-        let opts=document.querySelectorAll('.el-select-dropdown__item');
-        if(!opts.length) return false;
-        let match=keyword.replace(/\\D/g,'')+'服';
-        let target=null;
-        for(let opt of opts) if(opt.textContent.trim().startsWith(match)) { target=opt; break; }
-        if(target) { target.click(); trigger(input); console.log('已选区服:',target.textContent.trim()); }
-        else { opts[0].click(); trigger(input); }
+        const options = document.querySelectorAll('.el-select-dropdown__item');
+        if (!options.length) return false;
+        let matchPattern = keyword;
+        if (/^\\d+$/.test(keyword)) matchPattern = keyword + '服';
+        if (!matchPattern.endsWith('服') && /^\\d+$/.test(matchPattern.replace('服', ''))) matchPattern = matchPattern + '服';
+        let target = null;
+        for (let opt of options) {
+            if (opt.textContent.trim().startsWith(matchPattern)) {
+                target = opt;
+                break;
+            }
+        }
+        if (target) {
+            target.click();
+            trigger(input);
+            console.log(\`✓ 已选择区服: \${target.textContent.trim()}\`);
+        } else {
+            options[0].click();
+            trigger(input);
+            console.log(\`⚠ 未找到匹配区服，已选择第一个: \${options[0].textContent.trim()}\`);
+        }
         return true;
     }
-    function selectFirstDropdown(placeholder){
-        let input=document.querySelector(\`.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
-        if(!input) return false;
+
+    function selectFirstDropdown(placeholder) {
+        const input = document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
+        if (!input) return false;
         input.click();
-        let opts=document.querySelectorAll('.el-select-dropdown__item');
-        if(opts.length) { opts[0].click(); trigger(input); }
+        const options = document.querySelectorAll('.el-select-dropdown__item');
+        if (options.length) {
+            options[0].click();
+            trigger(input);
+            console.log(\`✓ 已选择平台: \${options[0].textContent.trim()}\`);
+        }
         return true;
     }
-    async function clearRows(){ let btns=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=btns.length-1;i>=0;i--){ btns[i].click(); await new Promise(r=>setTimeout(r,30)); } }
-    async function setRows(n){ let add=document.querySelector('button.el-button--primary.el-button--small.is-circle'); let cur=document.querySelectorAll('tr.el-table__row').length; if(cur===n)return; if(cur>n){ let del=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=0;i<cur-n;i++) del[del.length-1-i]?.click(); } else for(let i=0;i<n-cur;i++) add.click(); await new Promise(r=>setTimeout(r,50)); }
-    async function fillBatch(){
-        let rem=ITEMS.length-currentIndex; if(rem<=0){ console.log('🎉 完成'); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; }
-        let cnt=Math.min(BATCH_SIZE,rem);
-        console.log(\`📦 第\${Math.floor(currentIndex/BATCH_SIZE)+1}批，\${cnt}个道具，剩余\${rem-cnt}\`);
-        await clearRows(); await setRows(cnt);
-        let idIns=document.querySelectorAll('input[placeholder="请输入道具ID"]'), qtyIns=document.querySelectorAll('input[placeholder="请输入数量"]');
-        for(let i=0;i<cnt;i++){ let idx=currentIndex+i; if(idIns[i]){ idIns[i].value=ITEMS[idx][0]; trigger(idIns[i]); } if(qtyIns[i]){ qtyIns[i].value=ITEMS[idx][1]; trigger(qtyIns[i]); } }
-        currentIndex+=cnt;
-        if(currentIndex>=ITEMS.length){ console.log('✅ 全部完成'); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; }
-        console.log(\`✅ 已填充\${currentIndex}/\${ITEMS.length}，请点击“提交”继续\`);
+
+    async function clearAllItemRows() {
+        const delBtns = document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle');
+        for (let i = delBtns.length - 1; i >= 0; i--) {
+            delBtns[i].click();
+            await new Promise(r => setTimeout(r, 30));
+        }
+    }
+
+    async function setItemRowCount(targetCount) {
+        const addBtn = document.querySelector('button.el-button--primary.el-button--small.is-circle');
+        let currentRows = document.querySelectorAll('tr.el-table__row').length;
+        if (currentRows === targetCount) return;
+        if (currentRows > targetCount) {
+            const delBtns = document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle');
+            for (let i = 0; i < currentRows - targetCount; i++) {
+                delBtns[delBtns.length - 1 - i]?.click();
+                await new Promise(r => setTimeout(r, 30));
+            }
+        } else {
+            for (let i = 0; i < targetCount - currentRows; i++) {
+                addBtn.click();
+                await new Promise(r => setTimeout(r, 30));
+            }
+        }
+    }
+
+    async function fillCurrentBatch() {
+        if (completed) return false;
+        const remaining = ITEMS.length - currentIndex;
+        if (remaining <= 0) {
+            console.log('🎉 所有道具已填充完毕！');
+            completed = true;
+            clearProgress();
+            if (submitListener) {
+                const btn = document.querySelector('button.el-button--primary.el-button--default');
+                if (btn) btn.removeEventListener('click', submitListener);
+                submitListener = null;
+            }
+            return false;
+        }
+        const batchCount = Math.min(BATCH_SIZE, remaining);
+        console.log(\`📦 正在填充第 \${Math.floor(currentIndex / BATCH_SIZE) + 1} 批，本批 \${batchCount} 个道具，剩余 \${remaining - batchCount} 个道具未填充\`);
+        await clearAllItemRows();
+        await setItemRowCount(batchCount);
+        const idInputs = document.querySelectorAll('input[placeholder="请输入道具ID"]');
+        const qtyInputs = document.querySelectorAll('input[placeholder="请输入数量"]');
+        for (let i = 0; i < batchCount; i++) {
+            const idx = currentIndex + i;
+            if (idInputs[i]) {
+                idInputs[i].value = ITEMS[idx][0];
+                trigger(idInputs[i]);
+            }
+            if (qtyInputs[i]) {
+                qtyInputs[i].value = ITEMS[idx][1];
+                trigger(qtyInputs[i]);
+            }
+        }
+        currentIndex += batchCount;
+        saveProgress();
+        if (currentIndex >= ITEMS.length) {
+            console.log('✅ 本批填充完成，所有道具已填充完毕！');
+            completed = true;
+            clearProgress();
+            if (submitListener) {
+                const btn = document.querySelector('button.el-button--primary.el-button--default');
+                if (btn) btn.removeEventListener('click', submitListener);
+                submitListener = null;
+            }
+            return false;
+        }
+        console.log(\`✅ 本批填充完成，已填充 \${currentIndex}/\${ITEMS.length} 个道具，请点击“提交”按钮发送本批邮件\`);
         return true;
     }
-    async function onSubmit(){ console.log('提交触发，继续下一批'); await new Promise(r=>setTimeout(r,1500)); let more=await fillBatch(); if(!more && submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); }
-    async function init(){
-        if(initialized)return;
-        selectFirstDropdown('平台'); await new Promise(r=>setTimeout(r,80));
-        selectServerExact('区服',TARGET_SERVER); await new Promise(r=>setTimeout(r,100));
-        let pid=document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); if(pid){ pid.value=ROLE_ID; trigger(pid); }
-        let title=document.querySelector('input[placeholder="请填写标题信息"]'); if(title){ title.value=MAIL_TITLE; trigger(title); }
-        let content=document.querySelector('textarea[placeholder="邮件内容"]'); if(content){ content.value=MAIL_CONTENT; trigger(content); }
-        await new Promise(r=>setTimeout(r,80));
-        initialized=true;
-        await fillBatch();
-        let btn=document.querySelector('button.el-button--primary.el-button--default');
-        if(btn && !submitListener){ submitListener=onSubmit; btn.addEventListener('click',submitListener); console.log('监听提交按钮'); }
+
+    async function onSubmitClick() {
+        if (completed) {
+            console.log('已完成所有道具，忽略提交事件');
+            return;
+        }
+        console.log('🔘 提交按钮点击，保存进度并准备跳转...');
+        saveProgress();
+        setTimeout(() => {
+            if (completed) return;
+            const activeMenu = document.querySelector('.el-menu-item.is-active');
+            if (activeMenu && activeMenu.innerText.includes('邮件列表')) {
+                navigateToPersonalMail();
+            } else {
+                setTimeout(() => {
+                    if (completed) return;
+                    if (!isSendPage()) {
+                        navigateToPersonalMail();
+                    } else {
+                        console.log('已在发送页面，继续填充');
+                        continueFilling();
+                    }
+                }, 1000);
+            }
+        }, 800);
     }
+
+    async function continueFilling() {
+        if (completed) return;
+        await selectFirstDropdown('平台');
+        await new Promise(r => setTimeout(r, 80));
+        await selectServerExact('区服', TARGET_SERVER);
+        await new Promise(r => setTimeout(r, 100));
+        const pid = document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
+        if (pid) { pid.value = ROLE_ID; trigger(pid); }
+        const title = document.querySelector('input[placeholder="请填写标题信息"]');
+        if (title) { title.value = MAIL_TITLE; trigger(title); }
+        const content = document.querySelector('textarea[placeholder="邮件内容"]');
+        if (content) { content.value = MAIL_CONTENT; trigger(content); }
+        await new Promise(r => setTimeout(r, 80));
+        const hasMore = await fillCurrentBatch();
+        if (hasMore) {
+            const submitBtn = document.querySelector('button.el-button--primary.el-button--default');
+            if (submitBtn && !submitListener && !completed) {
+                submitListener = onSubmitClick;
+                submitBtn.addEventListener('click', submitListener);
+                console.log('👂 已重新绑定提交按钮监听');
+            }
+        }
+    }
+
+    async function init() {
+        loadProgress();
+        if (currentIndex >= ITEMS.length) {
+            console.log('所有道具已填充完毕，无需执行');
+            completed = true;
+            clearProgress();
+            return;
+        }
+        if (!isSendPage()) {
+            console.log('当前不在发送页面，尝试导航到个人邮件...');
+            navigateToPersonalMail();
+            return;
+        }
+        console.log('🚀 开始填充邮件...');
+        await selectFirstDropdown('平台');
+        await new Promise(r => setTimeout(r, 80));
+        await selectServerExact('区服', TARGET_SERVER);
+        await new Promise(r => setTimeout(r, 100));
+        const pid = document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
+        if (pid) { pid.value = ROLE_ID; trigger(pid); }
+        const title = document.querySelector('input[placeholder="请填写标题信息"]');
+        if (title) { title.value = MAIL_TITLE; trigger(title); }
+        const content = document.querySelector('textarea[placeholder="邮件内容"]');
+        if (content) { content.value = MAIL_CONTENT; trigger(content); }
+        await new Promise(r => setTimeout(r, 80));
+        const hasMore = await fillCurrentBatch();
+        if (hasMore) {
+            const submitBtn = document.querySelector('button.el-button--primary.el-button--default');
+            if (submitBtn && !submitListener && !completed) {
+                submitListener = onSubmitClick;
+                submitBtn.addEventListener('click', submitListener);
+                console.log('👂 已监听提交按钮，点击后会自动保存并尝试返回继续');
+            }
+        } else {
+            console.log('所有道具已处理完毕，脚本结束');
+        }
+    }
+
     init();
 })();`;
     document.getElementById('generatedCode').innerText = script;
     showMsg('代码已生成');
 }
+
 function copyCode() {
     let code = document.getElementById('generatedCode').innerText;
     navigator.clipboard.writeText(code).then(()=>showMsg('已复制')).catch(()=>showMsg('复制失败',true));
