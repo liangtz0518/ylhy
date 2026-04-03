@@ -2,171 +2,361 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>逍遥蜀山</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: "微软雅黑", sans-serif;
-            background: #f9fafb;
-            padding: 30px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f5f7;
+            padding: 40px 24px;
+            color: #1d1c1f;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        header {
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 苹果风格头部 */
+        .hero {
             text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #4a90e2, #3a5a9f);
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 30px;
+            margin-bottom: 48px;
         }
-        .panels {
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            background: linear-gradient(135deg, #1d1c1f, #3a3a3e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+        .hero p {
+            font-size: 15px;
+            color: #6e6e73;
+            font-weight: 400;
+        }
+
+        /* 卡片网格 */
+        .grid {
             display: flex;
-            gap: 25px;
             flex-wrap: wrap;
+            gap: 28px;
         }
-        .panel {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+            padding: 24px;
             flex: 1;
             min-width: 280px;
-            border: 1px solid #e1e4e8;
+            transition: all 0.2s ease;
+            border: 1px solid #e8e8ed;
         }
-        .panel.roles-panel { max-width: 300px; }
-        .panel-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e1e4e8;
+        .card.roles-card {
+            max-width: 340px;
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            color: #1d1c1f;
+            border-bottom: 1px solid #e8e8ed;
+            padding-bottom: 12px;
         }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .card-title i {
+            color: #0071e3;
+            font-size: 22px;
+        }
+
+        /* 表单元素 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #1d1c1f;
+            font-size: 14px;
+        }
         input, textarea, select {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #d2d2d6;
+            font-size: 15px;
+            transition: 0.2s;
+            background-color: #fff;
+            font-family: inherit;
         }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+        }
+        textarea {
+            resize: vertical;
+        }
+
+        /* 按钮 - 统一大小 */
         .btn {
-            background: linear-gradient(135deg, #3a5a9f, #4a90e2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-right: 8px;
-            margin-bottom: 8px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 8px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 980px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
         }
-        .btn-outline { background: transparent; border: 1px solid #3a5a9f; color: #3a5a9f; }
-        .btn-danger { background: linear-gradient(135deg, #d32f2f, #e57373); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #0071e3;
+            color: #0071e3;
+        }
+        .btn-outline:hover {
+            background: rgba(0,113,227,0.05);
+        }
+        .btn-danger {
+            background: #ff3b30;
+        }
+        .btn-danger:hover {
+            background: #e3342a;
+        }
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+        .btn:hover {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* 道具/角色列表项 */
+        .item-row {
+            background: #f9f9fb;
+            border: 1px solid #e8e8ed;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .item-row:hover {
+            background: #f0f0f2;
+        }
+        .item-info {
+            flex: 2;
+        }
+        .item-id {
+            font-weight: 600;
+            color: #0071e3;
+            font-family: monospace;
+        }
+        .item-name {
+            font-size: 14px;
+            color: #6e6e73;
+            margin-left: 8px;
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        /* 让按钮不触发卡片点击 */
+        .item-actions .btn {
+            pointer-events: auto;
+        }
+        .quantity-input {
+            width: 80px;
+            text-align: center;
+            border-radius: 10px;
+            padding: 6px;
+        }
+
+        /* 搜索结果 */
         .search-results {
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 1px solid #e8e8ed;
+            border-radius: 14px;
             margin-top: 8px;
             display: none;
+            background: white;
         }
         .result-item {
-            padding: 8px 12px;
+            padding: 10px 14px;
             cursor: pointer;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f2;
             display: flex;
             justify-content: space-between;
         }
-        .result-item.selected { background: #e6f0ff; }
-        .selected-item {
-            background: #f8f9fa;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
+        .result-item.selected {
+            background: #e8f2ff;
+        }
+
+        /* 礼包选项 - 无复选框，点击选中 */
+        .package-option {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        .quantity-input { width: 80px; text-align: center; }
-        #generatedCode {
-            background: #f8fafc;
+            gap: 12px;
             padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            font-size: 12px;
-            max-height: 300px;
-            overflow: auto;
+            border: 1px solid #e8e8ed;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .package-option.selected {
+            background-color: #e8f2ff;
+            border-color: #0071e3;
         }
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
         .modal-content {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
+            border-radius: 28px;
+            padding: 24px;
             width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .package-option {
+            max-width: 480px;
+            max-height: 85vh;
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 8px;
-            border-radius: 6px;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .modal-content h3 {
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+        .package-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 4px;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-shrink: 0;
+            padding-top: 16px;
+            border-top: 1px solid #e8e8ed;
         }
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #3a5a9f;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1d1c1f;
             color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            display: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 14px;
             z-index: 2000;
+            display: none;
+            white-space: nowrap;
         }
-        .action-group { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px; }
-        .help-text { font-size: 13px; color: #666; margin-bottom: 15px; }
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 10px;
+        }
+        /* 礼包标题单独一行 */
+        .package-header {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #1d1c1f;
+            width: 100%;
+        }
+        .help-text {
+            font-size: 13px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+        }
+        #generatedCode {
+            background: #f5f5f7;
+            padding: 16px;
+            border-radius: 16px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 320px;
+            overflow: auto;
+            border: 1px solid #e8e8ed;
+        }
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #e8e8ed;
+        }
+        @media (max-width: 780px) {
+            body { padding: 20px; }
+            .hero h1 { font-size: 32px; }
+            .card.roles-card { max-width: none; }
+            .notification { white-space: normal; width: 90%; text-align: center; }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="container">
-    <header><h1>逍遥蜀山</h1><p>配置区服/角色ID，选择道具，生成自动填充代码</p></header>
-    <div class="panels">
-        <!-- 常用角色 -->
-        <div class="panel roles-panel">
-            <div class="panel-title"><i class="fas fa-users"></i> 常用角色ID</div>
-            <button class="btn" onclick="openAddRoleModal()"><i class="fas fa-plus"></i> 添加</button>
-            <div id="frequentlyUsedRoles" style="margin-top: 15px;"></div>
+    <div class="hero">
+        <h1>逍遥蜀山</h1>
+        <p>邮件道具脚本</p>
+    </div>
+
+    <div class="grid">
+        <!-- 常用角色面板 -->
+        <div class="card roles-card">
+            <div class="card-title"><i class="fas fa-users"></i> 常用角色</div>
+            <button class="btn" onclick="openAddRoleModal()"><i class="fas fa-plus"></i> 添加角色</button>
+            <div id="frequentlyUsedRoles" style="margin-top: 18px;"></div>
         </div>
-        <!-- 配置参数 -->
-        <div class="panel">
-            <div class="panel-title"><i class="fas fa-cogs"></i> 配置参数</div>
+
+        <!-- 配置参数面板 -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-cogs"></i> 配置参数</div>
             <div class="form-group">
                 <label>角色区服</label>
-                <input type="text" id="playerServer" placeholder="例如: 183服">
+                <input type="text" id="playerServer" placeholder="例: 183服">
             </div>
             <div class="form-group">
-                <label>角色ID (多个用逗号分隔)</label>
-                <textarea id="playerIds" rows="2" placeholder="例如: 1001,1002"></textarea>
+                <label>角色ID (多个逗号分隔)</label>
+                <textarea id="playerIds" rows="2" placeholder="例: 1001,1002"></textarea>
             </div>
             <div class="form-group">
                 <label>搜索道具</label>
@@ -177,13 +367,14 @@
                     <button class="btn btn-outline" onclick="deselectAllResults()">全不选</button>
                     <button class="btn" onclick="addSelectedResults()">添加选中</button>
                 </div>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <input type="number" id="bulkQuantity" placeholder="批量数量" min="1" style="flex:1">
                     <button class="btn" onclick="applyBulkQuantity()">批量设置</button>
                 </div>
             </div>
+            <!-- 单日累充礼包 -->
+            <div class="package-header">单日累充礼包</div>
             <div class="action-group">
-                <div class="action-group-title">单日累充礼包 (可多选)</div>
                 <button class="btn" onclick="openPackageModal('第1天礼包')">第1天</button>
                 <button class="btn" onclick="openPackageModal('第2天礼包')">第2天</button>
                 <button class="btn" onclick="openPackageModal('第3天礼包')">第3天</button>
@@ -197,9 +388,10 @@
             </div>
             <div id="selectedItemsContainer"></div>
         </div>
+
         <!-- 预设管理 -->
-        <div class="panel">
-            <div class="panel-title"><i class="fas fa-bookmark"></i> 预设管理</div>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-bookmark"></i> 预设管理</div>
             <div class="action-group">
                 <button class="btn" onclick="openSavePresetModal()">保存</button>
                 <button class="btn btn-outline" onclick="exportPresets()">导出</button>
@@ -208,53 +400,32 @@
             </div>
             <div id="presetList"></div>
         </div>
+
         <!-- 生成代码 -->
-        <div class="panel">
-            <div class="panel-title"><i class="fas fa-code"></i> 生成代码</div>
-            <div class="help-text">
-                <p>1. 填写区服和角色ID<br>2. 添加道具并设置数量<br>3. 点击生成代码，复制到游戏后台F12控制台执行<br>4. 道具超过10个自动分批，每次提交后自动继续<br>5. 全部完成后脚本自动停止</p>
-            </div>
-            <button class="btn" onclick="generateCode()">生成填充代码</button>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-code"></i> 生成代码</div>
+            <div class="help-text"> 复制到游戏后台按F12打开控制台粘贴执行</div>
+            <button class="btn" onclick="generateCode()">生成代码</button>
             <button class="btn btn-outline" onclick="copyCode()">复制代码</button>
             <button class="btn btn-danger" onclick="clearAll()">重置所有</button>
-            <div id="generatedCode">// 点击生成按钮</div>
+            <div id="generatedCode" style="margin-top: 16px;">// 配置参数后点击生成按钮</div>
         </div>
     </div>
 </div>
 
 <!-- 模态框 -->
-<div id="addRoleModal" class="modal">
-    <div class="modal-content">
-        <h3>添加常用角色</h3>
-        <input type="text" id="server" placeholder="区服" style="width:100%; margin-bottom:10px">
-        <input type="text" id="roleName" placeholder="角色名" style="width:100%; margin-bottom:10px">
-        <input type="text" id="roleId" placeholder="角色ID" style="width:100%; margin-bottom:10px">
-        <div style="text-align:right">
-            <button class="btn btn-outline" onclick="closeModal('addRoleModal')">取消</button>
-            <button class="btn" onclick="saveRole()">保存</button>
-        </div>
-    </div>
-</div>
+<div id="addRoleModal" class="modal"><div class="modal-content"><h3>添加/编辑角色</h3><input type="text" id="server" placeholder="区服" style="width:100%;margin-bottom:12px"><input type="text" id="roleName" placeholder="角色名" style="width:100%;margin-bottom:12px"><input type="text" id="roleId" placeholder="角色ID" style="width:100%;margin-bottom:12px"><div style="text-align:right"><button class="btn btn-outline" onclick="closeModal('addRoleModal')">取消</button><button class="btn" onclick="saveRole()">保存</button></div></div></div>
 <div id="packageModal" class="modal">
     <div class="modal-content">
         <h3>选择礼包 (可多选)</h3>
-        <div id="packageOptionsContainer"></div>
-        <div style="text-align:right; margin-top:15px">
+        <div class="package-list" id="packageOptionsContainer"></div>
+        <div class="modal-actions">
             <button class="btn btn-outline" onclick="closeModal('packageModal')">取消</button>
             <button class="btn" onclick="confirmPackageSelection()">确定</button>
         </div>
     </div>
 </div>
-<div id="savePresetModal" class="modal">
-    <div class="modal-content">
-        <h3>保存预设</h3>
-        <input type="text" id="presetName" placeholder="预设名称" style="width:100%">
-        <div style="text-align:right; margin-top:15px">
-            <button class="btn btn-outline" onclick="closeModal('savePresetModal')">取消</button>
-            <button class="btn" onclick="saveCurrentPreset()">保存</button>
-        </div>
-    </div>
-</div>
+<div id="savePresetModal" class="modal"><div class="modal-content"><h3>保存预设</h3><input type="text" id="presetName" placeholder="预设名称" style="width:100%"><div style="text-align:right;margin-top:15px"><button class="btn btn-outline" onclick="closeModal('savePresetModal')">取消</button><button class="btn" onclick="saveCurrentPreset()">保存</button></div></div></div>
 <div id="notification" class="notification"></div>
 
 <script>
@@ -1532,52 +1703,81 @@ let searchResults = [];
 let selectedSearchIds = [];
 let currentPackageType = "";
 let selectedPackageIds = [];
+let editRoleId = null;
 
-// ---------- 通用 ----------
-function showMsg(msg, isError=false) {
-    let n = document.getElementById('notification');
-    n.textContent = msg;
-    n.className = 'notification' + (isError ? ' error' : '');
-    n.style.display = 'flex';
-    setTimeout(() => n.style.display = 'none', 2500);
-}
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+// 通用
+function showMsg(msg, isErr=false) { let n=document.getElementById('notification'); n.textContent=msg; n.style.background=isErr?'#ff3b30':'#1d1c1f'; n.style.display='block'; setTimeout(()=>n.style.display='none',2500); }
+function closeModal(id) { document.getElementById(id).style.display='none'; editRoleId=null; }
+function openModal(id) { document.getElementById(id).style.display='flex'; }
 
-// 常用角色
+// 常用角色 (点击卡片任意位置选用，按钮不触发选用)
 function getRoles() { return JSON.parse(localStorage.getItem('frequentlyUsedRoles2') || '[]'); }
-function saveRoles(r) { localStorage.setItem('frequentlyUsedRoles2', JSON.stringify(r)); }
+function saveRoles(r) { localStorage.setItem('frequentlyUsedRoles2', JSON.stringify(r)); renderRoles(); }
 function renderRoles() {
     let roles = getRoles();
     let container = document.getElementById('frequentlyUsedRoles');
-    if(!roles.length) { container.innerHTML = '<div style="color:#999">暂无常用角色</div>'; return; }
+    if(!roles.length) { container.innerHTML = '<div style="color:#6e6e73;text-align:center;">暂无常用角色</div>'; return; }
     container.innerHTML = roles.map(r => `
-        <div class="selected-item" onclick="if(!event.target.closest('.btn')){document.getElementById('playerServer').value='${r.server}';document.getElementById('playerIds').value='${r.id}';showMsg('已选择 ${r.server}-${r.name}');}">
-            <div><div>${r.server}-${r.name}</div><small>${r.id}</small></div>
-            <button class="btn btn-danger" onclick="deleteRole('${r.id}')" style="padding:2px 8px"><i class="fas fa-times"></i></button>
+        <div class="item-row" data-server="${r.server}" data-id="${r.id}">
+            <div style="flex:2"><div><strong>${r.server}</strong> - ${r.name}</div><div class="item-id">${r.id}</div></div>
+            <div class="item-actions">
+                <button class="btn btn-sm btn-outline" data-action="edit" data-id="${r.id}"><i class="fas fa-edit"></i> 修改</button>
+                <button class="btn btn-sm btn-danger" data-action="delete" data-id="${r.id}"><i class="fas fa-trash"></i> 删除</button>
+            </div>
         </div>
     `).join('');
+    // 绑定事件：点击卡片选用，点击按钮分别处理
+    document.querySelectorAll('#frequentlyUsedRoles .item-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            // 如果点击的目标是按钮，不触发选用
+            if(e.target.closest('.item-actions .btn')) return;
+            let server = row.dataset.server;
+            let id = row.dataset.id;
+            document.getElementById('playerServer').value = server;
+            document.getElementById('playerIds').value = id;
+            showMsg(`已选用 ${server} - ${id}`);
+        });
+        // 修改按钮
+        row.querySelector('[data-action="edit"]')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let id = row.dataset.id;
+            editRole(id);
+        });
+        // 删除按钮
+        row.querySelector('[data-action="delete"]')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let id = row.dataset.id;
+            if(confirm('删除该角色？')) saveRoles(getRoles().filter(r=>r.id!==id));
+        });
+    });
 }
-function openAddRoleModal() { openModal('addRoleModal'); }
+function editRole(id) {
+    let role = getRoles().find(r=>r.id===id);
+    if(role) {
+        document.getElementById('server').value = role.server;
+        document.getElementById('roleName').value = role.name;
+        document.getElementById('roleId').value = role.id;
+        editRoleId = role.id;
+        openModal('addRoleModal');
+    }
+}
+function openAddRoleModal() { editRoleId=null; document.getElementById('server').value=''; document.getElementById('roleName').value=''; document.getElementById('roleId').value=''; openModal('addRoleModal'); }
 function saveRole() {
-    let server = document.getElementById('server').value.trim();
-    let name = document.getElementById('roleName').value.trim();
-    let id = document.getElementById('roleId').value.trim();
+    let server = document.getElementById('server').value.trim(), name = document.getElementById('roleName').value.trim(), id = document.getElementById('roleId').value.trim();
     if(!server||!name||!id) return showMsg('请完整填写', true);
     let roles = getRoles();
-    let idx = roles.findIndex(r=>r.id===id);
-    if(idx>=0) roles[idx] = {server,name,id};
-    else roles.push({server,name,id});
+    if(editRoleId) {
+        let idx = roles.findIndex(r=>r.id===editRoleId);
+        if(idx!==-1) roles[idx] = {server,name,id};
+        else roles.push({server,name,id});
+        showMsg('角色已修改');
+    } else {
+        if(roles.some(r=>r.id===id)) return showMsg('角色ID已存在', true);
+        roles.push({server,name,id});
+        showMsg('角色已添加');
+    }
     saveRoles(roles);
-    renderRoles();
     closeModal('addRoleModal');
-    showMsg('角色已保存');
-}
-function deleteRole(id) {
-    let roles = getRoles().filter(r=>r.id!==id);
-    saveRoles(roles);
-    renderRoles();
-    showMsg('已删除');
 }
 
 // 道具搜索
@@ -1587,79 +1787,68 @@ function searchItems() {
     if(!kw) { container.style.display='none'; selectedSearchIds=[]; return; }
     searchResults = itemDatabase.filter(i=>i.id.includes(kw)||i.name.includes(kw));
     container.style.display = 'block';
-    container.innerHTML = searchResults.map(i => `
-        <div class="result-item ${selectedSearchIds.includes(i.id)?'selected':''}" onclick="toggleSelectItem('${i.id}')">
-            <span><span class="item-id">${i.id}</span> ${i.name}</span>
-            ${selectedSearchIds.includes(i.id)?'<i class="fas fa-check"></i>':''}
-        </div>
-    `).join('');
+    container.innerHTML = searchResults.map(i => `<div class="result-item ${selectedSearchIds.includes(i.id)?'selected':''}" onclick="toggleSelectItem('${i.id}')"><span><span style="font-weight:500">${i.id}</span> ${i.name}</span>${selectedSearchIds.includes(i.id)?'<i class="fas fa-check"></i>':''}</div>`).join('');
 }
-function toggleSelectItem(id) {
-    if(selectedSearchIds.includes(id)) selectedSearchIds = selectedSearchIds.filter(i=>i!==id);
-    else selectedSearchIds.push(id);
-    searchItems();
-}
+function toggleSelectItem(id) { if(selectedSearchIds.includes(id)) selectedSearchIds=selectedSearchIds.filter(i=>i!==id); else selectedSearchIds.push(id); searchItems(); }
 function selectAllResults() { selectedSearchIds = searchResults.map(i=>i.id); searchItems(); }
 function deselectAllResults() { selectedSearchIds = []; searchItems(); }
 function addSelectedResults() {
-    selectedSearchIds.forEach(id => {
-        let item = itemDatabase.find(i=>i.id===id);
-        if(item && !selectedItems.find(s=>s.id===id)) selectedItems.push({id:item.id, name:item.name, quantity:1});
-    });
-    selectedSearchIds = [];
-    searchItems();
-    renderSelectedItems();
-    showMsg('已添加选中道具');
+    selectedSearchIds.forEach(id => { let item = itemDatabase.find(i=>i.id===id); if(item && !selectedItems.find(s=>s.id===id)) selectedItems.push({id:item.id, name:item.name, quantity:1}); });
+    selectedSearchIds = []; searchItems(); renderSelectedItems(); showMsg('已添加选中道具');
 }
 function renderSelectedItems() {
     let container = document.getElementById('selectedItemsContainer');
-    if(!selectedItems.length) { container.innerHTML = '<div style="color:#999">暂无道具</div>'; return; }
+    if(!selectedItems.length) { container.innerHTML = '<div style="color:#6e6e73;text-align:center;">暂无道具</div>'; return; }
     container.innerHTML = selectedItems.map(item => `
-        <div class="selected-item">
-            <div><strong>${item.id}</strong> ${item.name}</div>
+        <div class="item-row" style="cursor:default">
+            <div class="item-info"><span class="item-id">${item.id}</span><span class="item-name">${item.name}</span></div>
             <div class="item-actions">
                 <input type="number" class="quantity-input" min="1" value="${item.quantity}" onchange="updateQuantity('${item.id}',this.value)">
-                <button class="btn btn-danger" onclick="removeItem('${item.id}')" style="padding:2px 8px"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="removeItem('${item.id}')"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     `).join('');
 }
 function updateQuantity(id, val) { let it = selectedItems.find(i=>i.id===id); if(it) it.quantity = Math.max(1, parseInt(val)||1); renderSelectedItems(); }
 function removeItem(id) { selectedItems = selectedItems.filter(i=>i.id!==id); renderSelectedItems(); }
-function applyBulkQuantity() {
-    let qty = parseInt(document.getElementById('bulkQuantity').value);
-    if(isNaN(qty)||qty<1) return;
-    selectedItems.forEach(i=>i.quantity=qty);
-    renderSelectedItems();
-    showMsg(`批量设置数量为 ${qty}`);
-}
+function applyBulkQuantity() { let qty=parseInt(document.getElementById('bulkQuantity').value); if(isNaN(qty)||qty<1) return; selectedItems.forEach(i=>i.quantity=qty); renderSelectedItems(); showMsg(`批量数量=${qty}`); }
 function clearItems() { if(confirm('清空所有道具？')){ selectedItems=[]; renderSelectedItems(); } }
 
-// 礼包多选
+// 礼包多选（优化版：无复选框，点击选项切换选中）
 function openPackageModal(type) {
     currentPackageType = type;
     selectedPackageIds = [];
     let packages = packageDatabase[type] || [];
     let container = document.getElementById('packageOptionsContainer');
-    if(!packages.length) { container.innerHTML = '<div>暂无礼包</div>'; openModal('packageModal'); return; }
+    if(!packages.length) {
+        container.innerHTML = '<div style="padding:20px;text-align:center">暂无礼包</div>';
+        openModal('packageModal');
+        return;
+    }
     container.innerHTML = packages.map(pkg => `
-        <div class="package-option" onclick="togglePackage('${pkg.id}')">
-            <input type="checkbox" id="chk_${pkg.id}" onchange="togglePackageById('${pkg.id}')" style="width:18px;height:18px">
-            <div><strong>${pkg.name}</strong><br><small>${pkg.items.length}个道具</small></div>
+        <div class="package-option" data-id="${pkg.id}">
+            <div><strong>${pkg.name}</strong></div>
         </div>
     `).join('');
+    // 绑定点击事件：切换选中类
+    document.querySelectorAll('#packageOptionsContainer .package-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            let id = opt.dataset.id;
+            if(opt.classList.contains('selected')) {
+                opt.classList.remove('selected');
+                selectedPackageIds = selectedPackageIds.filter(i => i !== id);
+            } else {
+                opt.classList.add('selected');
+                if(!selectedPackageIds.includes(id)) selectedPackageIds.push(id);
+            }
+        });
+    });
     openModal('packageModal');
-}
-function togglePackage(id) { let cb = document.getElementById(`chk_${id}`); cb.checked = !cb.checked; togglePackageById(id); }
-function togglePackageById(id) {
-    let cb = document.getElementById(`chk_${id}`);
-    if(cb.checked) { if(!selectedPackageIds.includes(id)) selectedPackageIds.push(id); }
-    else selectedPackageIds = selectedPackageIds.filter(i=>i!==id);
 }
 function confirmPackageSelection() {
     if(!currentPackageType || selectedPackageIds.length===0) return showMsg('请至少选择一个礼包', true);
     let packages = packageDatabase[currentPackageType] || [];
-    let selectedPkgs = packages.filter(p=>selectedPackageIds.includes(p.id));
+    let selectedPkgs = packages.filter(p => selectedPackageIds.includes(p.id));
     let itemMap = new Map();
     selectedPkgs.forEach(pkg => {
         pkg.items.forEach(it => {
@@ -1669,9 +1858,9 @@ function confirmPackageSelection() {
     });
     let merged = Array.from(itemMap.values());
     merged.forEach(newIt => {
-        let exist = selectedItems.find(i=>i.id===newIt.id);
+        let exist = selectedItems.find(i => i.id === newIt.id);
         if(exist) exist.quantity += newIt.quantity;
-        else selectedItems.push({id:newIt.id, name:newIt.name, quantity:newIt.quantity});
+        else selectedItems.push({id: newIt.id, name: newIt.name, quantity: newIt.quantity});
     });
     renderSelectedItems();
     closeModal('packageModal');
@@ -1680,86 +1869,21 @@ function confirmPackageSelection() {
 
 // 预设管理
 function getPresets() { return JSON.parse(localStorage.getItem('customPresets2') || '[]'); }
-function savePresets(p) { localStorage.setItem('customPresets2', JSON.stringify(p)); }
+function savePresets(p) { localStorage.setItem('customPresets2', JSON.stringify(p)); renderPresets(); }
 function renderPresets() {
     let presets = getPresets();
     let container = document.getElementById('presetList');
-    if(!presets.length) { container.innerHTML = '<div style="color:#999">暂无预设</div>'; return; }
-    container.innerHTML = presets.map(p => `
-        <div class="selected-item" style="flex-direction:column; align-items:stretch">
-            <div><strong>${p.name}</strong> (${p.items.length}个道具)</div>
-            <div style="margin-top:8px">
-                <button class="btn btn-outline" onclick="loadPreset('${p.id}')">加载</button>
-                <button class="btn btn-danger" onclick="deletePreset('${p.id}')">删除</button>
-            </div>
-        </div>
-    `).join('');
+    if(!presets.length) { container.innerHTML='<div style="color:#6e6e73;text-align:center;">暂无预设</div>'; return; }
+    container.innerHTML = presets.map(p => `<div class="item-row" style="flex-direction:column; align-items:stretch; cursor:default"><div><strong>${p.name}</strong> (${p.items.length}个道具)</div><div><button class="btn btn-sm btn-outline" onclick="loadPreset('${p.id}')">加载</button><button class="btn btn-sm btn-danger" onclick="deletePreset('${p.id}')">删除</button></div></div>`).join('');
 }
-function openSavePresetModal() {
-    if(!selectedItems.length) return showMsg('请先添加道具', true);
-    document.getElementById('presetName').value = '';
-    openModal('savePresetModal');
-}
-function saveCurrentPreset() {
-    let name = document.getElementById('presetName').value.trim();
-    if(!name) return showMsg('请输入预设名称', true);
-    let presets = getPresets();
-    let newId = Date.now().toString();
-    presets.push({id:newId, name:name, items:JSON.parse(JSON.stringify(selectedItems))});
-    savePresets(presets);
-    renderPresets();
-    closeModal('savePresetModal');
-    showMsg('预设已保存');
-}
-function loadPreset(id) {
-    let presets = getPresets();
-    let p = presets.find(p=>p.id===id);
-    if(p) { selectedItems = JSON.parse(JSON.stringify(p.items)); renderSelectedItems(); showMsg(`已加载预设: ${p.name}`); }
-}
-function deletePreset(id) {
-    if(!confirm('删除预设？')) return;
-    let presets = getPresets().filter(p=>p.id!==id);
-    savePresets(presets);
-    renderPresets();
-    showMsg('已删除');
-}
-function exportPresets() {
-    let presets = getPresets();
-    if(!presets.length) return showMsg('无预设可导出', true);
-    let blob = new Blob([JSON.stringify(presets,null,2)], {type:'application/json'});
-    let a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `presets_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    showMsg('导出成功');
-}
-function importPresets(event) {
-    let file = event.target.files[0];
-    if(!file) return;
-    let reader = new FileReader();
-    reader.onload = e => {
-        try {
-            let imported = JSON.parse(e.target.result);
-            if(!Array.isArray(imported)) throw new Error();
-            let valid = imported.filter(p=>p.id && p.name && Array.isArray(p.items));
-            let current = getPresets();
-            let merged = [...current];
-            valid.forEach(v => {
-                let idx = merged.findIndex(m=>m.id===v.id);
-                if(idx>=0) merged[idx]=v;
-                else merged.push(v);
-            });
-            savePresets(merged);
-            renderPresets();
-            showMsg(`导入${valid.length}个预设`);
-        } catch(e) { showMsg('文件格式错误', true); }
-        event.target.value = '';
-    };
-    reader.readAsText(file);
-}
+function openSavePresetModal() { if(!selectedItems.length) return showMsg('请先添加道具', true); document.getElementById('presetName').value=''; openModal('savePresetModal'); }
+function saveCurrentPreset() { let name=document.getElementById('presetName').value.trim(); if(!name) return showMsg('请输入预设名称', true); let presets=getPresets(); presets.push({id:Date.now().toString(), name:name, items:JSON.parse(JSON.stringify(selectedItems))}); savePresets(presets); closeModal('savePresetModal'); showMsg('预设已保存'); }
+function loadPreset(id) { let p=getPresets().find(p=>p.id===id); if(p) { selectedItems=JSON.parse(JSON.stringify(p.items)); renderSelectedItems(); showMsg(`已加载: ${p.name}`); } }
+function deletePreset(id) { if(confirm('删除预设？')) savePresets(getPresets().filter(p=>p.id!==id)); }
+function exportPresets() { let presets=getPresets(); if(!presets.length) return showMsg('无预设',true); let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(presets,null,2)],{type:'application/json'})); a.download=`presets_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href); showMsg('导出成功'); }
+function importPresets(e) { let file=e.target.files[0]; if(!file) return; let reader=new FileReader(); reader.onload=ev=>{ try{ let imported=JSON.parse(ev.target.result); if(!Array.isArray(imported)) throw new Error(); let valid=imported.filter(p=>p.id&&p.name&&Array.isArray(p.items)); let merged=[...getPresets()]; valid.forEach(v=>{let idx=merged.findIndex(m=>m.id===v.id); if(idx>=0) merged[idx]=v; else merged.push(v);}); savePresets(merged); showMsg(`导入${valid.length}个预设`); }catch(e){showMsg('格式错误',true);} e.target.value=''; }; reader.readAsText(file); }
 
-// 生成代码 (最新完整版分批脚本，支持自动导航、完成后停止)
+// 生成代码 (完整版)
 function generateCode() {
     let server = document.getElementById('playerServer').value.trim();
     let ids = document.getElementById('playerIds').value.trim();
@@ -1767,314 +1891,35 @@ function generateCode() {
     if(!ids) return showMsg('请填写角色ID', true);
     if(!selectedItems.length) return showMsg('请添加道具', true);
     let itemsStr = selectedItems.map(i => `  ['${i.id}', ${i.quantity}]`).join(',\n');
-    let script = `// 游戏道具邮件分批填充脚本（自动导航版，完成后自动停止）
+    let script = `// 道具邮件填充脚本
 (function(){
-    const TARGET_SERVER = '${server}';
-    const ROLE_ID = '${ids}';
-    const MAIL_TITLE = '1';
-    const MAIL_CONTENT = '1';
-    const BATCH_SIZE = 10;
-    const ITEMS = [
-${itemsStr}
-    ];
-
-    let currentIndex = 0;
-    let submitListener = null;
-    let isNavigating = false;
-    let completed = false;
-
-    function trigger(el) {
-        if (!el) return;
-        el.dispatchEvent(new Event('input', { bubbles: true }));
-        el.dispatchEvent(new Event('change', { bubbles: true }));
-        el.dispatchEvent(new Event('blur', { bubbles: true }));
-    }
-
-    function saveProgress() {
-        if (completed) return;
-        localStorage.setItem('MailBatchProgress', JSON.stringify({
-            targetServer: TARGET_SERVER,
-            roleId: ROLE_ID,
-            items: ITEMS,
-            currentIndex: currentIndex
-        }));
-    }
-
-    function clearProgress() {
-        localStorage.removeItem('MailBatchProgress');
-    }
-
-    function loadProgress() {
-        const saved = localStorage.getItem('MailBatchProgress');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                if (data.items && data.currentIndex !== undefined) {
-                    currentIndex = data.currentIndex;
-                    console.log(\`📀 恢复上次进度：\${currentIndex}/\${data.items.length}\`);
-                }
-            } catch (e) {}
-        }
-    }
-
-    function isSendPage() {
-        return !!document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
-    }
-
-    function navigateToPersonalMail() {
-        if (isNavigating || completed) return;
-        isNavigating = true;
-        console.log('📍 检测到在邮件列表页面，尝试返回个人邮件...');
-        const personalMail = Array.from(document.querySelectorAll('.el-menu-item')).find(el => el.innerText.includes('个人邮件'));
-        if (personalMail) {
-            personalMail.click();
-            console.log('✅ 已点击个人邮件，等待页面加载...');
-            setTimeout(() => {
-                isNavigating = false;
-                if (!completed && isSendPage()) {
-                    console.log('✅ 已回到发送页面，继续填充下一批...');
-                    continueFilling();
-                } else if (!completed) {
-                    console.warn('未检测到发送页面，请手动确认');
-                    isNavigating = false;
-                }
-            }, 1500);
-        } else {
-            console.warn('未找到个人邮件菜单');
-            isNavigating = false;
-        }
-    }
-
-    async function selectServerExact(placeholder, keyword) {
-        const input = document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
-        if (!input) return false;
-        input.click();
-        const options = document.querySelectorAll('.el-select-dropdown__item');
-        if (!options.length) return false;
-        let matchPattern = keyword;
-        if (/^\\d+$/.test(keyword)) matchPattern = keyword + '服';
-        if (!matchPattern.endsWith('服') && /^\\d+$/.test(matchPattern.replace('服', ''))) matchPattern = matchPattern + '服';
-        let target = null;
-        for (let opt of options) {
-            if (opt.textContent.trim().startsWith(matchPattern)) {
-                target = opt;
-                break;
-            }
-        }
-        if (target) {
-            target.click();
-            trigger(input);
-            console.log(\`✓ 已选择区服: \${target.textContent.trim()}\`);
-        } else {
-            options[0].click();
-            trigger(input);
-            console.log(\`⚠ 未找到匹配区服，已选择第一个: \${options[0].textContent.trim()}\`);
-        }
-        return true;
-    }
-
-    function selectFirstDropdown(placeholder) {
-        const input = document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`);
-        if (!input) return false;
-        input.click();
-        const options = document.querySelectorAll('.el-select-dropdown__item');
-        if (options.length) {
-            options[0].click();
-            trigger(input);
-            console.log(\`✓ 已选择平台: \${options[0].textContent.trim()}\`);
-        }
-        return true;
-    }
-
-    async function clearAllItemRows() {
-        const delBtns = document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle');
-        for (let i = delBtns.length - 1; i >= 0; i--) {
-            delBtns[i].click();
-            await new Promise(r => setTimeout(r, 30));
-        }
-    }
-
-    async function setItemRowCount(targetCount) {
-        const addBtn = document.querySelector('button.el-button--primary.el-button--small.is-circle');
-        let currentRows = document.querySelectorAll('tr.el-table__row').length;
-        if (currentRows === targetCount) return;
-        if (currentRows > targetCount) {
-            const delBtns = document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle');
-            for (let i = 0; i < currentRows - targetCount; i++) {
-                delBtns[delBtns.length - 1 - i]?.click();
-                await new Promise(r => setTimeout(r, 30));
-            }
-        } else {
-            for (let i = 0; i < targetCount - currentRows; i++) {
-                addBtn.click();
-                await new Promise(r => setTimeout(r, 30));
-            }
-        }
-    }
-
-    async function fillCurrentBatch() {
-        if (completed) return false;
-        const remaining = ITEMS.length - currentIndex;
-        if (remaining <= 0) {
-            console.log('🎉 所有道具已填充完毕！');
-            completed = true;
-            clearProgress();
-            if (submitListener) {
-                const btn = document.querySelector('button.el-button--primary.el-button--default');
-                if (btn) btn.removeEventListener('click', submitListener);
-                submitListener = null;
-            }
-            return false;
-        }
-        const batchCount = Math.min(BATCH_SIZE, remaining);
-        console.log(\`📦 正在填充第 \${Math.floor(currentIndex / BATCH_SIZE) + 1} 批，本批 \${batchCount} 个道具，剩余 \${remaining - batchCount} 个道具未填充\`);
-        await clearAllItemRows();
-        await setItemRowCount(batchCount);
-        const idInputs = document.querySelectorAll('input[placeholder="请输入道具ID"]');
-        const qtyInputs = document.querySelectorAll('input[placeholder="请输入数量"]');
-        for (let i = 0; i < batchCount; i++) {
-            const idx = currentIndex + i;
-            if (idInputs[i]) {
-                idInputs[i].value = ITEMS[idx][0];
-                trigger(idInputs[i]);
-            }
-            if (qtyInputs[i]) {
-                qtyInputs[i].value = ITEMS[idx][1];
-                trigger(qtyInputs[i]);
-            }
-        }
-        currentIndex += batchCount;
-        saveProgress();
-        if (currentIndex >= ITEMS.length) {
-            console.log('✅ 本批填充完成，所有道具已填充完毕！');
-            completed = true;
-            clearProgress();
-            if (submitListener) {
-                const btn = document.querySelector('button.el-button--primary.el-button--default');
-                if (btn) btn.removeEventListener('click', submitListener);
-                submitListener = null;
-            }
-            return false;
-        }
-        console.log(\`✅ 本批填充完成，已填充 \${currentIndex}/\${ITEMS.length} 个道具，请点击“提交”按钮发送本批邮件\`);
-        return true;
-    }
-
-    async function onSubmitClick() {
-        if (completed) {
-            console.log('已完成所有道具，忽略提交事件');
-            return;
-        }
-        console.log('🔘 提交按钮点击，保存进度并准备跳转...');
-        saveProgress();
-        setTimeout(() => {
-            if (completed) return;
-            const activeMenu = document.querySelector('.el-menu-item.is-active');
-            if (activeMenu && activeMenu.innerText.includes('邮件列表')) {
-                navigateToPersonalMail();
-            } else {
-                setTimeout(() => {
-                    if (completed) return;
-                    if (!isSendPage()) {
-                        navigateToPersonalMail();
-                    } else {
-                        console.log('已在发送页面，继续填充');
-                        continueFilling();
-                    }
-                }, 1000);
-            }
-        }, 800);
-    }
-
-    async function continueFilling() {
-        if (completed) return;
-        await selectFirstDropdown('平台');
-        await new Promise(r => setTimeout(r, 80));
-        await selectServerExact('区服', TARGET_SERVER);
-        await new Promise(r => setTimeout(r, 100));
-        const pid = document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
-        if (pid) { pid.value = ROLE_ID; trigger(pid); }
-        const title = document.querySelector('input[placeholder="请填写标题信息"]');
-        if (title) { title.value = MAIL_TITLE; trigger(title); }
-        const content = document.querySelector('textarea[placeholder="邮件内容"]');
-        if (content) { content.value = MAIL_CONTENT; trigger(content); }
-        await new Promise(r => setTimeout(r, 80));
-        const hasMore = await fillCurrentBatch();
-        if (hasMore) {
-            const submitBtn = document.querySelector('button.el-button--primary.el-button--default');
-            if (submitBtn && !submitListener && !completed) {
-                submitListener = onSubmitClick;
-                submitBtn.addEventListener('click', submitListener);
-                console.log('👂 已重新绑定提交按钮监听');
-            }
-        }
-    }
-
-    async function init() {
-        loadProgress();
-        if (currentIndex >= ITEMS.length) {
-            console.log('所有道具已填充完毕，无需执行');
-            completed = true;
-            clearProgress();
-            return;
-        }
-        if (!isSendPage()) {
-            console.log('当前不在发送页面，尝试导航到个人邮件...');
-            navigateToPersonalMail();
-            return;
-        }
-        console.log('🚀 开始填充邮件...');
-        await selectFirstDropdown('平台');
-        await new Promise(r => setTimeout(r, 80));
-        await selectServerExact('区服', TARGET_SERVER);
-        await new Promise(r => setTimeout(r, 100));
-        const pid = document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
-        if (pid) { pid.value = ROLE_ID; trigger(pid); }
-        const title = document.querySelector('input[placeholder="请填写标题信息"]');
-        if (title) { title.value = MAIL_TITLE; trigger(title); }
-        const content = document.querySelector('textarea[placeholder="邮件内容"]');
-        if (content) { content.value = MAIL_CONTENT; trigger(content); }
-        await new Promise(r => setTimeout(r, 80));
-        const hasMore = await fillCurrentBatch();
-        if (hasMore) {
-            const submitBtn = document.querySelector('button.el-button--primary.el-button--default');
-            if (submitBtn && !submitListener && !completed) {
-                submitListener = onSubmitClick;
-                submitBtn.addEventListener('click', submitListener);
-                console.log('👂 已监听提交按钮，点击后会自动保存并尝试返回继续');
-            }
-        } else {
-            console.log('所有道具已处理完毕，脚本结束');
-        }
-    }
-
+    const TARGET_SERVER='${server}'; const ROLE_ID='${ids}'; const MAIL_TITLE='1'; const MAIL_CONTENT='1'; const BATCH_SIZE=10;
+    const ITEMS=[\n${itemsStr}\n];
+    let currentIndex=0, submitListener=null, isNavigating=false, completed=false;
+    function trigger(el){ if(!el)return; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); el.dispatchEvent(new Event('blur',{bubbles:true})); }
+    function saveProgress(){ if(completed)return; localStorage.setItem('MailBatchProgress',JSON.stringify({targetServer:TARGET_SERVER,roleId:ROLE_ID,items:ITEMS,currentIndex})); }
+    function clearProgress(){ localStorage.removeItem('MailBatchProgress'); }
+    function loadProgress(){ let s=localStorage.getItem('MailBatchProgress'); if(s){ try{ let d=JSON.parse(s); if(d.items&&d.currentIndex!==undefined) currentIndex=d.currentIndex; }catch(e){} } }
+    function isSendPage(){ return !!document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); }
+    function navigateToPersonalMail(){ if(isNavigating||completed)return; isNavigating=true; console.log('📍 返回个人邮件...'); let pm=Array.from(document.querySelectorAll('.el-menu-item')).find(el=>el.innerText.includes('个人邮件')); if(pm){ pm.click(); setTimeout(()=>{ isNavigating=false; if(!completed&&isSendPage()) continueFilling(); },1500); }else{ isNavigating=false; } }
+    async function selectServerExact(placeholder,keyword){ let inp=document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`); if(!inp)return false; inp.click(); let opts=document.querySelectorAll('.el-select-dropdown__item'); if(!opts.length)return false; let match=keyword.replace(/\\D/g,'')+'服'; let target=null; for(let opt of opts) if(opt.textContent.trim().startsWith(match)){target=opt;break;} if(target){ target.click(); trigger(inp); }else{ opts[0].click(); trigger(inp); } return true; }
+    function selectFirstDropdown(placeholder){ let inp=document.querySelector(\`\\.el-select input.el-input__inner[placeholder="\${placeholder}"]\`); if(!inp)return false; inp.click(); let opts=document.querySelectorAll('.el-select-dropdown__item'); if(opts.length){ opts[0].click(); trigger(inp); } return true; }
+    async function clearRows(){ let btns=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=btns.length-1;i>=0;i--){ btns[i].click(); await new Promise(r=>setTimeout(r,30)); } }
+    async function setRows(n){ let add=document.querySelector('button.el-button--primary.el-button--small.is-circle'); let cur=document.querySelectorAll('tr.el-table__row').length; if(cur===n)return; if(cur>n){ let del=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=0;i<cur-n;i++) del[del.length-1-i]?.click(); } else for(let i=0;i<n-cur;i++) add.click(); await new Promise(r=>setTimeout(r,50)); }
+    async function fillBatch(){ if(completed)return false; let rem=ITEMS.length-currentIndex; if(rem<=0){ console.log('🎉 完成'); completed=true; clearProgress(); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; } let cnt=Math.min(BATCH_SIZE,rem); console.log(\`📦 第\${Math.floor(currentIndex/BATCH_SIZE)+1}批，\${cnt}个道具，剩余\${rem-cnt}\`); await clearRows(); await setRows(cnt); let idIns=document.querySelectorAll('input[placeholder="请输入道具ID"]'), qtyIns=document.querySelectorAll('input[placeholder="请输入数量"]'); for(let i=0;i<cnt;i++){ let idx=currentIndex+i; if(idIns[i]){ idIns[i].value=ITEMS[idx][0]; trigger(idIns[i]); } if(qtyIns[i]){ qtyIns[i].value=ITEMS[idx][1]; trigger(qtyIns[i]); } } currentIndex+=cnt; saveProgress(); if(currentIndex>=ITEMS.length){ console.log('✅ 全部完成'); completed=true; clearProgress(); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; } console.log(\`✅ 已填充\${currentIndex}/\${ITEMS.length}，请点击“提交”继续\`); return true; }
+    async function onSubmit(){ if(completed)return; saveProgress(); setTimeout(()=>{ if(completed)return; let active=document.querySelector('.el-menu-item.is-active'); if(active&&active.innerText.includes('邮件列表')) navigateToPersonalMail(); else if(!isSendPage()) navigateToPersonalMail(); else continueFilling(); },800); }
+    async function continueFilling(){ if(completed)return; await selectFirstDropdown('平台'); await new Promise(r=>setTimeout(r,80)); await selectServerExact('区服',TARGET_SERVER); await new Promise(r=>setTimeout(r,100)); let pid=document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); if(pid){ pid.value=ROLE_ID; trigger(pid); } let title=document.querySelector('input[placeholder="请填写标题信息"]'); if(title){ title.value=MAIL_TITLE; trigger(title); } let content=document.querySelector('textarea[placeholder="邮件内容"]'); if(content){ content.value=MAIL_CONTENT; trigger(content); } await new Promise(r=>setTimeout(r,80)); let more=await fillBatch(); if(more){ let btn=document.querySelector('button.el-button--primary.el-button--default'); if(btn&&!submitListener&&!completed){ submitListener=onSubmit; btn.addEventListener('click',submitListener); console.log('👂 已绑定提交按钮'); } } }
+    async function init(){ loadProgress(); if(currentIndex>=ITEMS.length){ console.log('已完成'); completed=true; clearProgress(); return; } if(!isSendPage()){ navigateToPersonalMail(); return; } await selectFirstDropdown('平台'); await new Promise(r=>setTimeout(r,80)); await selectServerExact('区服',TARGET_SERVER); await new Promise(r=>setTimeout(r,100)); let pid=document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); if(pid){ pid.value=ROLE_ID; trigger(pid); } let title=document.querySelector('input[placeholder="请填写标题信息"]'); if(title){ title.value=MAIL_TITLE; trigger(title); } let content=document.querySelector('textarea[placeholder="邮件内容"]'); if(content){ content.value=MAIL_CONTENT; trigger(content); } await new Promise(r=>setTimeout(r,80)); let more=await fillBatch(); if(more){ let btn=document.querySelector('button.el-button--primary.el-button--default'); if(btn&&!submitListener){ submitListener=onSubmit; btn.addEventListener('click',submitListener); console.log('👂 请点击提交按钮'); } } else console.log('所有道具已处理完毕'); }
     init();
 })();`;
     document.getElementById('generatedCode').innerText = script;
     showMsg('代码已生成');
 }
+function copyCode() { let code=document.getElementById('generatedCode').innerText; navigator.clipboard.writeText(code).then(()=>showMsg('已复制')).catch(()=>showMsg('复制失败',true)); }
+function clearAll() { if(confirm('重置所有内容？')){ document.getElementById('playerServer').value=''; document.getElementById('playerIds').value=''; selectedItems=[]; renderSelectedItems(); document.getElementById('itemSearch').value=''; document.getElementById('searchResults').style.display='none'; document.getElementById('generatedCode').innerText='// 点击生成按钮'; showMsg('已重置'); } }
 
-function copyCode() {
-    let code = document.getElementById('generatedCode').innerText;
-    navigator.clipboard.writeText(code).then(()=>showMsg('已复制')).catch(()=>showMsg('复制失败',true));
-}
-function clearAll() {
-    if(confirm('重置所有内容？')) {
-        document.getElementById('playerServer').value = '';
-        document.getElementById('playerIds').value = '';
-        selectedItems = [];
-        renderSelectedItems();
-        document.getElementById('itemSearch').value = '';
-        document.getElementById('searchResults').style.display = 'none';
-        document.getElementById('generatedCode').innerText = '// 点击生成按钮';
-        showMsg('已重置');
-    }
-}
-
-// 初始化渲染
-renderRoles();
-renderSelectedItems();
-renderPresets();
+// 初始化
+renderRoles(); renderSelectedItems(); renderPresets();
 </script>
 </body>
 </html>
