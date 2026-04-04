@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>常用网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        /* 头部 - 苹果风格 */
+        .header {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 16px 0;
+            margin-bottom: 40px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo-area h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #000000, #000000);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .logo-area p {
+            font-size: 14px;
+            color: #86868b;
+            margin-top: 4px;
+        }
+
+        /* 分类过滤栏 - 圆润胶囊 */
+        .categories-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 36px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .cat-chip {
+            background: #ffffff;
+            border: 1px solid #d2d2d7;
+            border-radius: 40px;
+            padding: 6px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1d1d1f;
+        }
+
+        .cat-chip.active {
+            background: #1d1d1f;
+            border-color: #1d1d1f;
+            color: white;
+        }
+
+        .cat-chip:hover:not(.active) {
+            background: #e8e8ed;
+            border-color: #a1a1a6;
+        }
+
+        /* 分组区域 */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.2px;
+        }
+
+        .section-title i {
+            font-size: 22px;
+            color: #0071e3;
+        }
+
+        /* 卡片网格 - 苹果风格卡片 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px 16px;
+            transition: all 0.25s cubic-bezier(0.25, 0.1, 0.2, 1);
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8e8ed;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+            border-color: #d2d2d7;
+        }
+
+        .card-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1d1d1f;
+            letter-spacing: -0.2px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #ffffff;
+            border-radius: 24px;
+            color: #86868b;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 12px;
+            color: #86868b;
+            border-top: 1px solid #d2d2d7;
+            padding-top: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 16px 40px;
+            }
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .cards-grid {
+                gap: 16px;
+            }
+            .card {
+                padding: 20px 12px;
+            }
+            .card-name {
+                font-size: 16px;
+            }
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div class="logo-area">
+            <h1>常用网站</h1>
+            <p>点击卡片直接跳转</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="categories-bar" id="categoriesBar"></div>
+    <div id="cardsContainer"></div>
+    <footer>点击任意卡片打开链接</footer>
+</div>
+
+<script>
+    const sitesData = [
+        { name: "游灵后台", url: "http://game.web.youlingplay.cn/member/order", category: "公司" },
+        { name: "客服在线表", url: "https://www.kdocs.cn/l/cpMDT20C5kEu", category: "公司" },
+        { name: "GS进驻登记表", url: "https://www.kdocs.cn/l/cey47f36Zyvx", category: "公司" },
+        { name: "GS账号位置", url: "https://www.kdocs.cn/l/cuRaS0Jcryeq", category: "GS" },
+        { name: "申请资源", url: "https://liangtz0518.github.io/ylhy/xyss.html", category: "逍遥蜀山" },
+        { name: "返利积分计算", url: "https://liangtz0518.github.io/ylhy/xyss1.html", category: "逍遥蜀山" },
+        { name: "未收录道具ID", url: "https://www.kdocs.cn/l/coLhd7ebUx09", category: "逍遥蜀山" },
+        { name: "2包·中控", url: "https://cn-admin-center-qr03.binghuodao.cn/#/login?from=unauthorized&timestamp=1764834840100", category: "逍遥蜀山" },
+        { name: "2包·福利后台", url: "https://welfare.833wan.com/#/login?redirect=%2Fwelfare%2FRedemptionOfPointItems", category: "逍遥蜀山" },
+        { name: "申请资源", url: "https://liangtz0518.github.io/ylhy/fmj.html", category: "仙风道骨" },
+        { name: "申请资源", url: "https://liangtz0518.github.io/ylhy/sgqg.html", category: "上古情歌" }
+    ];
+
+    const categoryOrder = ["公司","GS","逍遥蜀山", "仙风道骨", "上古情歌"];
+
+    let activeCategory = "all";
+
+    function getUniqueCategories() {
+        const cats = new Set(sitesData.map(s => s.category));
+        let categories = Array.from(cats);
+        categories.sort((a, b) => {
+            let ia = categoryOrder.indexOf(a);
+            let ib = categoryOrder.indexOf(b);
+            if (ia === -1) ia = 999;
+            if (ib === -1) ib = 999;
+            return ia - ib;
+        });
+        return categories;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function getFilteredSites() {
+        if (activeCategory === "all") return sitesData;
+        return sitesData.filter(site => site.category === activeCategory);
+    }
+
+    function renderCategoriesBar() {
+        const categories = getUniqueCategories();
+        let html = `<div class="cat-chip ${activeCategory === "all" ? "active" : ""}" data-cat="all">全部</div>`;
+        categories.forEach(cat => {
+            html += `<div class="cat-chip ${activeCategory === cat ? "active" : ""}" data-cat="${cat}">${escapeHtml(cat)}</div>`;
+        });
+        document.getElementById("categoriesBar").innerHTML = html;
+
+        document.querySelectorAll(".cat-chip").forEach(chip => {
+            chip.addEventListener("click", () => {
+                activeCategory = chip.getAttribute("data-cat");
+                renderCategoriesBar();
+                renderCards();
+            });
+        });
+    }
+
+    function renderCards() {
+        const filtered = getFilteredSites();
+        const container = document.getElementById("cardsContainer");
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 12px; display: block;"></i>暂无网站</div>`;
+            return;
+        }
+
+        const grouped = new Map();
+        filtered.forEach(site => {
+            if (!grouped.has(site.category)) grouped.set(site.category, []);
+            grouped.get(site.category).push(site);
+        });
+
+        const categoriesAll = getUniqueCategories();
+        let finalGroups = [];
+        for (let cat of categoriesAll) {
+            if (grouped.has(cat)) {
+                finalGroups.push({ category: cat, items: grouped.get(cat) });
+                grouped.delete(cat);
+            }
+        }
+        for (let [cat, items] of grouped.entries()) {
+            finalGroups.push({ category: cat, items });
+        }
+
+        let html = "";
+        for (let group of finalGroups) {
+            html += `<div class="section">
+                        <div class="section-title">
+                            <i class="fas fa-folder-open"></i>
+                            <span>${escapeHtml(group.category)}</span>
+                            <span style="font-size: 14px; background: #e8e8ed; padding: 2px 10px; border-radius: 30px;">${group.items.length}</span>
+                        </div>
+                        <div class="cards-grid">`;
+            for (let site of group.items) {
+                html += `<div class="card" data-url="${escapeHtml(site.url)}" data-name="${escapeHtml(site.name)}">
+                            <div class="card-name">${escapeHtml(site.name)}</div>
+                         </div>`;
+            }
+            html += `</div></div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function initCardClick() {
+        document.getElementById("cardsContainer").addEventListener("click", (e) => {
+            const card = e.target.closest(".card");
+            if (!card) return;
+            const url = card.getAttribute("data-url");
+            if (url) window.open(url, "_blank", "noopener,noreferrer");
+        });
+    }
+
+    renderCategoriesBar();
+    renderCards();
+    initCardClick();
+</script>
+</body>
+</html>
