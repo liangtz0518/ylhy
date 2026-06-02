@@ -1,0 +1,697 @@
+[ddzf.html](https://github.com/user-attachments/files/28507003/ddzf.html)
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>大道争锋</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: #fff;
+            padding: 24px;
+            color: #222;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            padding-left: 12px;
+            border-left: 3px solid #2c3e50;
+        }
+        .section {
+            margin-bottom: 28px;
+            border-bottom: 1px solid #eaeef2;
+            padding-bottom: 20px;
+        }
+        .section-title {
+            font-weight: 500;
+            margin-bottom: 14px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .row label {
+            width: 90px;
+            font-size: 0.85rem;
+        }
+        .row input {
+            flex: 1;
+            min-width: 200px;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 0.85rem;
+        }
+        .item-config {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .search-panel {
+            flex: 1;
+            min-width: 260px;
+        }
+        .selected-panel {
+            flex: 1;
+            min-width: 280px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .item-list {
+            border: 1px solid #eaeef2;
+            background: #fefefe;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .item-row {
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .item-row:hover {
+            background: #f5f7fa;
+        }
+        .item-row.selected {
+            background: #e0e7ff;
+        }
+        .selected-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .selected-list {
+            border: 1px solid #eaeef2;
+            background: #fefefe;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .selected-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+        }
+        .selected-item span:first-child {
+            flex: 2;
+            word-break: break-word;
+        }
+        .selected-item input {
+            width: 65px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+        }
+        .selected-item button {
+            background: none;
+            border: none;
+            color: #c00;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .action-buttons {
+            margin-top: 12px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #2c3e50;
+            border: none;
+            color: white;
+            padding: 5px 14px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        button.secondary {
+            background: #9e9e9e;
+        }
+        .generate-btn {
+            margin-top: 16px;
+            text-align: right;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            border-radius: 2px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .placeholder-text {
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>大道争锋</h2>
+
+    <div class="section">
+        <div class="section-title">基本信息</div>
+        <div class="row">
+            <label>区服</label>
+            <input type="text" id="serverValue" value="5" placeholder="例如 5">
+        </div>
+        <div class="row">
+            <label>角色ID</label>
+            <input type="text" id="roleId" value="12345678" placeholder="角色ID">
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">道具（最多10个）</div>
+        <div class="item-config">
+            <div class="search-panel">
+                <input type="text" id="searchInput" class="search-input" placeholder="输入道具名称或ID搜索...">
+                <div id="itemList" class="item-list"></div>
+            </div>
+            <div class="selected-panel">
+                <div class="selected-header">
+                    <span id="selectedTitle">已选道具 (已有 0 个)</span>
+                    <button id="clearAllSelectedBtn" class="secondary" style="background:#9e9e9e; padding:2px 10px;">清空全部</button>
+                </div>
+                <div id="selectedList" class="selected-list">
+                    <div class="placeholder-text">暂无道具</div>
+                </div>
+                <div class="action-buttons">
+                    <button id="addSelectedBtn">添加选中</button>
+                    <button id="clearSearchSelectionBtn" class="secondary">清空选中</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="generate-btn">
+        <button id="generateBtn">生成并复制脚本</button>
+    </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+    // 道具库
+    const ITEM_LIBRARY = [
+{ id: "37051", name: "圣藏-泳池派对1" },
+{ id: "37238", name: "圣藏-泳池派对2" },
+{ id: "37435", name: "圣藏-泳池派对3" },
+{ id: "37651", name: "圣藏-泳池派对4" },
+{ id: "37753", name: "圣藏-泳池派对5" },
+{ id: "38324", name: "圣藏-泳池派对6" },
+{ id: "37439", name: "圣藏-皇图霸业1" },
+{ id: "37655", name: "圣藏-皇图霸业2" },
+{ id: "37757", name: "圣藏-皇图霸业3" },
+{ id: "38328", name: "圣藏-皇图霸业4" },
+{ id: "39639", name: "圣藏-皇图霸业5" },
+{ id: "27807", name: "圣藏-皇图霸业6" },
+{ id: "37440", name: "圣藏-乱世阴阳1" },
+{ id: "37656", name: "圣藏-乱世阴阳2" },
+{ id: "37758", name: "圣藏-乱世阴阳3" },
+{ id: "38329", name: "圣藏-乱世阴阳4" },
+{ id: "39638", name: "圣藏-乱世阴阳5" },
+{ id: "27805", name: "圣藏-乱世阴阳6" },
+{ id: "37649", name: "圣藏-太古神王1" },
+{ id: "37751", name: "圣藏-太古神王2" },
+{ id: "37466", name: "圣藏-太古神王3" },
+{ id: "37651", name: "圣藏-太古神王4" },
+{ id: "39640", name: "圣藏-太古神王5" },
+{ id: "27808", name: "圣藏-太古神王6" },
+{ id: "39766", name: "古经-千颜绘卷1" },
+{ id: "39767", name: "古经-千颜绘卷2" },
+{ id: "39768", name: "古经-千颜绘卷3" },
+{ id: "39769", name: "古经-千颜绘卷4" },
+{ id: "39770", name: "古经-千颜绘卷5" },
+{ id: "28970", name: "绣春之刃" },
+{ id: "28951", name: "敦煌飞天" },
+{ id: "28955", name: "未来战士" },
+{ id: "28954", name: "海盗船长" },
+{ id: "28953", name: "仙帝传承" },
+{ id: "28952", name: "告白气球" },
+{ id: "28977", name: "禅天圣主" },
+{ id: "46397", name: "仙王-姑射仙子" },
+{ id: "46398", name: "仙王-通天教主" },
+{ id: "46401", name: "仙王-龙皇紫妍" },
+{ id: "46399", name: "仙王-昊天大帝" },
+{ id: "46400", name: "仙王-万妖女王" },
+{ id: "27805", name: "仙王-阴阳法王" },
+{ id: "27807", name: "仙王-霸王项羽" },
+{ id: "27808", name: "仙王-太古神王" },
+{ id: "46402", name: "仙王-东皇太一" },
+{ id: "46389", name: "仙器-冰魄云杖" },
+{ id: "46390", name: "仙器-通天圣枪" },
+{ id: "46391", name: "仙器-创世神剑" },
+{ id: "46392", name: "仙器-万妖灵扇" },
+{ id: "46393", name: "仙器-封神仙笔" },
+{ id: "46394", name: "仙器-方天魔戟" },
+{ id: "46395", name: "仙器-太古仙器" },
+{ id: "46405", name: "仙器-龙魄仙笛" },
+{ id: "46406", name: "仙器-破日神弓" },
+{ id: "28950", name: "唯一定制-轩辕仙帝" },
+{ id: "28949", name: "圣龙-皇权三相龙" },
+{ id: "28956", name: "圣龙-翡翠毒龙" },
+{ id: "28957", name: "圣龙-暗渊护命龙" },
+{ id: "28923", name: "圣龙-双生龙鲤" },
+{ id: "28962", name: "圣龙-圣辉煌龙" },
+{ id: "28958", name: "圣龙-海渊圣女" },
+{ id: "28959", name: "圣龙-焚天三劫龙" },
+{ id: "28981", name: "圣龙-西陵魔龙" },
+{ id: "28982", name: "圣龙-南国纸鸢" },
+{ id: "28983", name: "圣龙-千焱狱龙" },
+{ id: "28984", name: "圣龙-煌威天龙" },
+{ id: "28985", name: "圣龙-大浮屠塔" },
+{ id: "28986", name: "圣龙-沧溟烈焰" },
+{ id: "28963", name: "古经-九曜护体珠" },
+{ id: "28964", name: "古经-幽魄旋舞咒" },
+{ id: "28968", name: "古经-流浪星球" },
+{ id: "28965", name: "古经-万剑归宗" },
+{ id: "39635", name: "法相-暗夜死神" },
+{ id: "39636", name: "法相-不动明王" },
+{ id: "39637", name: "法相-上古火神" },
+{ id: "39638", name: "法相-阴阳法王" },
+{ id: "39639", name: "法相-霸王项羽" },
+{ id: "39640", name: "法相-太古神王" },
+{ id: "39641", name: "法相-魔本是道" },
+{ id: "28967", name: "传闻-飞龙在天" },
+{ id: "28966", name: "名片-飞龙在天" },
+{ id: "28971", name: "界域-大雷音寺" },
+{ id: "28969", name: "界域-永恒国度" },
+{ id: "28972", name: "界域-血海飘香" },
+{ id: "28973", name: "界域-量子霓虹" },
+{ id: "28974", name: "界域-慈悲莲心" },
+{ id: "28975", name: "界域-天帝镇魔" },
+{ id: "28987", name: "界域-沧澜龙吟" },
+{ id: "28988", name: "界域-年华祈愿" },
+{ id: "37044", name: "坐骑-暴打策划" },
+{ id: "37015", name: "坐骑-仙鹿神车" },
+{ id: "37098", name: "坐骑-无天黑莲" },
+{ id: "37097", name: "坐骑-星梦奇缘" },
+{ id: "37001", name: "坐骑-机械暴龙" },
+{ id: "37003", name: "坐骑-煌金神龙" },
+{ id: "37038", name: "坐骑-不灭龙皇" },
+{ id: "37008", name: "坐骑-玄夜神龙" },
+{ id: "37088", name: "坐骑-荒古应龙" },
+{ id: "37016", name: "坐骑-太古烛龙" },
+{ id: "37014", name: "坐骑-暴力摩托" },
+{ id: "37080", name: "坐骑-修罗魔龙" },
+{ id: "38703", name: "宠物-青羽云瑶" },
+{ id: "37115", name: "化鲲-空桑神鲲" },
+{ id: "37116", name: "化鲲-银河机鲲" },
+{ id: "37280", name: "羽翼-雷池圣羽" },
+{ id: "37474", name: "法宝-仙玉净瓶" },
+{ id: "37411", name: "法宝-镇妖仙铃" },
+{ id: "39819", name: "神兵-神锋昆吾" },
+{ id: "39818", name: "神兵-妖刀龙牙" },
+{ id: "37309", name: "神兵-太皇神剑" },
+{ id: "37308", name: "神兵-龙腾之刃" },
+{ id: "37551", name: "剑灵-大海无量" },
+{ id: "39481", name: "暴击丹" },
+{ id: "39480", name: "引气丹" },
+{ id: "39479", name: "破气丹" },
+{ id: "39478", name: "破甲丹" },
+{ id: "39477", name: "防御丹" },
+{ id: "39476", name: "攻击丹" },
+{ id: "39475", name: "气血丹" },
+{ id: "39474", name: "玄元丹" },
+{ id: "39473", name: "破玄丹" },
+{ id: "39472", name: "绝命丹" },
+{ id: "39471", name: "霸体丹" },
+{ id: "39470", name: "玄劲丹" },
+{ id: "39469", name: "回元丹" },
+{ id: "39468", name: "烈火丹" },
+{ id: "39467", name: "玄金丹" },
+{ id: "39466", name: "厚土丹" },
+{ id: "39464", name: "青木丹" },
+{ id: "39465", name: "溟水丹" },
+{ id: "39463", name: "八卦丹" },
+{ id: "39462", name: "图腾丹" },
+{ id: "39461", name: "两仪丹" },
+{ id: "39460", name: "太一丹" },
+{ id: "39459", name: "玄武灵丹" },
+{ id: "39458", name: "青龙灵丹" },
+{ id: "39457", name: "白虎灵丹" },
+{ id: "39456", name: "朱雀灵丹" },
+{ id: "39455", name: "刑天魔丹" },
+{ id: "39454", name: "夸父魔丹" },
+{ id: "39453", name: "蚩尤魔丹" },
+{ id: "39455", name: "刑天魔丹" },
+{ id: "39451", name: "神农仙丹" },
+{ id: "39450", name: "轩辕仙丹" },
+{ id: "39482", name: "神魂抵抗丹" },
+{ id: "39449", name: "女娲造化丹" },
+{ id: "39448", name: "盘古灭魂丹" },
+{ id: "39447", name: "鸿蒙不死药" },
+{ id: "39510", name: "轮回丹灵" },
+{ id: "39509", name: "荒古丹灵" },
+{ id: "39508", name: "玄羽丹灵" },
+{ id: "39507", name: "地煞丹灵" },
+{ id: "39506", name: "天罡丹灵" },
+{ id: "39505", name: "黑帝丹灵" },
+{ id: "39504", name: "赤帝丹灵" },
+{ id: "39503", name: "青帝丹灵" },
+{ id: "39502", name: "白帝丹灵" },
+{ id: "39501", name: "紫薇丹灵" },
+{ id: "39500", name: "玉皇丹灵" },
+{ id: "39499", name: "昊天丹灵" },
+{ id: "39498", name: "太一丹灵" },
+{ id: "39497", name: "鸿钧丹灵" },
+{ id: "27854", name: "羽翼技能书" },
+{ id: "27855", name: "法宝技能书" },
+{ id: "27856", name: "神兵技能书" },
+{ id: "27881", name: "剑灵技能书" },
+{ id: "27858", name: "坐骑技能书" },
+{ id: "27857", name: "灵宠技能书" },
+{ id: "26191", name: "粉色仙石" },
+{ id: "26193", name: "金色仙石" },
+{ id: "26194", name: "幻色仙石" },
+{ id: "48088", name: "SS级仙饰自选包（一套）" },
+{ id: "48452", name: "SSS级仙饰自选包（一套）" },
+{ id: "26944", name: "兽源石" },
+{ id: "26945", name: "兽金石" },
+{ id: "48120", name: "红5星神兽自选包" },
+{ id: "44286", name: "粉5星兽角" },
+{ id: "44287", name: "粉5星兽蹄" },
+{ id: "44288", name: "粉5星兽盔" },
+{ id: "44289", name: "粉5星兽爪" },
+{ id: "44290", name: "粉5星兽环" },
+{ id: "26348", name: "高级羽翼精华" },
+{ id: "26351", name: "高级法宝精华" },
+{ id: "26354", name: "高级神兵精华" },
+{ id: "26372", name: "高级剑灵精华" },
+{ id: "26357", name: "金凤翎羽" },
+{ id: "26360", name: "摄魂灵珠" },
+{ id: "26363", name: "镇魔剑魂" },
+{ id: "26375", name: "龙泉剑灵" },
+{ id: "26369", name: "盘龙精魄" },
+{ id: "26380", name: "宠物飞升丹" },
+{ id: "37022", name: "圣天云龙" },
+{ id: "37087", name: "黄金巨龙" },
+{ id: "28976", name: "壁画：画枕云烟礼包" },
+{ id: "36427", name: "代金券" },
+{ id: "22013", name: "3倍经验药水" },
+{ id: "22753", name: "镇妖令" },
+{ id: "37004", name: "总累充120-玉灵神龙" },
+{ id: "37272", name: "总累充180-百鸟朝凤" },
+{ id: "27802", name: "总累充240-罗刹女王" },
+{ id: "37039", name: "总累充360-小猪配骑" },
+{ id: "46039", name: "BOSS召唤卡" },
+{ id: "46041", name: "BOSS刷新卡" },
+{ id: "65534", name: "仙玉" },
+{ id: "28826", name: "套装石礼盒" },
+{ id: "44071", name: "A级仙王神饰礼包" },
+{ id: "44189", name: "B级仙王神饰礼包" },
+{ id: "27804", name: "二郎真君" },
+{ id: "46388", name: "霸王天戟" },
+{ id: "48076", name: "6阶红3星自选" },
+{ id: "48077", name: "7阶红3星自选" },
+{ id: "48078", name: "8阶红3星自选" },
+{ id: "48079", name: "9阶红3星自选" },
+{ id: "48549", name: "7阶红5星饰品自选" },
+{ id: "48550", name: "8阶红5星饰品自选" },
+{ id: "48551", name: "9阶红5星饰品自选" }
+    ];
+
+    let selectedItems = [];      // 已选道具 { id, name, count }
+    let selectedItemIds = new Set(); // 左侧高亮选中的道具ID
+
+    const searchInput = document.getElementById('searchInput');
+    const itemListDiv = document.getElementById('itemList');
+    const selectedListDiv = document.getElementById('selectedList');
+    const selectedTitleSpan = document.getElementById('selectedTitle');
+    const toastDiv = document.getElementById('toast');
+
+    function showToast(msg, isError = false) {
+        toastDiv.textContent = msg;
+        toastDiv.style.backgroundColor = isError ? '#b91c1c' : '#2c3e50';
+        toastDiv.style.opacity = '1';
+        setTimeout(() => {
+            toastDiv.style.opacity = '0';
+        }, 2000);
+    }
+
+    // 更新已选道具标题（显示数量）
+    function updateSelectedTitle() {
+        const count = selectedItems.length;
+        selectedTitleSpan.textContent = `已选道具 (已有 ${count} 个)`;
+    }
+
+    // 渲染左侧列表（只有搜索框有内容时显示）
+    function renderItemList() {
+        const keyword = searchInput.value.trim();
+        if (keyword === '') {
+            itemListDiv.innerHTML = '';
+            return;
+        }
+        const lowerKw = keyword.toLowerCase();
+        const filtered = ITEM_LIBRARY.filter(item => 
+            item.name.toLowerCase().includes(lowerKw) || item.id.toLowerCase().includes(lowerKw)
+        );
+        if (filtered.length === 0) {
+            itemListDiv.innerHTML = '<div class="placeholder-text">未找到道具</div>';
+            return;
+        }
+        itemListDiv.innerHTML = '';
+        filtered.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item-row' + (selectedItemIds.has(item.id) ? ' selected' : '');
+            div.textContent = `${item.name} (${item.id})`;
+            div.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (selectedItemIds.has(item.id)) {
+                    selectedItemIds.delete(item.id);
+                } else {
+                    selectedItemIds.add(item.id);
+                }
+                renderItemList();
+            });
+            itemListDiv.appendChild(div);
+        });
+    }
+
+    // 渲染右侧已选列表
+    function renderSelectedList() {
+        if (selectedItems.length === 0) {
+            selectedListDiv.innerHTML = '<div class="placeholder-text">暂无道具</div>';
+            updateSelectedTitle();
+            return;
+        }
+        selectedListDiv.innerHTML = '';
+        selectedItems.forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'selected-item';
+            div.innerHTML = `
+                <span>${item.name} (${item.id})</span>
+                <input type="number" class="item-count" data-idx="${idx}" value="${item.count}" min="1" step="1">
+                <button class="remove-item" data-idx="${idx}">✕</button>
+            `;
+            selectedListDiv.appendChild(div);
+        });
+        // 数量修改
+        document.querySelectorAll('.item-count').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const idx = parseInt(e.target.dataset.idx);
+                const newVal = parseInt(e.target.value) || 1;
+                if (selectedItems[idx]) selectedItems[idx].count = newVal;
+            });
+        });
+        // 删除单个
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                selectedItems.splice(idx, 1);
+                renderSelectedList();
+                renderItemList();  // 左侧
+                updateSelectedTitle();
+            });
+        });
+        updateSelectedTitle();
+    }
+
+    // 添加选中的道具
+    function addSelected() {
+        if (selectedItemIds.size === 0) {
+            showToast('请先在左侧点击选择道具', true);
+            return;
+        }
+        // 检查当前已选数量是否已达上限
+        if (selectedItems.length >= 10) {
+            showToast('食懵你啊，衰仔，最多10个啊', true);
+            return;
+        }
+        const toAdd = [];
+        for (let id of selectedItemIds) {
+            const item = ITEM_LIBRARY.find(i => i.id === id);
+            if (item) toAdd.push(item);
+        }
+        let added = 0;
+        for (let item of toAdd) {
+            if (selectedItems.length >= 10) {
+                showToast('食懵你啊，衰仔，最多10个啊', true);
+                break;
+            }
+            selectedItems.push({
+                id: item.id,
+                name: item.name,
+                count: 1
+            });
+            added++;
+        }
+        if (added > 0) {
+            selectedItemIds.clear();
+            renderItemList();
+            renderSelectedList();
+            showToast(`已添加 ${added} 个道具`);
+        } else {
+            showToast('未添加任何道具', true);
+        }
+    }
+
+    function clearSearchSelection() {
+        selectedItemIds.clear();
+        renderItemList();
+        showToast('已清空左侧选中');
+    }
+
+    function clearAllSelected() {
+        selectedItems = [];
+        renderSelectedList();
+        showToast('已清空全部道具');
+    }
+
+    // 生成脚本并复制
+    function generateAndCopy() {
+        const serverValue = document.getElementById('serverValue').value.trim();
+        const roleId = document.getElementById('roleId').value.trim();
+
+        const items = [];
+        for (let i = 0; i < 10; i++) {
+            if (i < selectedItems.length) {
+                items.push({ id: selectedItems[i].id, count: String(selectedItems[i].count) });
+            } else {
+                items.push({ id: "", count: "" });
+            }
+        }
+
+        const config = {
+            serverValue: serverValue || "0",
+            roleId: roleId || "",
+            items: items,
+            subject: "1",
+            content: "1"
+        };
+
+        const script = `// 自动填充脚本（先清空后填充）
+(function() {
+    const config = ${JSON.stringify(config, null, 4)};
+    function triggerEvent(el, type) {
+        if (!el) return;
+        el.dispatchEvent(new Event(type, { bubbles: true, cancelable: true }));
+    }
+    function clearForm() {
+        const select = document.querySelector('#select_server');
+        if (select) { select.value = "0"; triggerEvent(select, 'change'); if (typeof $ !== 'undefined' && $(select).data('select2')) $(select).trigger('change'); }
+        const roleInput = document.querySelector('#role_id');
+        if (roleInput) { roleInput.value = ""; triggerEvent(roleInput, 'input'); triggerEvent(roleInput, 'change'); }
+        for (let i = 1; i <= 10; i++) {
+            const th = Array.from(document.querySelectorAll('th')).find(el => el.textContent.trim() === \`物品\${i}\`);
+            if (th) {
+                const row = th.closest('tr');
+                const inputs = row.querySelectorAll(\`input[name="item\${i}[]"][type="text"]\`);
+                if (inputs.length >= 2) {
+                    inputs[0].value = ""; inputs[1].value = "";
+                    triggerEvent(inputs[0], 'input'); triggerEvent(inputs[0], 'change');
+                    triggerEvent(inputs[1], 'input'); triggerEvent(inputs[1], 'change');
+                }
+            }
+        }
+        const subjectInput = document.querySelector('input[name="subject"]');
+        if (subjectInput) { subjectInput.value = ""; triggerEvent(subjectInput, 'input'); triggerEvent(subjectInput, 'change'); }
+        const contentArea = document.querySelector('textarea[name="content"]');
+        if (contentArea) { contentArea.value = ""; triggerEvent(contentArea, 'input'); triggerEvent(contentArea, 'change'); }
+        console.log('[清空] 已重置所有表单字段');
+    }
+    function fillForm() {
+        const select = document.querySelector('#select_server');
+        if (select) { select.value = config.serverValue; triggerEvent(select, 'change'); if (typeof $ !== 'undefined' && $(select).data('select2')) $(select).trigger('change'); console.log(\`✓ 区服: \${select.options[select.selectedIndex]?.text}\`); }
+        const roleInput = document.querySelector('#role_id');
+        if (roleInput) { roleInput.value = config.roleId; triggerEvent(roleInput, 'input'); triggerEvent(roleInput, 'change'); console.log(\`✓ 角色ID: \${config.roleId}\`); }
+        for (let i = 1; i <= 10; i++) {
+            const item = config.items[i-1];
+            if (!item || (!item.id && !item.count)) continue;
+            const th = Array.from(document.querySelectorAll('th')).find(el => el.textContent.trim() === \`物品\${i}\`);
+            if (th) {
+                const row = th.closest('tr');
+                const inputs = row.querySelectorAll(\`input[name="item\${i}[]"][type="text"]\`);
+                if (inputs.length >= 2) {
+                    if (item.id) { inputs[0].value = item.id; triggerEvent(inputs[0], 'input'); triggerEvent(inputs[0], 'change'); }
+                    if (item.count) { inputs[1].value = item.count; triggerEvent(inputs[1], 'input'); triggerEvent(inputs[1], 'change'); }
+                    console.log(\`✓ 物品\${i}: ID=\${inputs[0].value}, 数量=\${inputs[1].value}\`);
+                }
+            }
+        }
+        const subjectInput = document.querySelector('input[name="subject"]');
+        if (subjectInput) { subjectInput.value = config.subject; triggerEvent(subjectInput, 'input'); triggerEvent(subjectInput, 'change'); console.log(\`✓ 标题: \${config.subject}\`); }
+        const contentArea = document.querySelector('textarea[name="content"]');
+        if (contentArea) { contentArea.value = config.content; triggerEvent(contentArea, 'input'); triggerEvent(contentArea, 'change'); console.log('✓ 邮件内容已填'); }
+        console.log('✅ 填充完成');
+    }
+    clearForm();
+    fillForm();
+})();`;
+
+        navigator.clipboard.writeText(script).then(() => {
+            showToast('脚本已复制到剪贴板');	
+        }).catch(() => {
+            showToast('复制失败，请手动复制', true);
+        });
+    }
+
+    // 事件绑定
+    searchInput.addEventListener('input', renderItemList);
+    document.getElementById('addSelectedBtn').addEventListener('click', addSelected);
+    document.getElementById('clearSearchSelectionBtn').addEventListener('click', clearSearchSelection);
+    document.getElementById('clearAllSelectedBtn').addEventListener('click', clearAllSelected);
+    document.getElementById('generateBtn').addEventListener('click', generateAndCopy);
+
+    // 初始渲染
+    renderItemList();
+    renderSelectedList();
+</script>
+</body>
+</html>
