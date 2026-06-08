@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>大道争锋</title>
+    <title>大道争锋 - 邮件填充助手</title>
     <style>
         * {
             margin: 0;
@@ -11,90 +11,158 @@
         }
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-            background: #fff;
+            background: #f0f2f5;
             padding: 24px;
-            color: #222;
         }
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
         }
+        /* 主标题 */
         h2 {
             font-size: 1.4rem;
             font-weight: 500;
             margin-bottom: 24px;
             padding-left: 12px;
             border-left: 3px solid #2c3e50;
+            color: #222;
         }
-        .section {
-            margin-bottom: 28px;
-            border-bottom: 1px solid #eaeef2;
-            padding-bottom: 20px;
+        /* 四列布局 */
+        .four-columns {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: start;
         }
-        .section-title {
+        /* 卡片通用样式 - 极简 */
+        .card {
+            background: #fefefe;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+        }
+        .card-title {
             font-weight: 500;
-            margin-bottom: 14px;
-            font-size: 0.9rem;
-            color: #2c3e50;
-        }
-        .row {
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #1e2a3a;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
         }
-        .row label {
-            width: 90px;
-            font-size: 0.85rem;
-        }
-        .row input {
-            flex: 1;
-            min-width: 200px;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            font-size: 0.85rem;
-        }
-        .item-config {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .search-panel {
-            flex: 1;
-            min-width: 260px;
-        }
-        .selected-panel {
-            flex: 1;
-            min-width: 280px;
-        }
-        .search-input {
-            width: 100%;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            font-size: 0.85rem;
+        /* 列表区域 */
+        .role-list, .scheme-list {
+            max-height: 260px;
+            overflow-y: auto;
             margin-bottom: 8px;
         }
+        .role-item, .scheme-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .role-item span:first-child, .scheme-item span:first-child {
+            cursor: pointer;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* 按钮样式 - 纯色无圆角 */
+        button {
+            background: #2c3e50;
+            border: none;
+            color: white;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        button.small {
+            background: #64748b;
+            padding: 2px 8px;
+        }
+        button.danger {
+            background: #9ca3af;
+        }
+        button.danger:hover {
+            background: #7f8c8d;
+        }
+        button.primary {
+            background: #2c3e50;
+        }
+        button.clear-btn {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        /* 基本信息表单 */
+        .basic-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .basic-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .basic-row label {
+            width: 60px;
+            font-size: 0.8rem;
+            color: #334155;
+        }
+        .basic-row input {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+            background: white;
+        }
+        /* 道具配置搜索框和列表 */
+        .search-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            background: white;
+        }
         .item-list {
-            border: 1px solid #eaeef2;
-            background: #fefefe;
+            border: 1px solid #e2e8f0;
+            background: white;
             max-height: 280px;
             overflow-y: auto;
         }
         .item-row {
-            padding: 6px 10px;
+            padding: 6px 8px;
             cursor: pointer;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #f0f2f5;
         }
         .item-row:hover {
-            background: #f5f7fa;
+            background: #f8fafc;
         }
         .item-row.selected {
-            background: #e0e7ff;
+            background: #e2e8f0;
         }
+        /* 生成按钮区域 */
+        .generate-wrapper {
+            margin-bottom: 16px;
+        }
+        .generate-wrapper button {
+            background: #2c3e50;
+            width: 100%;
+            padding: 8px;
+            font-size: 0.85rem;
+        }
+        /* 已选道具区域 */
         .selected-header {
             display: flex;
             justify-content: space-between;
@@ -104,29 +172,28 @@
             font-weight: 500;
         }
         .selected-list {
-            border: 1px solid #eaeef2;
-            background: #fefefe;
-            max-height: 500px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            max-height: 280px;
             overflow-y: auto;
         }
         .selected-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 6px 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.8rem;
+            padding: 6px 8px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.75rem;
         }
         .selected-item span:first-child {
             flex: 2;
-            word-break: break-word;
         }
         .selected-item input {
-            width: 65px;
-            padding: 4px;
+            width: 60px;
+            padding: 3px;
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 2px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.75rem;
         }
         .selected-item button {
             background: none;
@@ -135,28 +202,28 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
+            padding: 0 6px;
         }
         .action-buttons {
             margin-top: 12px;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-end;
         }
-        button {
+        .action-buttons button {
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 4px 12px;
+        }
+        .action-buttons button.primary {
             background: #2c3e50;
-            border: none;
             color: white;
-            padding: 5px 14px;
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 0.8rem;
         }
-        button.secondary {
-            background: #9e9e9e;
-        }
-        .generate-btn {
-            margin-top: 16px;
-            text-align: right;
+        .placeholder-text {
+            color: #94a3b8;
+            text-align: center;
+            padding: 16px;
+            font-size: 0.75rem;
         }
         .toast {
             position: fixed;
@@ -164,63 +231,84 @@
             right: 20px;
             background: #2c3e50;
             color: white;
-            padding: 8px 16px;
+            padding: 6px 12px;
             font-size: 0.8rem;
-            border-radius: 2px;
             z-index: 1000;
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: none;
         }
-        .placeholder-text {
-            color: #aaa;
-            text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
+        @media (max-width: 1000px) {
+            .four-columns {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h2>大道争锋</h2>
-
-    <div class="section">
-        <div class="section-title">基本信息</div>
-        <div class="row">
-            <label>区服</label>
-            <input type="text" id="serverValue" value="5" placeholder="例如 5">
+    <div class="four-columns">
+        <!-- 第一列：常用角色 -->
+        <div class="card">
+            <div class="card-title">
+                常用角色
+                <button id="addRoleBtn" class="small">添加</button>
+            </div>
+            <div id="roleList" class="role-list">
+                <div class="placeholder-text">暂无角色</div>
+            </div>
         </div>
-        <div class="row">
-            <label>角色ID</label>
-            <input type="text" id="roleId" value="12345678" placeholder="角色ID">
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-title">道具（最多10个）</div>
-        <div class="item-config">
-            <div class="search-panel">
-                <input type="text" id="searchInput" class="search-input" placeholder="输入道具名称或ID搜索...">
+        <!-- 第二列：基本信息 + 道具配置 -->
+        <div class="card">
+            <div class="card-title">基本信息</div>
+            <div class="basic-form">
+                <div class="basic-row">
+                    <label>区服</label>
+                    <input type="text" id="serverValue" value="" placeholder="区服">
+                </div>
+                <div class="basic-row">
+                    <label>角色ID</label>
+                    <input type="text" id="roleId" value="" placeholder="角色ID">
+                </div>
+            </div>
+            <div class="card-title" style="margin-top: 8px;">道具配置</div>
+            <div>
+                <input type="text" id="searchInput" class="search-input" placeholder="输入道具名称或ID搜索">
                 <div id="itemList" class="item-list"></div>
             </div>
-            <div class="selected-panel">
-                <div class="selected-header">
-                    <span id="selectedTitle">已选道具 (已有 0 个)</span>
-                    <button id="clearAllSelectedBtn" class="secondary" style="background:#9e9e9e; padding:2px 10px;">清空全部</button>
-                </div>
-                <div id="selectedList" class="selected-list">
-                    <div class="placeholder-text">暂无道具</div>
-                </div>
-                <div class="action-buttons">
-                    <button id="addSelectedBtn">添加选中</button>
-                    <button id="clearSearchSelectionBtn" class="secondary">清空选中</button>
-                </div>
+        </div>
+
+        <!-- 第三列：常用方案 -->
+        <div class="card">
+            <div class="card-title">
+                常用方案
+                <button id="saveSchemeBtn" class="small">保存当前</button>
+            </div>
+            <div id="schemeList" class="scheme-list">
+                <div class="placeholder-text">暂无方案</div>
             </div>
         </div>
-    </div>
 
-    <div class="generate-btn">
-        <button id="generateBtn">生成并复制脚本</button>
+        <!-- 第四列：生成按钮 + 已选道具 -->
+        <div class="card">
+            <div class="generate-wrapper">
+                <button id="generateBtn">生成并复制</button>
+            </div>
+            <div class="card-title" style="margin-top: 8px;">已选道具</div>
+            <div class="selected-header">
+                <span>已选道具 (<span id="selectedCount">0</span>/10)</span>
+                <button id="clearAllSelectedBtn" class="clear-btn">清空全部</button>
+            </div>
+            <div id="selectedList" class="selected-list">
+                <div class="placeholder-text">暂无道具</div>
+            </div>
+            <div class="action-buttons">
+                <button id="addSelectedBtn" class="primary">添加选中</button>
+                <button id="clearSearchSelectionBtn">清空选中</button>
+            </div>
+        </div>
     </div>
 </div>
 <div id="toast" class="toast"></div>
@@ -446,31 +534,30 @@
 { id: "48551", name: "9阶红5星饰品自选" }
     ];
 
-    let selectedItems = [];      // 已选道具 { id, name, count }
-    let selectedItemIds = new Set(); // 左侧高亮选中的道具ID
+    // ---------- 全局状态 ----------
+    let selectedItems = [];
+    let selectedItemIds = new Set();
 
+    // DOM 元素
     const searchInput = document.getElementById('searchInput');
     const itemListDiv = document.getElementById('itemList');
     const selectedListDiv = document.getElementById('selectedList');
-    const selectedTitleSpan = document.getElementById('selectedTitle');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const serverValueInput = document.getElementById('serverValue');
+    const roleIdInput = document.getElementById('roleId');
     const toastDiv = document.getElementById('toast');
 
     function showToast(msg, isError = false) {
         toastDiv.textContent = msg;
         toastDiv.style.backgroundColor = isError ? '#b91c1c' : '#2c3e50';
         toastDiv.style.opacity = '1';
-        setTimeout(() => {
-            toastDiv.style.opacity = '0';
-        }, 2000);
+        setTimeout(() => { toastDiv.style.opacity = '0'; }, 2000);
     }
 
-    // 更新已选道具标题（显示数量）
-    function updateSelectedTitle() {
-        const count = selectedItems.length;
-        selectedTitleSpan.textContent = `已选道具 (已有 ${count} 个)`;
+    function updateSelectedCount() {
+        selectedCountSpan.textContent = selectedItems.length;
     }
 
-    // 渲染左侧列表（只有搜索框有内容时显示）
     function renderItemList() {
         const keyword = searchInput.value.trim();
         if (keyword === '') {
@@ -478,7 +565,7 @@
             return;
         }
         const lowerKw = keyword.toLowerCase();
-        const filtered = ITEM_LIBRARY.filter(item => 
+        const filtered = ITEM_LIBRARY.filter(item =>
             item.name.toLowerCase().includes(lowerKw) || item.id.toLowerCase().includes(lowerKw)
         );
         if (filtered.length === 0) {
@@ -489,25 +576,21 @@
         filtered.forEach(item => {
             const div = document.createElement('div');
             div.className = 'item-row' + (selectedItemIds.has(item.id) ? ' selected' : '');
-            div.textContent = `${item.name} (${item.id})`;
+            div.textContent = `${item.name}`;
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (selectedItemIds.has(item.id)) {
-                    selectedItemIds.delete(item.id);
-                } else {
-                    selectedItemIds.add(item.id);
-                }
+                if (selectedItemIds.has(item.id)) selectedItemIds.delete(item.id);
+                else selectedItemIds.add(item.id);
                 renderItemList();
             });
             itemListDiv.appendChild(div);
         });
     }
 
-    // 渲染右侧已选列表
     function renderSelectedList() {
         if (selectedItems.length === 0) {
             selectedListDiv.innerHTML = '<div class="placeholder-text">暂无道具</div>';
-            updateSelectedTitle();
+            updateSelectedCount();
             return;
         }
         selectedListDiv.innerHTML = '';
@@ -521,7 +604,6 @@
             `;
             selectedListDiv.appendChild(div);
         });
-        // 数量修改
         document.querySelectorAll('.item-count').forEach(inp => {
             inp.addEventListener('change', (e) => {
                 const idx = parseInt(e.target.dataset.idx);
@@ -529,28 +611,25 @@
                 if (selectedItems[idx]) selectedItems[idx].count = newVal;
             });
         });
-        // 删除单个
         document.querySelectorAll('.remove-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const idx = parseInt(btn.dataset.idx);
                 selectedItems.splice(idx, 1);
                 renderSelectedList();
-                renderItemList();  // 左侧
-                updateSelectedTitle();
+                renderItemList();
+                updateSelectedCount();
             });
         });
-        updateSelectedTitle();
+        updateSelectedCount();
     }
 
-    // 添加选中的道具
     function addSelected() {
         if (selectedItemIds.size === 0) {
             showToast('请先在左侧点击选择道具', true);
             return;
         }
-        // 检查当前已选数量是否已达上限
         if (selectedItems.length >= 10) {
-            showToast('食懵你啊，衰仔，最多10个啊', true);
+            showToast('最多只能选择10个道具，请先删除一些', true);
             return;
         }
         const toAdd = [];
@@ -560,15 +639,8 @@
         }
         let added = 0;
         for (let item of toAdd) {
-            if (selectedItems.length >= 10) {
-                showToast('食懵你啊，衰仔，最多10个啊', true);
-                break;
-            }
-            selectedItems.push({
-                id: item.id,
-                name: item.name,
-                count: 1
-            });
+            if (selectedItems.length >= 10) break;
+            selectedItems.push({ id: item.id, name: item.name, count: 1 });
             added++;
         }
         if (added > 0) {
@@ -593,11 +665,175 @@
         showToast('已清空全部道具');
     }
 
-    // 生成脚本并复制
-    function generateAndCopy() {
-        const serverValue = document.getElementById('serverValue').value.trim();
-        const roleId = document.getElementById('roleId').value.trim();
+    // ---------- 常用方案 ----------
+    const STORAGE_SCHEMES = 'mailTool_schemes';
+    function loadSchemes() {
+        const raw = localStorage.getItem(STORAGE_SCHEMES);
+        if (!raw) return [];
+        try { return JSON.parse(raw); } catch(e) { return []; }
+    }
+    function saveSchemes(schemes) {
+        localStorage.setItem(STORAGE_SCHEMES, JSON.stringify(schemes));
+        renderSchemeList();
+    }
+    function renderSchemeList() {
+        const container = document.getElementById('schemeList');
+        const schemes = loadSchemes();
+        if (!schemes.length) {
+            container.innerHTML = '<div class="placeholder-text">暂无方案</div>';
+            return;
+        }
+        container.innerHTML = '';
+        schemes.forEach((scheme, idx) => {
+            const div = document.createElement('div');
+            div.className = 'scheme-item';
+            div.innerHTML = `
+                <span>${escapeHtml(scheme.name)} (${scheme.items.length})</span>
+                <div>
+                    <button class="load-scheme" data-idx="${idx}" style="background:#3b82f6;">加载</button>
+                    <button class="del-scheme" data-idx="${idx}" style="background:#9ca3af;">删</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.load-scheme').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                const schemes = loadSchemes();
+                if (schemes[idx]) loadSchemeData(schemes[idx].items);
+            });
+        });
+        document.querySelectorAll('.del-scheme').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                let schemes = loadSchemes();
+                schemes.splice(idx, 1);
+                saveSchemes(schemes);
+                showToast('方案已删除');
+            });
+        });
+    }
+    function loadSchemeData(items) {
+        if (!items || !items.length) return;
+        if (items.length > 10) items = items.slice(0,10);
+        const newSelected = [];
+        for (let it of items) {
+            const libItem = ITEM_LIBRARY.find(i => i.id === it.id);
+            if (libItem) {
+                newSelected.push({ id: libItem.id, name: libItem.name, count: it.count || 1 });
+            } else {
+                showToast(`道具ID ${it.id} 不存在，已跳过`, true);
+            }
+        }
+        if (newSelected.length) {
+            selectedItems = newSelected;
+            renderSelectedList();
+            renderItemList();
+            showToast(`已加载方案，共 ${newSelected.length} 个道具`);
+        } else {
+            showToast('方案中无有效道具', true);
+        }
+    }
+    function saveCurrentScheme() {
+        if (selectedItems.length === 0) {
+            showToast('当前没有道具，无法保存方案', true);
+            return;
+        }
+        const name = prompt('请输入方案名称：', `方案${new Date().toLocaleTimeString()}`);
+        if (!name) return;
+        const schemes = loadSchemes();
+        const itemsToSave = selectedItems.map(item => ({ id: item.id, count: item.count }));
+        schemes.push({ name: name, items: itemsToSave });
+        saveSchemes(schemes);
+        showToast('方案已保存');
+    }
 
+    // ---------- 常用角色 ----------
+    const STORAGE_ROLES = 'mailTool_roles';
+    function loadRoles() {
+        const raw = localStorage.getItem(STORAGE_ROLES);
+        if (!raw) return [];
+        try { return JSON.parse(raw); } catch(e) { return []; }
+    }
+    function saveRoles(roles) {
+        localStorage.setItem(STORAGE_ROLES, JSON.stringify(roles));
+        renderRoleList();
+    }
+    function renderRoleList() {
+        const container = document.getElementById('roleList');
+        const roles = loadRoles();
+        if (!roles.length) {
+            container.innerHTML = '<div class="placeholder-text">暂无角色</div>';
+            return;
+        }
+        container.innerHTML = '';
+        roles.forEach((role, idx) => {
+            const div = document.createElement('div');
+            div.className = 'role-item';
+            div.innerHTML = `
+                <span>${escapeHtml(role.serverValue)} - ${escapeHtml(role.roleId)}</span>
+                <div>
+                    <button class="edit-role" data-idx="${idx}" style="background:#3b82f6;">编辑</button>
+                    <button class="del-role" data-idx="${idx}" style="background:#9ca3af;">删</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.edit-role').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                editRole(idx);
+            });
+        });
+        document.querySelectorAll('.del-role').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                let roles = loadRoles();
+                roles.splice(idx, 1);
+                saveRoles(roles);
+                showToast('角色已删除');
+            });
+        });
+        container.querySelectorAll('.role-item span').forEach(span => {
+            span.addEventListener('click', (e) => {
+                const idx = parseInt(span.closest('.role-item').querySelector('.edit-role').dataset.idx);
+                const roles = loadRoles();
+                if (roles[idx]) {
+                    serverValueInput.value = roles[idx].serverValue;
+                    roleIdInput.value = roles[idx].roleId;
+                    showToast('已填充角色信息');
+                }
+            });
+        });
+    }
+    function addRole() {
+        const serverValue = prompt('区服:', '');
+        if (serverValue === null) return;
+        const roleId = prompt('角色ID:', '');
+        if (roleId === null) return;
+        const roles = loadRoles();
+        roles.push({ serverValue: serverValue.trim(), roleId: roleId.trim() });
+        saveRoles(roles);
+        showToast('角色已添加');
+    }
+    function editRole(idx) {
+        const roles = loadRoles();
+        const role = roles[idx];
+        if (!role) return;
+        const newServer = prompt('编辑区服 value:', role.serverValue);
+        if (newServer === null) return;
+        const newRoleId = prompt('编辑角色ID:', role.roleId);
+        if (newRoleId === null) return;
+        role.serverValue = newServer.trim();
+        role.roleId = newRoleId.trim();
+        saveRoles(roles);
+        showToast('角色已更新');
+    }
+
+    // ---------- 生成脚本 ----------
+    function generateAndCopy() {
+        const serverValue = serverValueInput.value.trim();
+        const roleId = roleIdInput.value.trim();
         const items = [];
         for (let i = 0; i < 10; i++) {
             if (i < selectedItems.length) {
@@ -606,15 +842,7 @@
                 items.push({ id: "", count: "" });
             }
         }
-
-        const config = {
-            serverValue: serverValue || "0",
-            roleId: roleId || "",
-            items: items,
-            subject: "1",
-            content: "1"
-        };
-
+        const config = { serverValue: serverValue || "0", roleId: roleId || "", items, subject: "1", content: "1" };
         const script = `// 自动填充脚本（先清空后填充）
 (function() {
     const config = ${JSON.stringify(config, null, 4)};
@@ -673,24 +901,37 @@
     clearForm();
     fillForm();
 })();`;
-
         navigator.clipboard.writeText(script).then(() => {
-            showToast('脚本已复制到剪贴板');	
+            showToast('已复制到剪贴板');
         }).catch(() => {
             showToast('复制失败，请手动复制', true);
         });
     }
 
-    // 事件绑定
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // 绑定事件
     searchInput.addEventListener('input', renderItemList);
     document.getElementById('addSelectedBtn').addEventListener('click', addSelected);
     document.getElementById('clearSearchSelectionBtn').addEventListener('click', clearSearchSelection);
     document.getElementById('clearAllSelectedBtn').addEventListener('click', clearAllSelected);
     document.getElementById('generateBtn').addEventListener('click', generateAndCopy);
+    document.getElementById('saveSchemeBtn').addEventListener('click', saveCurrentScheme);
+    document.getElementById('addRoleBtn').addEventListener('click', addRole);
 
-    // 初始渲染
+    // 初始化
     renderItemList();
     renderSelectedList();
+    renderSchemeList();
+    renderRoleList();
 </script>
 </body>
 </html>
