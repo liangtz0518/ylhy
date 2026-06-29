@@ -2,315 +2,675 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大道争锋</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-body: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-hover: #f5f5f7;
+            --bg-input: #f5f5f7;
+            --border: #e5e5e7;
+            --border-focus: #0071e3;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-muted: #aeaeb2;
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
+            --accent-light: rgba(0, 113, 227, 0.08);
+            --danger: #ff3b30;
+            --danger-hover: #e0352b;
+            --danger-light: rgba(255, 59, 48, 0.06);
+            --success: #34c759;
+            --info: #0071e3;
+            --radius-sm: 8px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.08);
+            --transition: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-            background: #f0f2f5;
-            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 32px;
+            line-height: 1.47059;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 20px;
+
+        /* ===== SCROLLBAR (Apple style) ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.15);
+            border-radius: 3px;
         }
-        /* 主标题 */
-        h2 {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 24px;
-            padding-left: 12px;
-            border-left: 3px solid #2c3e50;
-            color: #222;
-        }
-        /* 四列布局 */
-        .four-columns {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+        /* ===== HEADER ===== */
+        .header {
+            max-width: 1440px;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
             gap: 20px;
+        }
+        .header-icon {
+            width: 52px; height: 52px;
+            background: var(--text-primary);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+        .header-text h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        .header-text .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            letter-spacing: -0.01em;
+            margin-top: 2px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-layout {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr 340px;
+            gap: 24px;
             align-items: start;
         }
-        /* 卡片通用样式 - 极简 */
+
+        /* ===== CARD (Apple style) ===== */
         .card {
-            background: #fefefe;
-            border: 1px solid #e2e8f0;
-            padding: 12px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
-        .card-title {
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-header .label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text-secondary);
+            text-transform: none;
+        }
+        .card-body {
+            padding: 20px 24px;
+        }
+        .card-body.no-pad { padding: 0; }
+
+        /* ===== BUTTONS (Apple pill style) ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 7px 16px;
+            border: none;
+            border-radius: 980px;
+            font-size: 0.75rem;
             font-weight: 500;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e2e8f0;
-            color: #1e2a3a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        /* 列表区域 */
-        .role-list, .scheme-list {
-            max-height: 260px;
-            overflow-y: auto;
-            margin-bottom: 8px;
-        }
-        .role-item, .scheme-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            padding: 5px 0;
-            border-bottom: 1px solid #edf2f7;
-        }
-        .role-item span:first-child, .scheme-item span:first-child {
             cursor: pointer;
+            transition: all var(--transition);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            white-space: nowrap;
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+        .btn:hover {
+            background: #e8e8ed;
+        }
+        .btn:active {
+            transform: scale(0.97);
+            background: #e0e0e5;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+        .btn-primary:active {
+            background: #0060c0;
+        }
+        .btn-danger {
+            background: transparent;
+            color: var(--danger);
+        }
+        .btn-danger:hover {
+            background: var(--danger-light);
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.6875rem;
+            border-radius: 980px;
+        }
+        .btn-block { width: 100%; justify-content: center; }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 0;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.01em;
+            -webkit-appearance: none;
+        }
+        .form-group input:hover {
+            background: #ebebf0;
+        }
+        .form-group input:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box {
+            position: relative;
+        }
+        .search-box .search-icon {
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            pointer-events: none;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            background: var(--bg-input);
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.01em;
+        }
+        .search-box input:hover {
+            background: #ebebf0;
+        }
+        .search-box input:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ===== LIST (roles / schemes) ===== */
+        .list-container {
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+            font-size: 0.8125rem;
+            transition: background var(--transition);
+        }
+        .list-item:hover {
+            background: var(--bg-hover);
+        }
+        .list-item .item-label {
             flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-        /* 按钮样式 - 纯色无圆角 */
-        button {
-            background: #2c3e50;
-            border: none;
-            color: white;
-            padding: 4px 12px;
-            font-size: 0.75rem;
             cursor: pointer;
+            color: var(--text-primary);
+            transition: color var(--transition);
+            letter-spacing: -0.01em;
         }
-        button.small {
-            background: #64748b;
-            padding: 2px 8px;
+        .list-item .item-label:hover {
+            color: var(--accent);
         }
-        button.danger {
-            background: #9ca3af;
-        }
-        button.danger:hover {
-            background: #7f8c8d;
-        }
-        button.primary {
-            background: #2c3e50;
-        }
-        button.clear-btn {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-        /* 基本信息表单 */
-        .basic-form {
+        .list-item .item-actions {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 4px;
+            flex-shrink: 0;
+            margin-left: 12px;
         }
-        .basic-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .basic-row label {
-            width: 60px;
-            font-size: 0.8rem;
-            color: #334155;
-        }
-        .basic-row input {
-            flex: 1;
-            padding: 4px 8px;
-            border: 1px solid #cbd5e1;
-            font-size: 0.8rem;
-            background: white;
-        }
-        /* 道具配置搜索框和列表 */
-        .search-input {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid #cbd5e1;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            background: white;
-        }
-        .item-list {
-            border: 1px solid #e2e8f0;
-            background: white;
-            max-height: 280px;
-            overflow-y: auto;
-        }
-        .item-row {
-            padding: 6px 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .item-row:hover {
-            background: #f8fafc;
-        }
-        .item-row.selected {
-            background: #e2e8f0;
-        }
-        /* 生成按钮区域 */
-        .generate-wrapper {
-            margin-bottom: 16px;
-        }
-        .generate-wrapper button {
-            background: #2c3e50;
-            width: 100%;
-            padding: 8px;
-            font-size: 0.85rem;
-        }
-        /* 已选道具区域 */
-        .selected-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .selected-list {
-            border: 1px solid #e2e8f0;
-            background: white;
-            max-height: 280px;
-            overflow-y: auto;
-        }
-        .selected-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 8px;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 0.75rem;
-        }
-        .selected-item span:first-child {
-            flex: 2;
-        }
-        .selected-item input {
-            width: 60px;
-            padding: 3px;
+
+        .placeholder-text {
+            color: var(--text-muted);
             text-align: center;
-            border: 1px solid #cbd5e1;
-            font-size: 0.75rem;
+            padding: 32px 20px;
+            font-size: 0.8125rem;
+            letter-spacing: -0.01em;
         }
-        .selected-item button {
+
+        /* ===== ITEM LIBRARY (search results) ===== */
+        .item-library {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .item-library .item-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            transition: all var(--transition);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        .item-library .item-option:hover {
+            background: var(--bg-hover);
+        }
+        .item-library .item-option.selected {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .item-library .item-option .check-circle {
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            border: 2px solid #d2d2d7;
+            flex-shrink: 0;
+            transition: all var(--transition);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .item-library .item-option:hover .check-circle {
+            border-color: #b0b0b8;
+        }
+        .item-library .item-option.selected .check-circle {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #ffffff;
+        }
+        .item-search-actions {
+            display: flex;
+            gap: 10px;
+            padding: 16px 24px 20px;
+        }
+
+        /* ===== SELECTED ITEMS ===== */
+        .selected-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .selected-count {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+        .selected-count strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .selected-items-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        .selected-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            font-size: 0.8125rem;
+            transition: background var(--transition);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+        .selected-row:last-child { border-bottom: none; }
+        .selected-row:hover { background: var(--bg-hover); }
+        .selected-row .item-info {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        .selected-row .item-info .item-id {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+        .selected-row input[type="number"] {
+            width: 60px;
+            padding: 6px 8px;
+            background: var(--bg-input);
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 0.8125rem;
+            transition: all var(--transition);
+            font-family: inherit;
+            -webkit-appearance: none;
+        }
+        .selected-row input[type="number"]:hover {
+            background: #ebebf0;
+        }
+        .selected-row input[type="number"]:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+        .selected-row .remove-btn {
             background: none;
             border: none;
-            color: #c00;
+            color: var(--text-muted);
             cursor: pointer;
             font-size: 1rem;
-            font-weight: bold;
-            padding: 0 6px;
+            padding: 4px 6px;
+            border-radius: 50%;
+            transition: all var(--transition);
+            line-height: 1;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .action-buttons {
-            margin-top: 12px;
+        .selected-row .remove-btn:hover {
+            color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        /* ===== GENERATE SECTION ===== */
+        .generate-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .generate-section .btn-generate {
+            width: 100%;
+            padding: 14px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            background: var(--accent);
+            border: none;
+            border-radius: 980px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all var(--transition-slow);
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        .generate-section .btn-generate:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 16px rgba(0, 113, 227, 0.3);
+            transform: translateY(-1px);
+        }
+        .generate-section .btn-generate:active {
+            transform: scale(0.98);
+            background: #0060c0;
+        }
+        .selected-footer {
             display: flex;
             gap: 8px;
-            justify-content: flex-end;
+            padding: 14px 24px;
         }
-        .action-buttons button {
-            background: #e2e8f0;
-            color: #1e293b;
-            padding: 4px 12px;
-        }
-        .action-buttons button.primary {
-            background: #2c3e50;
-            color: white;
-        }
-        .placeholder-text {
-            color: #94a3b8;
-            text-align: center;
-            padding: 16px;
-            font-size: 0.75rem;
-        }
+
+        /* ===== TOAST (Apple frosted glass style) ===== */
         .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #2c3e50;
-            color: white;
-            padding: 6px 12px;
-            font-size: 0.8rem;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-12px);
+            background: rgba(29, 29, 31, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #ffffff;
+            padding: 10px 28px;
+            border-radius: 980px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
             pointer-events: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
-        @media (max-width: 1000px) {
-            .four-columns {
-                grid-template-columns: repeat(2, 1fr);
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.error {
+            background: rgba(255, 59, 48, 0.92);
+        }
+        .toast.success {
+            background: rgba(29, 29, 31, 0.9);
+        }
+
+        /* ===== LIST BUTTONS (load/edit/delete) ===== */
+        .list-actions { display: flex; gap: 4px; }
+        .list-actions .btn-load {
+            color: var(--accent);
+            background: transparent;
+        }
+        .list-actions .btn-load:hover {
+            background: var(--accent-light);
+        }
+        .list-actions .btn-del {
+            color: var(--text-muted);
+            background: transparent;
+        }
+        .list-actions .btn-del:hover {
+            color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+            .sidebar-left {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
             }
         }
+        @media (max-width: 768px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .sidebar-left { grid-template-columns: 1fr; }
+            body { padding: 16px; }
+            .header { margin-bottom: 28px; }
+            .header-text h1 { font-size: 1.5rem; }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            animation: fadeUp 0.45s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+        }
+        .card:nth-child(2) { animation-delay: 0.06s; }
+        .card:nth-child(3) { animation-delay: 0.12s; }
+        .card:nth-child(4) { animation-delay: 0.18s; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>大道争锋</h2>
-    <div class="four-columns">
-        <!-- 第一列：常用角色 -->
-        <div class="card">
-            <div class="card-title">
-                常用角色
-                <button id="addRoleBtn" class="small">添加</button>
-            </div>
-            <div id="roleList" class="role-list">
-                <div class="placeholder-text">暂无角色</div>
-            </div>
-        </div>
 
-        <!-- 第二列：基本信息 + 道具配置 -->
+<!-- HEADER -->
+<div class="header">
+    <div class="header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+    </div>
+    <div class="header-text">
+        <h1>大道争锋</h1>
+        <div class="subtitle">邮件填充</div>
+    </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+    <!-- ===== LEFT SIDEBAR: ROLES + SCHEMES ===== -->
+    <div class="sidebar-left" style="display:flex;flex-direction:column;gap:24px;">
+
+        <!-- 常用角色 -->
         <div class="card">
-            <div class="card-title">基本信息</div>
-            <div class="basic-form">
-                <div class="basic-row">
-                    <label>区服</label>
-                    <input type="text" id="serverValue" value="" placeholder="区服">
+            <div class="card-header">
+                <span class="label">常用角色</span>
+                <button id="addRoleBtn" class="btn btn-sm">添加</button>
+            </div>
+            <div class="card-body no-pad">
+                <div id="roleList" class="list-container">
+                    <div class="placeholder-text">暂无角色</div>
                 </div>
-                <div class="basic-row">
-                    <label>角色ID</label>
-                    <input type="text" id="roleId" value="" placeholder="角色ID">
+            </div>
+        </div>
+
+        <!-- 常用方案 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="label">常用方案</span>
+                <button id="saveSchemeBtn" class="btn btn-sm">保存当前</button>
+            </div>
+            <div class="card-body no-pad">
+                <div id="schemeList" class="list-container">
+                    <div class="placeholder-text">暂无方案</div>
                 </div>
             </div>
-            <div class="card-title" style="margin-top: 8px;">道具配置</div>
-            <div>
-                <input type="text" id="searchInput" class="search-input" placeholder="输入道具名称或ID搜索">
-                <div id="itemList" class="item-list"></div>
+        </div>
+    </div>
+
+    <!-- ===== CENTER: BASIC INFO + ITEM SEARCH ===== -->
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+        <!-- 基本信息 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="label">基本信息</span>
+            </div>
+            <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div class="form-group">
+                        <label>区服</label>
+                        <input type="text" id="serverValue" placeholder="输入区服">
+                    </div>
+                    <div class="form-group">
+                        <label>角色 ID</label>
+                        <input type="text" id="roleId" placeholder="输入角色 ID">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 第三列：常用方案 -->
+        <!-- 道具配置 -->
         <div class="card">
-            <div class="card-title">
-                常用方案
-                <button id="saveSchemeBtn" class="small">保存当前</button>
+            <div class="card-header">
+                <span class="label">道具配置</span>
             </div>
-            <div id="schemeList" class="scheme-list">
-                <div class="placeholder-text">暂无方案</div>
+            <div class="card-body no-pad">
+                <div style="padding:16px 24px;">
+                    <div class="search-box">
+                        <span class="search-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                        </span>
+                        <input type="text" id="searchInput" placeholder="搜索道具名称或 ID">
+                    </div>
+                </div>
+                <div id="itemList" class="item-library"></div>
+                <div class="item-search-actions">
+                    <button id="addSelectedBtn" class="btn btn-primary" style="flex:1;">添加选中</button>
+                    <button id="clearSearchSelectionBtn" class="btn">清空选中</button>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- 第四列：生成按钮 + 已选道具 -->
+    <!-- ===== RIGHT: GENERATE + SELECTED ITEMS ===== -->
+    <div style="display:flex;flex-direction:column;">
         <div class="card">
-            <div class="generate-wrapper">
-                <button id="generateBtn">生成并复制</button>
+            <!-- Generate Button -->
+            <div class="generate-section">
+                <button id="generateBtn" class="btn-generate">生成并复制脚本</button>
             </div>
-            <div class="card-title" style="margin-top: 8px;">已选道具</div>
-            <div class="selected-header">
-                <span>已选道具 (<span id="selectedCount">0</span>/10)</span>
-                <button id="clearAllSelectedBtn" class="clear-btn">清空全部</button>
+
+            <!-- Selected Items Header -->
+            <div class="selected-header-row">
+                <span class="label" style="font-weight:600;color:var(--text-primary);">已选道具</span>
+                <span class="selected-count">已选 <strong id="selectedCount">0</strong> / 10</span>
             </div>
-            <div id="selectedList" class="selected-list">
+
+            <!-- Selected Items List -->
+            <div id="selectedList" class="selected-items-list">
                 <div class="placeholder-text">暂无道具</div>
             </div>
-            <div class="action-buttons">
-                <button id="addSelectedBtn" class="primary">添加选中</button>
-                <button id="clearSearchSelectionBtn">清空选中</button>
+
+            <!-- Footer Actions -->
+            <div class="selected-footer">
+                <button id="clearAllSelectedBtn" class="btn btn-danger btn-sm" style="margin-left:auto;">全部清空</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- TOAST -->
 <div id="toast" class="toast"></div>
 
 <script>
@@ -601,14 +961,32 @@
 { id: "37063", name: "玄影修罗·坐骑" },
 { id: "37242", name: "玄影修罗·翅膀" },
 { id: "37483", name: "玄影修罗·法宝" },
-{ id: "38709", name: "玄影修罗·宠物" }
+{ id: "38709", name: "玄影修罗·宠物" },
+{ id: "29614", name: "无上符文" },
+{ id: "48592", name: "九尾天狐自选礼包" },
+{ id: "46404", name: "熊猫仙人" },
+{ id: "48576", name: "倾世红颜" },
+{ id: "22615", name: "世界魔王药水" },
+{ id: "46042", name: "跨服boss刷新卡" },
+{ id: "36366", name: "蛮荒神兽次数药水" },
+{ id: "32133", name: "龙元·强化之元" },
+{ id: "32134", name: "龙元·强化之元" },
+{ id: "32123", name: "龙元·技伤之元" },
+{ id: "32124", name: "龙元·技伤之元" },
+{ id: "32113", name: "龙元·碎甲之元" },
+{ id: "32114", name: "龙元·碎甲之元" },
+{ id: "32103", name: "龙元·不灭之元" },
+{ id: "32104", name: "龙元·不灭之元" },
+{ id: "32093", name: "龙元·遁甲之元" },
+{ id: "32094", name: "龙元·遁甲之元" },
+{ id: "29622", name: "龙元·龙元精魄" }
     ];
 
-    // ---------- 全局状态 ----------
+    // ===== GLOBAL STATE =====
     let selectedItems = [];
     let selectedItemIds = new Set();
 
-    // DOM 元素
+    // ===== DOM REFS =====
     const searchInput = document.getElementById('searchInput');
     const itemListDiv = document.getElementById('itemList');
     const selectedListDiv = document.getElementById('selectedList');
@@ -617,17 +995,21 @@
     const roleIdInput = document.getElementById('roleId');
     const toastDiv = document.getElementById('toast');
 
+    // ===== TOAST =====
+    let toastTimer;
     function showToast(msg, isError = false) {
+        clearTimeout(toastTimer);
         toastDiv.textContent = msg;
-        toastDiv.style.backgroundColor = isError ? '#b91c1c' : '#2c3e50';
-        toastDiv.style.opacity = '1';
-        setTimeout(() => { toastDiv.style.opacity = '0'; }, 2000);
+        toastDiv.className = 'toast ' + (isError ? 'error' : 'success');
+        requestAnimationFrame(() => { toastDiv.classList.add('show'); });
+        toastTimer = setTimeout(() => { toastDiv.classList.remove('show'); }, 2200);
     }
 
     function updateSelectedCount() {
         selectedCountSpan.textContent = selectedItems.length;
     }
 
+    // ===== ITEM SEARCH =====
     function renderItemList() {
         const keyword = searchInput.value.trim();
         if (keyword === '') {
@@ -645,18 +1027,31 @@
         itemListDiv.innerHTML = '';
         filtered.forEach(item => {
             const div = document.createElement('div');
-            div.className = 'item-row' + (selectedItemIds.has(item.id) ? ' selected' : '');
-            div.textContent = `${item.name}`;
+            const isSel = selectedItemIds.has(item.id);
+            div.className = 'item-option' + (isSel ? ' selected' : '');
+            div.innerHTML = `
+                <span class="check-circle">${isSel ? '✓' : ''}</span>
+                <span style="flex:1;">${escapeHtml(item.name)}</span>
+                <span style="color:var(--text-muted);font-size:0.75rem;">#${item.id}</span>
+            `;
             div.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (selectedItemIds.has(item.id)) selectedItemIds.delete(item.id);
-                else selectedItemIds.add(item.id);
+                if (selectedItemIds.has(item.id)) {
+                    selectedItemIds.delete(item.id);
+                } else {
+                    if (selectedItemIds.size + selectedItems.length >= 10) {
+                        showToast('已经10個啦，衰仔', true);
+                        return;
+                    }
+                    selectedItemIds.add(item.id);
+                }
                 renderItemList();
             });
             itemListDiv.appendChild(div);
         });
     }
 
+    // ===== SELECTED ITEMS =====
     function renderSelectedList() {
         if (selectedItems.length === 0) {
             selectedListDiv.innerHTML = '<div class="placeholder-text">暂无道具</div>';
@@ -665,47 +1060,47 @@
         }
         selectedListDiv.innerHTML = '';
         selectedItems.forEach((item, idx) => {
-            const div = document.createElement('div');
-            div.className = 'selected-item';
-            div.innerHTML = `
-                <span>${item.name} (${item.id})</span>
+            const row = document.createElement('div');
+            row.className = 'selected-row';
+            row.innerHTML = `
+                <span class="item-info">${escapeHtml(item.name)}<span class="item-id">#${item.id}</span></span>
                 <input type="number" class="item-count" data-idx="${idx}" value="${item.count}" min="1" step="1">
-                <button class="remove-item" data-idx="${idx}">✕</button>
+                <button class="remove-btn" data-idx="${idx}" title="移除">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
             `;
-            selectedListDiv.appendChild(div);
+            selectedListDiv.appendChild(row);
         });
-        document.querySelectorAll('.item-count').forEach(inp => {
-            inp.addEventListener('change', (e) => {
-                const idx = parseInt(e.target.dataset.idx);
-                const newVal = parseInt(e.target.value) || 1;
-                if (selectedItems[idx]) selectedItems[idx].count = newVal;
+        selectedListDiv.querySelectorAll('.item-count').forEach(inp => {
+            inp.addEventListener('change', function() {
+                const idx = parseInt(this.dataset.idx);
+                const val = parseInt(this.value) || 1;
+                if (selectedItems[idx]) selectedItems[idx].count = Math.max(1, val);
+                this.value = selectedItems[idx].count;
             });
         });
-        document.querySelectorAll('.remove-item').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.dataset.idx);
+        selectedListDiv.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.idx);
                 selectedItems.splice(idx, 1);
                 renderSelectedList();
                 renderItemList();
-                updateSelectedCount();
             });
         });
         updateSelectedCount();
     }
 
+    // ===== ADD / CLEAR SELECTIONS =====
     function addSelected() {
-        if (selectedItemIds.size === 0) {
-            showToast('请先在左侧点击选择道具', true);
-            return;
-        }
-        if (selectedItems.length >= 10) {
-            showToast('最多只能选择10个道具，请先删除一些', true);
-            return;
-        }
+        if (selectedItemIds.size === 0) { showToast('咩都冇选，加咩加啊', true); return; }
+        if (selectedItems.length >= 10) { showToast('最多只能选择 10 个道具', true); return; }
+        const maxSlots = 10 - selectedItems.length;
         const toAdd = [];
+        let count = 0;
         for (let id of selectedItemIds) {
+            if (count >= maxSlots) break;
             const item = ITEM_LIBRARY.find(i => i.id === id);
-            if (item) toAdd.push(item);
+            if (item) { toAdd.push(item); count++; }
         }
         let added = 0;
         for (let item of toAdd) {
@@ -726,21 +1121,23 @@
     function clearSearchSelection() {
         selectedItemIds.clear();
         renderItemList();
-        showToast('已清空左侧选中');
+        showToast('已清空搜索选中');
     }
 
     function clearAllSelected() {
+        serverValueInput.value = '';
+        roleIdInput.value = '';
+        selectedItemIds.clear();
         selectedItems = [];
+        renderItemList();
         renderSelectedList();
-        showToast('已清空全部道具');
+        showToast('已清空全部配置信息');
     }
 
-    // ---------- 常用方案 ----------
+    // ===== SCHEMES =====
     const STORAGE_SCHEMES = 'mailTool_schemes';
     function loadSchemes() {
-        const raw = localStorage.getItem(STORAGE_SCHEMES);
-        if (!raw) return [];
-        try { return JSON.parse(raw); } catch(e) { return []; }
+        try { return JSON.parse(localStorage.getItem(STORAGE_SCHEMES)) || []; } catch(e) { return []; }
     }
     function saveSchemes(schemes) {
         localStorage.setItem(STORAGE_SCHEMES, JSON.stringify(schemes));
@@ -756,25 +1153,24 @@
         container.innerHTML = '';
         schemes.forEach((scheme, idx) => {
             const div = document.createElement('div');
-            div.className = 'scheme-item';
+            div.className = 'list-item';
             div.innerHTML = `
-                <span>${escapeHtml(scheme.name)} (${scheme.items.length})</span>
-                <div>
-                    <button class="load-scheme" data-idx="${idx}" style="background:#3b82f6;">加载</button>
-                    <button class="del-scheme" data-idx="${idx}" style="background:#9ca3af;">删</button>
+                <span class="item-label" title="${escapeHtml(scheme.name)}">${escapeHtml(scheme.name)} <span style="color:var(--text-muted);font-size:0.7rem;">(${scheme.items.length})</span></span>
+                <div class="list-actions">
+                    <button class="btn btn-sm btn-load" data-idx="${idx}">加载</button>
+                    <button class="btn btn-sm btn-del" data-idx="${idx}">删除</button>
                 </div>
             `;
             container.appendChild(div);
         });
-        document.querySelectorAll('.load-scheme').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        container.querySelectorAll('.btn-load').forEach(btn => {
+            btn.addEventListener('click', () => {
                 const idx = parseInt(btn.dataset.idx);
-                const schemes = loadSchemes();
-                if (schemes[idx]) loadSchemeData(schemes[idx].items);
+                loadSchemeData(loadSchemes()[idx].items);
             });
         });
-        document.querySelectorAll('.del-scheme').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        container.querySelectorAll('.btn-del').forEach(btn => {
+            btn.addEventListener('click', () => {
                 const idx = parseInt(btn.dataset.idx);
                 let schemes = loadSchemes();
                 schemes.splice(idx, 1);
@@ -785,45 +1181,36 @@
     }
     function loadSchemeData(items) {
         if (!items || !items.length) return;
-        if (items.length > 10) items = items.slice(0,10);
+        if (items.length > 10) items = items.slice(0, 10);
         const newSelected = [];
         for (let it of items) {
             const libItem = ITEM_LIBRARY.find(i => i.id === it.id);
-            if (libItem) {
-                newSelected.push({ id: libItem.id, name: libItem.name, count: it.count || 1 });
-            } else {
-                showToast(`道具ID ${it.id} 不存在，已跳过`, true);
-            }
+            if (libItem) newSelected.push({ id: libItem.id, name: libItem.name, count: it.count || 1 });
+            else showToast(`道具 ${it.id} 在库中不存在`, true);
         }
         if (newSelected.length) {
             selectedItems = newSelected;
             renderSelectedList();
             renderItemList();
-            showToast(`已加载方案，共 ${newSelected.length} 个道具`);
+            showToast(`已加载方案（${newSelected.length} 个道具）`);
         } else {
             showToast('方案中无有效道具', true);
         }
     }
     function saveCurrentScheme() {
-        if (selectedItems.length === 0) {
-            showToast('当前没有道具，无法保存方案', true);
-            return;
-        }
-        const name = prompt('请输入方案名称：', `方案${new Date().toLocaleTimeString()}`);
-        if (!name) return;
+        if (selectedItems.length === 0) { showToast('当前没有道具，无法保存', true); return; }
+        const name = prompt('方案名称：', `方案 ${new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}`);
+        if (!name || !name.trim()) return;
         const schemes = loadSchemes();
-        const itemsToSave = selectedItems.map(item => ({ id: item.id, count: item.count }));
-        schemes.push({ name: name, items: itemsToSave });
+        schemes.push({ name: name.trim(), items: selectedItems.map(i => ({id:i.id, count:i.count})) });
         saveSchemes(schemes);
         showToast('方案已保存');
     }
 
-    // ---------- 常用角色 ----------
+    // ===== ROLES =====
     const STORAGE_ROLES = 'mailTool_roles';
     function loadRoles() {
-        const raw = localStorage.getItem(STORAGE_ROLES);
-        if (!raw) return [];
-        try { return JSON.parse(raw); } catch(e) { return []; }
+        try { return JSON.parse(localStorage.getItem(STORAGE_ROLES)) || []; } catch(e) { return []; }
     }
     function saveRoles(roles) {
         localStorage.setItem(STORAGE_ROLES, JSON.stringify(roles));
@@ -839,34 +1226,19 @@
         container.innerHTML = '';
         roles.forEach((role, idx) => {
             const div = document.createElement('div');
-            div.className = 'role-item';
+            div.className = 'list-item';
             div.innerHTML = `
-                <span>${escapeHtml(role.serverValue)} - ${escapeHtml(role.roleId)}</span>
-                <div>
-                    <button class="edit-role" data-idx="${idx}" style="background:#3b82f6;">编辑</button>
-                    <button class="del-role" data-idx="${idx}" style="background:#9ca3af;">删</button>
+                <span class="item-label" title="点击填充基本信息">${escapeHtml(role.serverValue)} · ${escapeHtml(role.roleId)}</span>
+                <div class="list-actions">
+                    <button class="btn btn-sm btn-load" data-idx="${idx}">编辑</button>
+                    <button class="btn btn-sm btn-del" data-idx="${idx}">删除</button>
                 </div>
             `;
             container.appendChild(div);
         });
-        document.querySelectorAll('.edit-role').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.dataset.idx);
-                editRole(idx);
-            });
-        });
-        document.querySelectorAll('.del-role').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.dataset.idx);
-                let roles = loadRoles();
-                roles.splice(idx, 1);
-                saveRoles(roles);
-                showToast('角色已删除');
-            });
-        });
-        container.querySelectorAll('.role-item span').forEach(span => {
-            span.addEventListener('click', (e) => {
-                const idx = parseInt(span.closest('.role-item').querySelector('.edit-role').dataset.idx);
+        container.querySelectorAll('.item-label').forEach(span => {
+            span.addEventListener('click', () => {
+                const idx = parseInt(span.parentElement.querySelector('.btn-load').dataset.idx);
                 const roles = loadRoles();
                 if (roles[idx]) {
                     serverValueInput.value = roles[idx].serverValue;
@@ -875,14 +1247,29 @@
                 }
             });
         });
+        container.querySelectorAll('.btn-load').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx);
+                editRole(idx);
+            });
+        });
+        container.querySelectorAll('.btn-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.idx);
+                let roles = loadRoles();
+                roles.splice(idx, 1);
+                saveRoles(roles);
+                showToast('角色已删除');
+            });
+        });
     }
     function addRole() {
-        const serverValue = prompt('区服:', '');
-        if (serverValue === null) return;
-        const roleId = prompt('角色ID:', '');
+        const server = prompt('区服：', '');
+        if (server === null) return;
+        const roleId = prompt('角色 ID：', '');
         if (roleId === null) return;
         const roles = loadRoles();
-        roles.push({ serverValue: serverValue.trim(), roleId: roleId.trim() });
+        roles.push({ serverValue: server.trim(), roleId: roleId.trim() });
         saveRoles(roles);
         showToast('角色已添加');
     }
@@ -890,17 +1277,17 @@
         const roles = loadRoles();
         const role = roles[idx];
         if (!role) return;
-        const newServer = prompt('编辑区服 value:', role.serverValue);
-        if (newServer === null) return;
-        const newRoleId = prompt('编辑角色ID:', role.roleId);
-        if (newRoleId === null) return;
-        role.serverValue = newServer.trim();
-        role.roleId = newRoleId.trim();
+        const server = prompt('编辑区服：', role.serverValue);
+        if (server === null) return;
+        const roleId = prompt('编辑角色 ID：', role.roleId);
+        if (roleId === null) return;
+        role.serverValue = server.trim();
+        role.roleId = roleId.trim();
         saveRoles(roles);
         showToast('角色已更新');
     }
 
-    // ---------- 生成脚本 ----------
+    // ===== GENERATE =====
     function generateAndCopy() {
         const serverValue = serverValueInput.value.trim();
         const roleId = roleIdInput.value.trim();
@@ -980,15 +1367,10 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
     }
 
-    // 绑定事件
+    // ===== BIND EVENTS =====
     searchInput.addEventListener('input', renderItemList);
     document.getElementById('addSelectedBtn').addEventListener('click', addSelected);
     document.getElementById('clearSearchSelectionBtn').addEventListener('click', clearSearchSelection);
@@ -997,7 +1379,7 @@
     document.getElementById('saveSchemeBtn').addEventListener('click', saveCurrentScheme);
     document.getElementById('addRoleBtn').addEventListener('click', addRole);
 
-    // 初始化
+    // ===== INIT =====
     renderItemList();
     renderSelectedList();
     renderSchemeList();
