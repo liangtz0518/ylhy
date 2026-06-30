@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>逍遥蜀山 · 仙风道骨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fbfbfd;            /* 苹果背景暖白 */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 2rem 1.2rem;
+            line-height: 1.5;
+            color: #1d1d1f;
+        }
+
+        /* 主卡片 — 纯白，无阴影，仅一层细边 */
+        .card {
+            max-width: 1440px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+            padding: 2.8rem 3rem;
+            border: 1px solid #f0f0f2;
+            transition: all 0.15s ease;
+        }
+
+        /* 标题区域 */
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 620;
+            letter-spacing: -0.02em;
+            color: #1d1d1f;
+            margin-bottom: 0.15rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 标签页 (iOS风格分段控件) */
+        .tab-container {
+            display: flex;
+            gap: 0.5rem;
+            background: #f5f5f7;
+            border-radius: 48px;
+            padding: 0.25rem;
+            width: fit-content;
+            margin: 1.8rem 0 2.2rem 0;
+            border: 1px solid #eaeaea;
+        }
+        .tab-btn {
+            padding: 0.7rem 2.2rem;
+            font-size: 1rem;
+            font-weight: 540;
+            border-radius: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #4a4a4e;
+            transition: all 0.12s ease;
+            letter-spacing: -0.01em;
+        }
+        .tab-btn.active {
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            font-weight: 560;
+        }
+
+        /* 游戏面板容器 */
+        .game-panel {
+            display: none;
+            margin-top: 0.5rem;
+        }
+        .game-panel.active {
+            display: block;
+        }
+
+        /* 输入卡片 — 无底色，仅分割线 */
+        .input-panel {
+            background: transparent;
+            border-radius: 24px;
+            padding: 0.2rem 0 1.2rem 0;
+            margin-bottom: 2rem;
+            border: none;
+            box-shadow: none;
+        }
+
+        .panel-title {
+            font-weight: 550;
+            font-size: 1.2rem;
+            color: #1d1d1f;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+        }
+        .panel-title::before {
+            content: "▍";
+            font-size: 1.8rem;
+            color: #c6c6c8;
+            line-height: 1;
+            margin-right: 0.2rem;
+        }
+
+        /* 左右两列布局 */
+        .input-row {
+            display: flex;
+            gap: 3rem;
+        }
+        .left-col {
+            flex: 1.5;
+            min-width: 0;
+        }
+        .right-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .right-col label {
+            font-size: 0.8rem;
+            font-weight: 550;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #8e8e93;
+            margin-bottom: 0.7rem;
+        }
+
+        /* 自定义文本框 — 细线，大圆角 */
+        .custom-textarea {
+            width: 100%;
+            height: 280px;
+            padding: 1.2rem;
+            border: 1px solid #e6e6e8;
+            border-radius: 18px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            background: white;
+            transition: border 0.1s;
+            outline: none;
+            color: #1d1d1f;
+        }
+        .custom-textarea:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+
+        /* 左侧网格 */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.8rem 1.5rem;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-item label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #8e8e93;
+            margin-left: 0.2rem;
+        }
+
+        /* 数值输入框 — 极细边框 */
+        .input-field {
+            background: white;
+            border: 1px solid #e6e6e8;
+            border-radius: 14px;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 450;
+            color: #1d1d1f;
+            transition: border 0.1s, box-shadow 0.1s;
+            outline: none;
+            width: 100%;
+        }
+        .input-field:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+        .input-field::placeholder {
+            color: #b0b0b6;
+            font-weight: 400;
+        }
+
+        /* 切换组 — 苹果分段选择器风格 */
+        .toggle-group {
+            display: flex;
+            background: #f5f5f7;
+            border-radius: 40px;
+            padding: 0.2rem;
+            border: 1px solid #eaeaea;
+        }
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 0.6rem 0.1rem;
+            font-size: 0.9rem;
+            font-weight: 520;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            color: #4a4a4e;
+            background: transparent;
+            border: none;
+            user-select: none;
+        }
+        .toggle-btn.active {
+            background: #1d1d1f;
+            color: #ffffff;
+            font-weight: 560;
+        }
+        .toggle-btn:not(.active):hover {
+            background: rgba(0,0,0,0.03);
+            color: #1d1d1f;
+        }
+
+        /* 新增的预设按钮行样式 (苹果风辅助按钮) */
+        .preset-row {
+            grid-column: 1 / -1;
+            margin-top: 0.8rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #efeff1;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .preset-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #6c6c70;
+            letter-spacing: -0.2px;
+            background: #f5f5f7;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+        }
+        .preset-btn {
+            background: #ffffff;
+            border: 1px solid #e2e2e6;
+            border-radius: 40px;
+            padding: 0.55rem 1.3rem;
+            font-size: 0.85rem;
+            font-weight: 540;
+            color: #1d1d1f;
+            cursor: pointer;
+            transition: all 0.12s ease;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+            letter-spacing: -0.2px;
+        }
+        .preset-btn:hover {
+            background: #f9f9fb;
+            border-color: #c6c6c8;
+            transform: translateY(-1px);
+        }
+        .preset-btn:active {
+            transform: translateY(1px);
+            background: #f0f0f2;
+        }
+
+        /* 结果卡片 — 极浅灰底，干净 */
+        .result-panel {
+            background: #fafafc;
+            border-radius: 24px;
+            padding: 2rem 2.2rem;
+            border: 1px solid #efeff1;
+            margin: 2rem 0 1rem;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .result-header span {
+            color: #1d1d1f;
+            font-size: 1rem;
+            font-weight: 540;
+            letter-spacing: -0.01em;
+            background: transparent;
+            padding: 0;
+        }
+
+        #result {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 1.8rem;
+            color: #1d1d1f;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'SF Mono', Monaco, monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            border: 1px solid #efeff1;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* 复制按钮 — 纯黑，极简 */
+        .copy-btn {
+            background: #1d1d1f;
+            border: none;
+            color: white;
+            padding: 0.85rem 2.6rem;
+            border-radius: 50px;
+            font-weight: 540;
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: none;
+            margin-top: 2rem;
+            border: none;
+            outline: none;
+        }
+        .copy-btn:hover {
+            background: #2d2d2f;
+            transform: scale(1.01);
+        }
+        .copy-btn:active {
+            background: #3a3a3c;
+            transform: scale(0.99);
+        }
+
+        /* 轻提示 */
+        .toast {
+            position: fixed;
+            top: 28px;
+            right: 28px;
+            background: #1d1d1f;
+            color: white;
+            padding: 0.8rem 2.2rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 2000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* 分隔装饰 */
+        .divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 2rem 0 1rem;
+        }
+
+        .footer-note {
+            font-size: 0.75rem;
+            color: #8e8e93;
+            text-align: right;
+            margin-top: 0.8rem;
+        }
+
+        @media (max-width: 900px) {
+            .input-row { flex-direction: column; }
+            .card { padding: 1.8rem; }
+            .preset-btn { padding: 0.45rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast">方案已复制</div>
+    <div class="card">
+        <h1>方案生成</h1>
+
+        <!-- 标签页切换 -->
+        <div class="tab-container" id="tabContainer">
+            <button class="tab-btn active" data-game="game1">逍遥蜀山</button>
+            <button class="tab-btn" data-game="game2">仙风道骨</button>
+        </div>
+
+        <!-- ========= 游戏1：逍遥蜀山面板 (id统一加 _g1) ========= -->
+        <div id="game1-panel" class="game-panel active">
+            <div class="input-panel">
+                <div class="panel-title">参数</div>
+                <div class="input-row">
+                    <!-- 左侧列 -->
+                    <div class="left-col">
+                        <div class="input-grid">
+                            <!-- 三个数值 -->
+                            <div class="input-item">
+                                <label>充值金额</label>
+                                <input type="number" id="val1_g1" class="input-field" step="1" placeholder="例：3000">
+                            </div>
+                            <div class="input-item">
+                                <label>目前累充</label>
+                                <input type="number" id="val2_g1" class="input-field" step="1" placeholder="历史充值">
+                            </div>
+                            <div class="input-item">
+                                <label>新增序号</label>
+                                <input type="number" id="val3_g1" class="input-field" min="0" step="1" placeholder="新增行数">
+                            </div>
+                            <!-- 自选套装 -->
+                            <div class="input-item">
+                                <label>自选套装</label>
+                                <div class="toggle-group" id="group9_g1">
+                                    <div class="toggle-btn active" data-value="是">是</div>
+                                    <div class="toggle-btn" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 七个切换 -->
+                            <div class="input-item">
+                                <label>积分换玉</label>
+                                <div class="toggle-group" id="group1_g1">
+                                    <div class="toggle-btn active" data-value="是">是</div>
+                                    <div class="toggle-btn" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>定制头像</label>
+                                <div class="toggle-group" id="group2_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>0元特权</label>
+                                <div class="toggle-group" id="group3_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>神王特权</label>
+                                <div class="toggle-group" id="group4_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>至尊特权</label>
+                                <div class="toggle-group" id="group5_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>新服首日</label>
+                                <div class="toggle-group" id="group6_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 话术 -->
+                            <div class="input-item">
+                                <label>冠名话术</label>
+                                <div class="toggle-group" id="group7_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>新服话术</label>
+                                <div class="toggle-group" id="group8_g1">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 新增预设按钮行：首日1000 / 首日3000 / 单日5000 / 单日10000 -->
+                            <div class="preset-row">
+                                <span class="preset-label">⚡ 快捷方案</span>
+                                <button class="preset-btn" data-type="first1000">首日1000</button>
+                                <button class="preset-btn" data-type="first3000">首日3000</button>
+                                <button class="preset-btn" data-type="single5000">单日5000</button>
+                                <button class="preset-btn" data-type="single10000">单日10000</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 右侧自定义 -->
+                    <div class="right-col">
+                        <label>自定义物品 (一行一个 / 类型：物品1、物品2)</label>
+                        <textarea id="customItems_g1" class="custom-textarea" placeholder="例如：
+武圣关羽
+金刚哪吒
+齐天大圣
+神通：佛怒炎莲、万紫千红"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========= 游戏2：仙风道骨面板 (id统一加 _g2) ========= -->
+        <div id="game2-panel" class="game-panel">
+            <div class="input-panel">
+                <div class="panel-title"> 参数</div>
+                <div class="input-row">
+                    <div class="left-col">
+                        <div class="input-grid">
+                            <!-- 三个数值 -->
+                            <div class="input-item">
+                                <label>充值金额</label>
+                                <input type="number" id="val1_g2" class="input-field" step="1" placeholder="例：3000">
+                            </div>
+                            <div class="input-item">
+                                <label>目前累充</label>
+                                <input type="number" id="val2_g2" class="input-field" step="1" placeholder="历史充值">
+                            </div>
+                            <div class="input-item">
+                                <label>新增序号</label>
+                                <input type="number" id="val3_g2" class="input-field" min="0" step="1" placeholder="新增行数">
+                            </div>
+                            <!-- 自选套装 -->
+                            <div class="input-item">
+                                <label>自选套装</label>
+                                <div class="toggle-group" id="group9_g2">
+                                    <div class="toggle-btn active" data-value="是">是</div>
+                                    <div class="toggle-btn" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 七个切换 (仙风道骨专用) -->
+                            <div class="input-item">
+                                <label>真充卡</label>
+                                <div class="toggle-group" id="group1_g2">
+                                    <div class="toggle-btn active" data-value="是">是</div>
+                                    <div class="toggle-btn" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>定制头像</label>
+                                <div class="toggle-group" id="group2_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>至尊特权</label>
+                                <div class="toggle-group" id="group3_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>羽化登仙壁画</label>
+                                <div class="toggle-group" id="group4_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>超补特权</label>
+                                <div class="toggle-group" id="group5_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>新服首日</label>
+                                <div class="toggle-group" id="group6_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 忽悠话术 -->
+                            <div class="input-item">
+                                <label>冠名话术</label>
+                                <div class="toggle-group" id="group7_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <div class="input-item">
+                                <label>新服话术</label>
+                                <div class="toggle-group" id="group8_g2">
+                                    <div class="toggle-btn" data-value="是">是</div>
+                                    <div class="toggle-btn active" data-value="否">否</div>
+                                </div>
+                            </div>
+                            <!-- 新增预设按钮行 (仙风道骨版) -->
+                            <div class="preset-row">
+                                <span class="preset-label">⚡ 快捷方案</span>
+                                <button class="preset-btn" data-type="first1000">首日1000</button>
+                                <button class="preset-btn" data-type="first3000">首日3000</button>
+                                <button class="preset-btn" data-type="single5000">单日5000</button>
+                                <button class="preset-btn" data-type="single10000">单日10000</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 右侧自定义 -->
+                    <div class="right-col">
+                        <label>自定义物品 (一行一个 / 类型：物品1、物品2)</label>
+                        <textarea id="customItems_g2" class="custom-textarea" placeholder="例如：
+武圣关羽
+金刚哪吒
+齐天大圣
+圣龙：沧溟紫龙、终焉祖龙"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 共用结果区 -->
+        <div class="result-panel">
+            <div class="result-header">
+                <span>方案</span>
+            </div>
+            <div id="result"></div>
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="copy-btn" id="copyBtn">📋 复制方案</button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="footer-note">方案快速生成</div>
+    </div>
+
+    <script>
+        (function() {
+            // --- 当前游戏标识 ---
+            let currentGame = 'game1';   // 'game1' 或 'game2'
+
+            // --- 获取标签页与面板 ---
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panel1 = document.getElementById('game1-panel');
+            const panel2 = document.getElementById('game2-panel');
+
+            // 切换标签
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentGame = btn.dataset.game; // 'game1' 或 'game2'
+                    if (currentGame === 'game1') {
+                        panel1.classList.add('active');
+                        panel2.classList.remove('active');
+                    } else {
+                        panel2.classList.add('active');
+                        panel1.classList.remove('active');
+                    }
+                    updateResult(); // 刷新结果
+                });
+            });
+
+            // --- 通用自定义物品解析 (支持纯文本行 + 冒号分割) ---
+            function parseCustomItemsGeneric(inputText) {
+                if (!inputText || !inputText.trim()) return [];
+                const lines = inputText.split('\n').filter(line => line.trim() !== '');
+                const result = [];
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    const colonIndex = trimmed.indexOf('：');
+                    if (colonIndex === -1) {
+                        // 无冒号：整行作为一个物品
+                        result.push(trimmed);
+                    } else {
+                        const type = trimmed.substring(0, colonIndex).trim();
+                        const itemsPart = trimmed.substring(colonIndex + 1).trim();
+                        const items = itemsPart.split(/[，、,]/).map(s => s.trim()).filter(s => s !== '');
+                        for (const item of items) {
+                            result.push(`${type}：${item}`);
+                        }
+                    }
+                }
+                return result;
+            }
+
+            // ================= 游戏1 (逍遥蜀山) 数据与函数 =================
+            const Z1_AM1_g1 = [30, 60, 98, 128, 198, 300, 500, 700, 1000, 2000, 3000, 5000, 10000, 20000];
+            const Z2_AU2_g1 = [30, 68, 98, 128, 198, 328, 648, 1000, 2000, 3000, 5000, 7000, 10000, 20000, 30000, 50000, 70000, 100000, 150000, 200000, 250000, 300000];
+            const AW1_BA10_g1 = [
+                [500, "10w", "20w", "帝藏套装*(碧霄龙君/合金弹头/赤焰魔龙)/神通*(佛怒炎莲/万紫千红)5选1", ""],
+                [1000, "30w", "80w", "神通*(七宝琉璃塔/打狗棍法/鬼影重重)/天麟*(虚空幻龙/雪翼冰鸢)/神将*(真龙仙子/极西神使)7选1", "私人订制称号Ⅰ"],
+                [2000, "60w", "100w", "帝藏套装*(紫霄天凰/炼狱三首)/神通*(大风刮钱)/神将*(倾世貂蝉/虎痴许褚)/天麟*(金猪献财)/6选1", "私人订制称号Ⅰ"],
+                [3000, "90w", "210w", "帝藏套装*(天下至尊/虎痴许褚)神将*(西凉马超/当阳张飞)/天麟*(琵琶舞女/鎏金神龙)6选1", "私人订制称号Ⅱ"],
+                [5000, "200w", "420w", "帝藏套装*(倾世貂蝉/赌王争霸)/神通*(鱼跃龙门)/天麟*(寒冰霜翼/万剑归宗)/5选1", "私人订制称号Ⅲ"],
+                [7000, "280w", "", "帝藏套装*(天渊飞龙/神州精工/西凉马超)/神通*(黄金比例)/天麟*(夏日狂欢)/传闻*(红桃杰克)6选1", "私人订制称号Ⅲ"],
+                [10000, "500w", "", "帝藏套装*(帝豪私享/当阳张飞)/神通*(加班狗)/神将*(水德星君)/天麟*(疯狂星期四/苍穹霸主)6选1", "私人订制称号Ⅲ"],
+                [20000, "1000w", "", "唯一定制：青龙现世", "私人订制称号Ⅲ"]
+            ];
+            const AY18_AZ21_g1 = [
+                { threshold: 98, text: "①天麟：血影烛龙*1" },
+                { threshold: 500, text: "②神将：青羽真人*1、25W仙玉、8级长生宝石*1、8级攻击宝石*1" },
+                { threshold: 1000, text: "③十方俱灭*1、50W仙玉、动物乐园套装*1" },
+                { threshold: 3000, text: "④帝藏：赤焰魔龙*1、150W仙玉" }
+            ];
+
+            function getInputs_game1() {
+                return {
+                    a3: parseFloat(document.getElementById('val1_g1')?.value) || 0,
+                    b3: parseFloat(document.getElementById('val2_g1')?.value) || 0,
+                    i3: parseInt(document.getElementById('val3_g1')?.value) || 0,
+                    zixuan1: document.querySelector('#group9_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    c3: document.querySelector('#group1_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    d3: document.querySelector('#group2_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    e3: document.querySelector('#group3_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    f3: document.querySelector('#group4_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    g3: document.querySelector('#group5_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    h3: document.querySelector('#group6_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    guanming: document.querySelector('#group7_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    xinfu: document.querySelector('#group8_g1 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    custom: document.getElementById('customItems_g1')?.value || ''
+                };
+            }
+
+            function computeSchemeContentArray_game1(inputs) {
+                let contentArray = [];
+                let target = inputs.a3;
+                let selectedRow = null;
+                for (let i = 0; i < AW1_BA10_g1.length; i++) {
+                    if (AW1_BA10_g1[i][0] <= target) selectedRow = AW1_BA10_g1[i];
+                    else break;
+                }
+                if (selectedRow && inputs.a3 > 0 && (inputs.c3 === "是" || inputs.c3 === "否")) {
+                    let rebate = selectedRow[1] || '';
+                    let exchange = selectedRow[2] || '';
+                    if (inputs.c3 === "是") {
+                        contentArray.push(exchange ? "仙玉" + rebate + "+" + exchange : "仙玉" + rebate);
+                    } else {
+                        contentArray.push("仙玉" + rebate);
+                    }
+                }
+                if (inputs.a3 > 0) {
+                    let maxZ1 = Math.max(...Z1_AM1_g1);
+                    if (inputs.a3 >= maxZ1) {
+                        contentArray.push("单日累充" + Z1_AM1_g1.join('+') + "的所有礼包");
+                    } else {
+                        let idx = Z1_AM1_g1.findIndex(v => v > inputs.a3);
+                        if (idx === -1) idx = Z1_AM1_g1.length;
+                        contentArray.push("单日累充" + Z1_AM1_g1.slice(0, idx).join('+') + "的所有礼包");
+                    }
+                    let sumAB = inputs.a3 + inputs.b3;
+                    let filtered = Z2_AU2_g1.filter(v => v > inputs.b3 && v <= sumAB);
+                    if (filtered.length > 0) {
+                        contentArray.push("总累充" + filtered.join('+') + "的所有礼包");
+                    }
+                    if (selectedRow && selectedRow[4]) contentArray.push(selectedRow[4]);
+                    if (inputs.zixuan1 === "是" && selectedRow && selectedRow[3]) {
+                        contentArray.push(selectedRow[3]);
+                    }
+                }
+                if (inputs.d3 === "是") contentArray.push("私人定制头像（可自定义图片哦）");
+                if (inputs.e3 === "是") contentArray.push("0元特权额外加赠：青霄蟠龙*1、沧源璃龙*1、紫霆应龙*1、朱煌焚龙*1、绯霞霓龙*1、鎏金阙龙*1（战力秒涨500W）");
+                if (inputs.f3 === "是") contentArray.push("神王特权额外加赠：神将：雷音大圣（价值1000，神将pk很强）");
+                if (inputs.g3 === "是") contentArray.push("至尊特权额外加赠：帝藏套装-智械危机");
+                if (inputs.h3 === "是" && inputs.a3 > 0) {
+                    let extraLines = AY18_AZ21_g1.filter(item => item.threshold <= inputs.a3).map(item => item.text);
+                    if (extraLines.length > 0) {
+                        contentArray.push("新服首日额外加赠（仅限开服第一天）：\n" + extraLines.join('\n'));
+                    }
+                }
+                return contentArray.filter(v => v && v.trim() !== '');
+            }
+
+            function computeFinalScheme_game1() {
+                const inputs = getInputs_game1();
+                let guanmingText = '';
+                if (inputs.guanming === "是") {
+                    const diff = Math.max(0, 3000 - inputs.b3);
+                    guanmingText = `亲，这边看区服还没冠名，您这边考虑单日3000嘛？直接把冠名拿下，而且给到的套装是超好的，这边列给您看看哈，并额外给您申请到私人定制（绝版头像）您还差${diff}就可以给区服冠名啦~\n`;
+                }
+                let xinfuText = '';
+                if (inputs.xinfu === "是") {
+                    xinfuText = "多种高福利档位，您有需要可以直接充逍遥币，先买再用，还是挺划算的， 新服第一天进行冠名，优势很大的呢，全服首个唯一可修改服务器名字，同时获得对应的冠名礼包~只有新服第一天才能给到这么多仙玉哦";
+                }
+                const customItems = parseCustomItemsGeneric(inputs.custom);
+                const contentArray = computeSchemeContentArray_game1(inputs);
+                const allContent = [...contentArray, ...customItems];
+                const newCount = Math.max(0, inputs.i3);
+                const blankLines = Array(newCount).fill('');
+                const allLines = [...allContent, ...blankLines];
+                if (allLines.length === 0 && !guanmingText && !xinfuText) return "";
+                const numberedLines = allLines.map((content, index) => content === '' ? `${index + 1}、` : `${index + 1}、${content}`);
+                let prefix = (inputs.a3 > 0) ? `单日${inputs.a3}` : '';
+                let parts = [];
+                if (guanmingText) parts.push(guanmingText);
+                let mainPart = '';
+                if (prefix) mainPart += prefix + '\n';
+                if (numberedLines.length > 0) mainPart += numberedLines.join('\n');
+                if (mainPart) parts.push(mainPart);
+                if (xinfuText) parts.push(xinfuText);
+                return parts.join('\n');
+            }
+
+            // ================= 游戏2 (仙风道骨) 数据与函数 =================
+            const Z1_AM1_g2 = [38,68,98,198,328,500,1000,2000,3000,5000,10000,20000];
+            const Z2_AU2_g2 = [30,60,90,120,200,328,648,1000,2000,3000,4000,5000,7000,10000,15000,20000,30000,40000,50000,70000,100000,150000,200000,250000,300000,350000,400000,450000,500000];
+            const AW1_BA10_g2 = [
+                [500, "10w仙玉+", "10000元真充卡", "鸿蒙地藏（圣火昭昭/篮翔技校）/神通（通天神箓/佛怒炎莲）/灵将（贪狼星君）/圣龙（沧溟紫龙）6选1", ""],
+                [1000, "105w仙玉+", "20000元真充卡", "神通（乾坤大挪移）/灵将（昊天大帝/华光天王/嗜战狂牛）/圣龙（太古剑阵/雷影烛龙）6选1", "订制称号Ⅰ"],
+                [2000, "145w仙玉+", "40000元真充卡", "鸿蒙地藏（天下至尊）/灵将（齐天大圣/无双赵云/永夜君王）/圣龙（伽罗天龙/炼狱炎龙/霜炎玄鲲）7选1", "订制称号Ⅰ"],
+                [3000, "210w仙玉+", "70000元真充卡", "鸿蒙地藏（枪出如龙/飞龙在天）/灵将（武圣关羽/度厄灵将）/神通（独孤九剑)/圣龙（鸿蒙圣龙/祈梦祝龙）7选1", "订制称号Ⅱ"],
+                [5000, "", "15万元真充卡", "鸿蒙地藏（游艇派对/义薄云天）/圣龙（终焉祖龙）/神通（炁体源流）4选1", "订制称号Ⅲ"],
+                [7000, "", "21万元真充卡", "鸿蒙地藏（斗战胜佛/三头六臂）/神通（恭贺新春）圣龙（财神驾到/香车美人）5选1", "订制称号Ⅲ"],
+                [10000, "", "50万元真充卡", "鸿蒙地藏（庆典-金龙降福/庆典-九龙拉棺/庆典-嫦娥奔月）/灵将（黑悟空·变异）4选1", "订制称号Ⅲ"],
+                [20000, "", "100万元真充卡", "专属定制(上古青龙)", "订制称号Ⅲ"]
+            ];
+            const AY18_AZ21_g2 = [
+                { threshold: 500, text: "①遥遥领先*1（限定称号）、8级长生宝石*1、8级攻击宝石*1、灵将：月宫仙子*1【红色】" },
+                { threshold: 3000, text: "②10级长生宝石*1、10级攻击宝石*1、神将：齐天大圣*1" }
+            ];
+
+            function getInputs_game2() {
+                return {
+                    a3: parseFloat(document.getElementById('val1_g2')?.value) || 0,
+                    b3: parseFloat(document.getElementById('val2_g2')?.value) || 0,
+                    i3: parseInt(document.getElementById('val3_g2')?.value) || 0,
+                    zixuan1: document.querySelector('#group9_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    c3: document.querySelector('#group1_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    d3: document.querySelector('#group2_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    e3: document.querySelector('#group3_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    f3: document.querySelector('#group4_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    g3: document.querySelector('#group5_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    h3: document.querySelector('#group6_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    guanming: document.querySelector('#group7_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    xinfu: document.querySelector('#group8_g2 .toggle-btn.active')?.getAttribute('data-value') || '',
+                    custom: document.getElementById('customItems_g2')?.value || ''
+                };
+            }
+
+            function computeSchemeContentArray_game2(inputs) {
+                let contentArray = [];
+                let target = inputs.a3;
+                let selectedRow = null;
+                for (let i = 0; i < AW1_BA10_g2.length; i++) {
+                    if (AW1_BA10_g2[i][0] <= target) selectedRow = AW1_BA10_g2[i];
+                    else break;
+                }
+                if (selectedRow && inputs.a3 > 0 && (inputs.c3 === "是" || inputs.c3 === "否")) {
+                    let rebate = selectedRow[1] || '';
+                    let exchange = selectedRow[2] || '';
+                    if (inputs.c3 === "是") {
+                        contentArray.push("" + rebate + "" + exchange);
+                    } else {
+                        contentArray.push("" + rebate);
+                    }
+                }
+                if (inputs.a3 > 0) {
+                    let maxZ1 = Math.max(...Z1_AM1_g2);
+                    if (inputs.a3 >= maxZ1) {
+                        contentArray.push("单日累充" + Z1_AM1_g2.join('+') + "的所有礼包");
+                    } else {
+                        let idx = Z1_AM1_g2.findIndex(v => v > inputs.a3);
+                        if (idx === -1) idx = Z1_AM1_g2.length;
+                        contentArray.push("单日累充" + Z1_AM1_g2.slice(0, idx).join('+') + "的所有礼包");
+                    }
+                    let sumAB = inputs.a3 + inputs.b3;
+                    let filtered = Z2_AU2_g2.filter(v => v > inputs.b3 && v <= sumAB);
+                    if (filtered.length > 0) {
+                        contentArray.push("总累充" + filtered.join('+') + "的所有礼包");
+                    }
+                    if (selectedRow && selectedRow[4]) contentArray.push(selectedRow[4]);
+                    if (inputs.zixuan1 === "是" && selectedRow && selectedRow[3]) {
+                        contentArray.push(selectedRow[3]);
+                    }
+                }
+                if (inputs.d3 === "是") contentArray.push("私人定制头像（可自定义图片哦）");
+                if (inputs.e3 === "是") contentArray.push("套装石*100、7级长生宝石*1、7级攻击宝石*1、宠物：太阴真君*1【粉色】");
+                if (inputs.f3 === "是") contentArray.push("9级长生宝石*1、9级攻击宝石*1、神通：通天神篆*1");
+                if (inputs.g3 === "是") contentArray.push("套装:赛博幻想（超多稀有属性百分比加成，大大提高实战能力）");
+                if (inputs.h3 === "是" && inputs.a3 > 0) {
+                    let extraLines = AY18_AZ21_g2.filter(item => item.threshold <= inputs.a3).map(item => item.text);
+                    if (extraLines.length > 0) {
+                        contentArray.push("新服首日额外加赠（仅限开服第一天）：\n" + extraLines.join('\n'));
+                    }
+                }
+                return contentArray.filter(v => v && v.trim() !== '');
+            }
+
+            function computeFinalScheme_game2() {
+                const inputs = getInputs_game2();
+                let guanmingText = '';
+                if (inputs.guanming === "是") {
+                    const diff = Math.max(0, 3000 - inputs.b3);
+                    guanmingText = `亲，这边看区服还没冠名，您这边考虑单日3000嘛？直接把冠名拿下，而且给到的套装是超好的，这边列给您看看哈，并额外给您申请到私人定制（绝版头像）您还差${diff}就可以给区服冠名啦~\n`;
+                }
+                let xinfuText = '';
+                if (inputs.xinfu === "是") {
+                    xinfuText = "多种高福利档位，您有需要可以直接充万能仙币，先买再用，还是挺划算的， 新服第一天进行冠名，优势很大的呢，全服首个唯一可修改服务器名字，同时获得对应的冠名礼包~只有新服第一天才能给到这么多仙玉哦";
+                }
+                const customItems = parseCustomItemsGeneric(inputs.custom);
+                const contentArray = computeSchemeContentArray_game2(inputs);
+                const allContent = [...contentArray, ...customItems];
+                const newCount = Math.max(0, inputs.i3);
+                const blankLines = Array(newCount).fill('');
+                const allLines = [...allContent, ...blankLines];
+                if (allLines.length === 0 && !guanmingText && !xinfuText) return "";
+                const numberedLines = allLines.map((content, index) => content === '' ? `${index + 1}、` : `${index + 1}、${content}`);
+                let prefix = (inputs.a3 > 0) ? `单日${inputs.a3}` : '';
+                let parts = [];
+                if (guanmingText) parts.push(guanmingText);
+                let mainPart = '';
+                if (prefix) mainPart += prefix + '\n';
+                if (numberedLines.length > 0) mainPart += numberedLines.join('\n');
+                if (mainPart) parts.push(mainPart);
+                if (xinfuText) parts.push(xinfuText);
+                return parts.join('\n');
+            }
+
+            // --- 统一更新结果 ---
+            function updateResult() {
+                let finalText = '';
+                if (currentGame === 'game1') {
+                    finalText = computeFinalScheme_game1();
+                } else {
+                    finalText = computeFinalScheme_game2();
+                }
+                document.getElementById('result').innerText = finalText;
+            }
+
+            // ========= 新增：预设文案独立规则 (不参与原有设定，仅展示文案) =========
+            const presetMap = {
+                game1: {
+                    first1000: `单日1000
+1、仙玉110w
+2、单日累充30+60+98+128+198+300+500+700+1000的所有礼包
+3、总累充30+68+98+128+198+328+648+1000的所有礼包
+4、私人订制称号Ⅰ（可自定义文字哦）
+5、神通：七宝琉璃塔
+6、0元特权额外加赠：青霄蟠龙*1、沧源璃龙*1、紫霆应龙*1、朱煌焚龙*1、绯霞霓龙*1、鎏金阙龙*1（战力秒涨500W）
+7、神王特权额外加赠：神将：雷音大圣（价值1000，神将pk很强）
+8、至尊特权额外加赠：帝藏套装-智械危机
+9、新服首日额外加赠（仅限开服第一天）：
+①天麟：血影烛龙*1
+②神将：青羽真人*1、25W仙玉、8级长生宝石*1、8级攻击宝石*1
+③十方俱灭*1、50W仙玉、动物乐园套装*1
+10、激活1000挡位月卡：每天送1000元真充卡
+
+您看看哈，合适可以找我了解哦，因为新服第一天的活动和优惠是比较多的，还有额外礼包给到助力您今天冲榜的，加的战力也是相对于比较多的哈`,
+                    first3000: `单日3000
+1、仙玉90w+新服首日额外加赠225w，共计315w
+2、单日累充30+60+98+128+198+300+500+700+1000+2000+3000的所有礼包
+3、总累充30+68+98+128+198+328+648+1000+2000+3000的所有礼包
+4、私人订制称号Ⅱ（可自定义文字哦）
+5、私人定制头像（可自定义图片哦）
+6、0元特权额外加赠：青霄蟠龙*1、沧源璃龙*1、紫霆应龙*1、朱煌焚龙*1、绯霞霓龙*1、鎏金阙龙*1（战力秒涨500W）
+7、神王特权额外加赠：神将：雷音大圣（价值1000，神将pk很强）
+8、至尊特权额外加赠：帝藏套装-智械危机
+9、新服首日额外加赠（仅限开服第一天）：
+①天麟：血影烛龙*1
+②神将：青羽真人*1、25W仙玉、8级长生宝石*1、8级攻击宝石*1
+③十方俱灭*1、50W仙玉、动物乐园套装*1
+④帝藏：赤焰魔龙*1、150W仙玉
+10、帝藏：虎痴许褚（全套帝藏，含归墟神将，战力与实战兼具，提升巨大）
+11、神器：虎威神锤（许褚专属神器，极大提升许褚输出能力）
+12、激活3000挡位月卡：每天送3000元真充卡`,
+                    single5000: `单日5000
+1、仙玉*200w + 420w`,
+                    single10000: `单日10000
+1、仙玉*500w`
+                },
+                game2: {
+                    first1000: `首日1000
+1、105w仙玉 + 20000元真充卡`,
+                    first3000: `首日3000
+1、210w仙玉 + 70000元真充卡`,
+                    single5000: `单日5000
+1、15万元真充卡`,
+                    single10000: `单日10000
+1、50万元真充卡`
+                }
+            };
+
+            function applyPreset(type) {
+                let presetText = '';
+                if (currentGame === 'game1') {
+                    switch(type) {
+                        case 'first1000': presetText = presetMap.game1.first1000; break;
+                        case 'first3000': presetText = presetMap.game1.first3000; break;
+                        case 'single5000': presetText = presetMap.game1.single5000; break;
+                        case 'single10000': presetText = presetMap.game1.single10000; break;
+                        default: return;
+                    }
+                } else {
+                    switch(type) {
+                        case 'first1000': presetText = presetMap.game2.first1000; break;
+                        case 'first3000': presetText = presetMap.game2.first3000; break;
+                        case 'single5000': presetText = presetMap.game2.single5000; break;
+                        case 'single10000': presetText = presetMap.game2.single10000; break;
+                        default: return;
+                    }
+                }
+                if (presetText) {
+                    document.getElementById('result').innerText = presetText;
+                }
+            }
+
+            // 绑定预设按钮事件 (独立规则)
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const type = btn.getAttribute('data-type');
+                    if (type) applyPreset(type);
+                });
+            });
+
+            // --- 绑定所有输入事件 (所有toggle-btn和输入框) ---
+            function bindAllInputs() {
+                // 所有toggle-btn（整个页面所有游戏面板的按钮）
+                document.querySelectorAll('.toggle-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        // 切换本组active
+                        const group = this.closest('.toggle-group');
+                        if (group) {
+                            group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                        }
+                        updateResult();
+                    });
+                });
+
+                // 所有数值输入和textarea
+                const inputSelectors = [
+                    'input[id^="val1_"]', 'input[id^="val2_"]', 'input[id^="val3_"]',
+                    'textarea[id^="customItems_"]'
+                ];
+                inputSelectors.forEach(sel => {
+                    document.querySelectorAll(sel).forEach(el => {
+                        el.addEventListener('input', updateResult);
+                        el.addEventListener('change', updateResult);
+                    });
+                });
+            }
+
+            // 复制提示
+            const toast = document.getElementById('toast');
+            function showToast(msg) {
+                toast.innerText = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 1000);
+            }
+
+            document.getElementById('copyBtn').addEventListener('click', function() {
+                const text = document.getElementById('result').innerText;
+                if (!text) {
+                    showToast('暂无方案可复制');
+                    return;
+                }
+                navigator.clipboard.writeText(text).then(() => showToast('方案已复制'))
+                    .catch(() => showToast('❌ 复制失败'));
+            });
+
+            // 初始化
+            bindAllInputs();
+            updateResult();
+        })();
+    </script>
+</body>
+</html>
