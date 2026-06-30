@@ -3,13 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Hub</title>
+<title>资源申请</title>
 <style>
-  *, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --bg: #f5f6fa;
@@ -19,7 +15,7 @@
     --text-secondary: #64748b;
     --primary: #4f46e5;
     --primary-light: #eef2ff;
-    --radius-sm: 6px;
+    --sidebar-w: 220px;
   }
 
   body {
@@ -36,285 +32,428 @@
   .header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 56px;
+    padding: 0 20px;
+    height: 48px;
     display: flex;
     align-items: center;
+    gap: 10px;
     flex-shrink: 0;
     z-index: 10;
   }
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
   .logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px; height: 28px;
     background: var(--primary);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 16px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px;
+    flex-shrink: 0;
   }
 
   .header-title {
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-size: 15px; font-weight: 600;
   }
 
-  .header-subtitle {
-    font-size: 13px;
-    color: var(--text-secondary);
-    font-weight: 400;
+  /* Main layout */
+  .main {
+    flex: 1; display: flex; overflow: hidden;
   }
 
-  /* Tab Bar */
-  .tab-bar {
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0;
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    height: 44px;
-    gap: 2px;
-    flex-shrink: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .tab-bar::-webkit-scrollbar { display: none; }
-
-  .tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    font-family: inherit;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-    position: relative;
-    user-select: none;
-  }
-
-  .tab:hover {
-    color: var(--text);
-    background: #f8fafc;
-  }
-
-  .tab.active {
-    color: var(--primary);
-    font-weight: 600;
-  }
-
-  .tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 8px;
-    right: 8px;
-    height: 2px;
-    background: var(--primary);
-    border-radius: 2px 2px 0 0;
-  }
-
-  .tab-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* Content */
-  .content {
-    flex: 1;
-    position: relative;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
     overflow: hidden;
   }
 
+  .sidebar-nav {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 6px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .sidebar-nav::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
+  /* Category */
+  .category { margin-bottom: 1px; }
+
+  .cat-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    cursor: pointer; user-select: none;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    transition: background 0.12s ease;
+  }
+
+  .cat-header:hover { background: #f8fafc; }
+
+  .cat-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  .cat-arrow {
+    width: 16px; height: 16px; flex-shrink: 0;
+    margin-left: auto; color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .cat-arrow svg {
+    width: 14px; height: 14px;
+    transition: transform 0.2s ease;
+  }
+
+  .category.collapsed .cat-arrow svg { transform: rotate(-90deg); }
+
+  /* Items */
+  .cat-items {
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  .category.collapsed .cat-items { max-height: 0 !important; }
+
+  .nav-item {
+    display: flex; align-items: center;
+    padding: 7px 14px 7px 30px;
+    font-size: 13px; color: var(--text-secondary);
+    cursor: pointer; user-select: none;
+    border: none; background: transparent; font-family: inherit;
+    width: 100%; text-align: left;
+    transition: all 0.12s ease;
+    position: relative;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .nav-item:hover { color: var(--text); background: #f8fafc; }
+
+  .nav-item.active {
+    color: var(--primary); font-weight: 600; background: var(--primary-light);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute; left: 0; top: 4px; bottom: 4px;
+    width: 3px; background: var(--primary); border-radius: 0 3px 3px 0;
+  }
+
+  /* Content area */
+  .content {
+    flex: 1; position: relative; overflow: hidden; background: #fff;
+  }
+
   .game-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; border: none;
     display: none;
   }
 
-  .game-frame.active {
-    display: block;
-  }
+  .game-frame.active { display: block; }
 
   /* Loading overlay */
   .loading-overlay {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background: var(--surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     z-index: 5;
     transition: opacity 0.2s ease;
   }
 
-  .loading-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
 
   .spinner {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border: 3px solid var(--border);
     border-top-color: var(--primary);
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Update notification banner */
+  .update-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #4f46e5; color: #fff;
+    padding: 10px 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    font-size: 14px; font-weight: 500;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 12px rgba(79,70,229,0.3);
   }
+  .update-banner.show { transform: translateY(0); }
+  .update-banner button {
+    background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+    padding: 5px 16px; border-radius: 6px; cursor: pointer;
+    font-size: 13px; font-family: inherit;
+    white-space: nowrap;
+  }
+  .update-banner button:hover { background: rgba(255,255,255,0.3); }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <header class="header">
-  <div class="header-left">
-    <div class="logo-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
-    </div>
-    <div>
-      <div class="header-title">资源申请</div>
-      <div class="header-subtitle" id="header-count">--</div>
-    </div>
+  <div class="logo-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
   </div>
+  <span class="header-title">资源申请</span>
 </header>
 
-<!-- Tab Bar -->
-<div class="tab-bar" id="tabBar"></div>
-
-<!-- Content -->
-<div class="content" id="content">
+<div class="main">
+  <aside class="sidebar">
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+  <div class="content" id="content">
+    <div class="loading-overlay hidden" id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+  </div>
 </div>
 
-<!-- Loading Overlay -->
-<div class="loading-overlay hidden" id="loadingOverlay">
-  <div class="spinner"></div>
+<div class="update-banner" id="updateBanner">
+  <span id="updateMsg">检测到子页面有更新</span>
+  <button onclick="doRefresh()">立即刷新</button>
 </div>
 
 <script>
+// ========================================
+//  分类配置 —— 在这里添加
+// ========================================
 
-const GAMES = [
-{ name: '逍遥蜀山·邮件', url: 'https://liangtz0518.github.io/ylhy/xyss.html', color: '#008737' },
-{ name: '逍遥蜀山·算分', url: 'https://liangtz0518.github.io/ylhy/xyss1.html', color: '#008737' },
-{ name: '大道争锋·邮件', url: 'https://liangtz0518.github.io/ylhy/ddzf.html', color: '#b1ad0a' },
-{ name: '伏魔诀·邮件', url: 'https://liangtz0518.github.io/ylhy/fmj.html', color: '#4f46e5' },
-{ name: '上古情歌·邮件', url: 'https://liangtz0518.github.io/ylhy/sgqg.html', color: '#d10606' }
-  ];
+// ========================================
+//  全局版本号：更新了子页面内容后，修改此
+//  版本号即可强制所有浏览器刷新 iframe 缓存
+// ========================================
+const HUB_VERSION = '1';
 
-  let activeIndex = -1;
+// 版本检测地址：指向你 GitHub 仓库中的 version.json
+// version.json 内容示例：{"version": "1"}
+// 更新子页面后，同步更新 version.json 里的版本号
+const VERSION_CHECK_URL = 'https://liangtz0518.github.io/ylhy/version.json';
+const VERSION_CHECK_INTERVAL = 30000; // 检测间隔（毫秒）
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+// ========================================
+//  分类配置
+//  name: 分类名称
+//  color: 侧边栏圆点颜色
+//  collapsed: true=初始折叠, false/不填=初始展开
+//  items: [ { name: 标签名, url: 后台地址 } ]
+// ========================================
+const CATEGORIES = [
+  {
+    name: '逍遥蜀山',
+    color: '#008737',
+    collapsed: false,
+    items: [
+      { name: '邮件', url: 'https://liangtz0518.github.io/ylhy/xyss.html' },
+      { name: '算分', url: 'https://liangtz0518.github.io/ylhy/xyss1.html' },
+    ]
+  },
+  {
+    name: '大道争锋',
+    color: '#b1ad0a',
+    collapsed: false,
+    items: [
+      { name: '邮件', url: 'https://liangtz0518.github.io/ylhy/ddzf.html' },
+    ]
+  },
+  {
+    name: '伏魔诀',
+    color: '#4f46e5',
+    collapsed: false,
+    items: [
+      { name: '邮件', url: 'https://liangtz0518.github.io/ylhy/fmj.html' },
+    ]
+  },
+  {
+    name: '上古情歌',
+    color: '#d10606',
+    collapsed: false,
+    items: [
+      { name: '邮件', url: 'https://liangtz0518.github.io/ylhy/sgqg.html' },
+    ]
+  },
+  // 其他工具示例
+  // {
+  //   name: '其他工具',
+  //   color: '#64748b',
+  //   collapsed: true,
+  //   items: [
+  //     { name: 'JSON 格式化', url: 'https://example.com/json' },
+  //     { name: '时间戳转换',  url: 'https://example.com/time' },
+  //   ]
+  // },
+];
 
-  function renderTabs() {
-    const tabBar = document.getElementById('tabBar');
-    tabBar.innerHTML = GAMES.map((g, i) => `
-      <button class="tab ${i === activeIndex ? 'active' : ''}" onclick="switchTab(${i})" title="${escapeHtml(g.url)}">
-        <span class="tab-dot" style="background:${g.color}"></span>
-        ${escapeHtml(g.name)}
-      </button>
-    `).join('');
-  }
+// ========================================
+//  以下逻辑无需修改
+// ========================================
 
-  function renderFrames() {
-    const content = document.getElementById('content');
-    content.querySelectorAll('.game-frame').forEach(el => el.remove());
+let allItems = [];
+let activeGlobalIdx = -1;
+let frameCache = {};
 
-    GAMES.forEach((g, i) => {
-      const frame = document.createElement('iframe');
-      frame.className = 'game-frame' + (i === activeIndex ? ' active' : '');
-      frame.src = 'about:blank';
-      frame.id = 'frame-' + i;
-      frame.setAttribute('loading', 'lazy');
-      content.appendChild(frame);
-      if (i === activeIndex || i === activeIndex - 1 || i === activeIndex + 1) {
-        loadFrame(i);
-      }
+function buildIndex() {
+  allItems = [];
+  CATEGORIES.forEach((cat, ci) => {
+    cat.items.forEach((item, ii) => {
+      allItems.push({ catIndex: ci, itemIndex: ii, name: item.name, url: item.url, color: cat.color });
     });
-  }
-
-  function loadFrame(i) {
-    const frame = document.getElementById('frame-' + i);
-    if (!frame || frame.dataset.loaded === '1') return;
-    const g = GAMES[i];
-    if (!g || !g.url) return;
-
-    const overlay = document.getElementById('loadingOverlay');
-    overlay.classList.remove('hidden');
-    frame.dataset.loaded = '1';
-    frame.onload = () => { overlay.classList.add('hidden'); };
-    frame.onerror = () => { overlay.classList.add('hidden'); };
-    frame.src = g.url;
-    setTimeout(() => { overlay.classList.add('hidden'); }, 8000);
-  }
-
-  function switchTab(i) {
-    if (i < 0 || i >= GAMES.length) return;
-    activeIndex = i;
-    document.querySelectorAll('.tab').forEach((el, idx) => el.classList.toggle('active', idx === i));
-    document.querySelectorAll('.game-frame').forEach((el, idx) => el.classList.toggle('active', idx === i));
-    loadFrame(i);
-    if (i > 0) loadFrame(i - 1);
-    if (i < GAMES.length - 1) loadFrame(i + 1);
-  }
-
-  function renderAll() {
-    document.getElementById('header-count').textContent = GAMES.length > 0 ? `${GAMES.length} 个后台` : '--';
-    renderTabs();
-    renderFrames();
-    if (activeIndex >= GAMES.length) {
-      activeIndex = GAMES.length > 0 ? GAMES.length - 1 : -1;
-    }
-    if (GAMES.length > 0 && activeIndex < 0) {
-      activeIndex = 0;
-    }
-    if (GAMES.length > 0) {
-      document.querySelectorAll('.game-frame').forEach((el, idx) => el.classList.toggle('active', idx === activeIndex));
-      document.querySelectorAll('.tab').forEach((el, idx) => el.classList.toggle('active', idx === activeIndex));
-      loadFrame(activeIndex);
-    }
-  }
-
-  // Keyboard shortcuts: Ctrl+1~9 to switch tabs
-  document.addEventListener('keydown', function(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.ctrlKey || e.metaKey) {
-      const num = parseInt(e.key);
-      if (num >= 1 && num <= 9) {
-        e.preventDefault();
-        switchTab(num - 1);
-      }
-    }
   });
+}
 
-  // Init
-  if (GAMES.length > 0) activeIndex = 0;
-  renderAll();
+function renderSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = CATEGORIES.map((cat, ci) => {
+    const itemCount = cat.items.length;
+    return `
+      <div class="category${cat.collapsed ? ' collapsed' : ''}" id="cat-${ci}">
+        <div class="cat-header" onclick="toggleCategory(${ci})">
+          <span class="cat-dot" style="background:${cat.color}"></span>
+          <span>${escapeHtml(cat.name)}</span>
+          <span class="cat-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </div>
+        <div class="cat-items" style="max-height:${itemCount * 36}px">
+          ${cat.items.map((item, ii) => {
+            const gi = allItems.findIndex(a => a.catIndex === ci && a.itemIndex === ii);
+            return `<button class="nav-item" data-gi="${gi}" onclick="selectItem(${gi})">${escapeHtml(item.name)}</button>`;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleCategory(ci) {
+  document.getElementById('cat-' + ci).classList.toggle('collapsed');
+}
+
+function selectItem(gi) {
+  if (gi < 0 || gi >= allItems.length) return;
+
+  activeGlobalIdx = gi;
+
+  // 展开目标分类
+  const cat = document.getElementById('cat-' + allItems[gi].catIndex);
+  if (cat) cat.classList.remove('collapsed');
+
+  // 更新侧边栏高亮
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const target = document.querySelector(`.nav-item[data-gi="${gi}"]`);
+  if (target) target.classList.add('active');
+
+  // 隐藏所有 iframe
+  document.querySelectorAll('.game-frame').forEach(el => el.classList.remove('active'));
+
+  // 创建或激活目标 iframe
+  if (!frameCache[gi]) {
+    createFrame(gi);
+  } else {
+    frameCache[gi].classList.add('active');
+  }
+
+  // 加载内容（loadFrame 内部有防重复保护）
+  loadFrame(gi);
+
+  // 预创建相邻 iframe 空壳
+  if (gi > 0 && !frameCache[gi - 1]) createFrame(gi - 1);
+  if (gi < allItems.length - 1 && !frameCache[gi + 1]) createFrame(gi + 1);
+}
+
+function createFrame(gi) {
+  const item = allItems[gi];
+  if (!item || !item.url) return;
+
+  const content = document.getElementById('content');
+  const frame = document.createElement('iframe');
+  frame.className = 'game-frame' + (gi === activeGlobalIdx ? ' active' : '');
+  frame.id = 'frame-' + gi;
+  frame.allow = 'clipboard-read; clipboard-write';
+  content.appendChild(frame);
+  frameCache[gi] = frame;
+}
+
+function loadFrame(gi) {
+  const frame = frameCache[gi];
+  if (!frame || frame.dataset.loaded === '1') return;
+  const item = allItems[gi];
+  if (!item || !item.url) return;
+
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.remove('hidden');
+  frame.dataset.loaded = '1';
+  frame.onload = () => { overlay.classList.add('hidden'); };
+  frame.onerror = () => { overlay.classList.add('hidden'); };
+  // 追加版本参数，子页面更新后改 HUB_VERSION 即可强制刷新缓存
+  const sep = item.url.includes('?') ? '&' : '?';
+  frame.src = item.url + sep + 'hub_v=' + HUB_VERSION;
+  setTimeout(() => { overlay.classList.add('hidden'); }, 12000);
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Ctrl+1~9 全局切换
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.ctrlKey || e.metaKey) {
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= 9) {
+      e.preventDefault();
+      const gi = num - 1;
+      if (gi < allItems.length) selectItem(gi);
+    }
+  }
+});
+
+// ========================================
+//  版本轮询检测
+// ========================================
+let versionUpdateDetected = false;
+
+async function checkVersion() {
+  if (versionUpdateDetected || !VERSION_CHECK_URL) return;
+  try {
+    const resp = await fetch(VERSION_CHECK_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const remoteVersion = String(data.version || '');
+    if (remoteVersion && remoteVersion !== HUB_VERSION) {
+      versionUpdateDetected = true;
+      const banner = document.getElementById('updateBanner');
+      document.getElementById('updateMsg').textContent = '检测到有更新，建议刷新获取最新内容';
+      banner.classList.add('show');
+    }
+  } catch (e) {
+    // 网络问题或文件不存在，静默忽略
+  }
+}
+
+function doRefresh() {
+  location.reload(true);
+}
+
+// 启动定时检测
+setInterval(checkVersion, VERSION_CHECK_INTERVAL);
+// 首次延迟 5 秒后开始，避免页面刚加载就触发
+setTimeout(checkVersion, 5000);
+
+// Init
+buildIndex();
+if (allItems.length > 0) {
+  activeGlobalIdx = 0;
+  renderSidebar();
+  createFrame(0);
+}
 </script>
 
 </body>
