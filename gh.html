@@ -250,7 +250,6 @@ const GAMES = [
       frame.className = 'game-frame' + (i === activeIndex ? ' active' : '');
       frame.src = 'about:blank';
       frame.id = 'frame-' + i;
-      frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
       frame.setAttribute('loading', 'lazy');
       content.appendChild(frame);
       if (i === activeIndex || i === activeIndex - 1 || i === activeIndex + 1) {
