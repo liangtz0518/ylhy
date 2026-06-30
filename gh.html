@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>资源申请</title>
+<title>GameHub</title>
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -222,12 +222,8 @@
 
 <script>
 // ========================================
-//  分类配置 —— 在这里添加
-// ========================================
-
-// ========================================
-//  全局版本号：更新了子页面内容后，修改此
-//  版本号即可强制所有浏览器刷新 iframe 缓存
+//  全局版本号
+//  强制所有浏览器刷新 iframe 缓存
 // ========================================
 const HUB_VERSION = '1';
 
@@ -290,10 +286,6 @@ const CATEGORIES = [
   // },
 ];
 
-// ========================================
-//  以下逻辑无需修改
-// ========================================
-
 let allItems = [];
 let activeGlobalIdx = -1;
 let frameCache = {};
@@ -340,29 +332,23 @@ function selectItem(gi) {
 
   activeGlobalIdx = gi;
 
-  // 展开目标分类
   const cat = document.getElementById('cat-' + allItems[gi].catIndex);
   if (cat) cat.classList.remove('collapsed');
 
-  // 更新侧边栏高亮
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   const target = document.querySelector(`.nav-item[data-gi="${gi}"]`);
   if (target) target.classList.add('active');
 
-  // 隐藏所有 iframe
   document.querySelectorAll('.game-frame').forEach(el => el.classList.remove('active'));
 
-  // 创建或激活目标 iframe
   if (!frameCache[gi]) {
     createFrame(gi);
   } else {
     frameCache[gi].classList.add('active');
   }
 
-  // 加载内容（loadFrame 内部有防重复保护）
   loadFrame(gi);
 
-  // 预创建相邻 iframe 空壳
   if (gi > 0 && !frameCache[gi - 1]) createFrame(gi - 1);
   if (gi < allItems.length - 1 && !frameCache[gi + 1]) createFrame(gi + 1);
 }
@@ -402,7 +388,6 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Ctrl+1~9 全局切换
 document.addEventListener('keydown', function(e) {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   if (e.ctrlKey || e.metaKey) {
@@ -416,7 +401,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ========================================
-//  版本轮询检测
+//  版本轮询
 // ========================================
 let versionUpdateDetected = false;
 
