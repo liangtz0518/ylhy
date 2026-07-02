@@ -3,599 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>伏魔诀邮件道具ID填充</title>
+    <title>伏魔诀</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(58, 90, 159, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(211, 47, 47, 0.05) 0%, transparent 20%);
-            color: #333;
-            padding: 20px;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1700px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #4a90e2 0%, #3a5a9f 100%);
-            border-radius: 12px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1" fill="white" opacity="0.2"/></svg>');
-            opacity: 0.3;
-        }
-        
-        header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            position: relative;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-        
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-        }
-        
-        .panels {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .panel {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            flex: 1;
-            min-width: 300px;
-            border: 1px solid #e1e4e8;
-        }
-        
-        /* 调整角色ID面板宽度 */
-        .panel.roles-panel {
-            flex: 0.7; /* 比其他面板窄一些 */
-            max-width: 300px; /* 设置最大宽度 */
-        }
-        
-        .panel:hover {
-            transform: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        
-        .panel-title {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: #2d3748;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e1e4e8;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .panel-title i {
-            color: #3a5a9f;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #4a5568;
-            font-size: 0.95rem;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            font-size: 1rem;
-            background: white;
-            color: #2d3748;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        }
-        
-        textarea {
-            min-height: 0px;
-            resize: vertical;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #3a5a9f 0%, #4a90e2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 6px rgba(58, 90, 159, 0.2);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(58, 90, 159, 0.3);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(58, 90, 159, 0.2);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #3a5a9f;
-            color: #3a5a9f;
-            box-shadow: none;
-        }
-        
-        .btn-outline:hover {
-            background: rgba(58, 90, 159, 0.05);
-            box-shadow: none;
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #d32f2f 0%, #e57373 100%);
-            box-shadow: 0 2px 6px rgba(211, 47, 47, 0.2);
-        }
-        
-        .btn-danger:hover {
-            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
-        }
-        
-        .search-results {
-            max-height: 250px;
-            overflow-y: auto;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            margin-top: 10px;
-            display: none;
-            background: white;
-        }
-        
-        .search-results::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .search-results::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 8px;
-        }
-        
-        .search-results::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 8px;
-        }
-        
-        .result-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f1f1f1;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .result-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .result-item.selected {
-            background-color: rgba(74, 144, 226, 0.1);
-            border-left: 3px solid #4a90e2;
-        }
-        
-        .result-item .item-id {
-            color: #3a5a9f;
-            font-family: monospace;
-            margin-right: 10px;
-        }
-        
-        .result-item .item-name {
-            flex: 1;
-        }
-        
-        .selected-item {
-            padding: 12px 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #e1e4e8;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .selected-item:hover {
-            background-color: #f1f3f5;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .selected-item .item-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .selected-item .item-id {
-            color: #3a5a9f;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
-        
-        .selected-item .item-name {
-            font-size: 0.95rem;
-        }
-        
-        .selected-item .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .quantity-input {
-            width: 100px;
-            padding: 6px;
-            text-align: center;
-            border-radius: 4px;
-            background: white;
-            border: 1px solid #d1d5db;
-            color: #2d3748;
-        }
-        
-        #generatedCode {
-            width: 100%;
-            height: 250px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            font-family: 'Fira Code', monospace;
-            white-space: pre-wrap;
-            overflow: auto;
-            border: 1px solid #e1e4e8;
-            color: #2d3748;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        #generatedCode::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        
-        #generatedCode::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 8px;
-        }
-        
-        #generatedCode::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 8px;
-        }
-        
-        .preset-item {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            border: 1px solid #e1e4e8;
-        }
-        
-        .preset-item:hover {
-            background: #f1f3f5;
-            transform: none;
-        }
-        
-        .preset-name {
-            font-weight: 600;
-            margin-bottom: 8px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            color: #2d3748;
-            transition: all 0.2s ease;
-        }
-        
-        .preset-name:hover {
-            background-color: rgba(74, 144, 226, 0.05);
-            color: #3a5a9f;
-        }
-        
-        .preset-name-input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 8px;
-            display: none;
-            background: white;
-            border: 1px solid #d1d5db;
-            color: #2d3748;
-            border-radius: 4px;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #3a5a9f 0%, #4a90e2 100%);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .notification.error {
-            background: linear-gradient(135deg, #d32f2f 0%, #e57373 100%);
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        .modal-content {
-            background: white;
-            border: 1px solid #e1e4e8;
-            padding: 25px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: translateY(0);
-            animation: scaleIn 0.3s ease;
-        }
-        
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .modal h3 {
-            margin-bottom: 20px;
-            color: #2d3748;
-            font-size: 1.3rem;
-        }
-        
-        .package-option {
-            padding: 15px;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .package-option:hover {
-            background-color: #f8f9fa;
-            border-color: #4a90e2;
-        }
-        
-        .package-option.selected {
-            background-color: rgba(74, 144, 226, 0.1);
-            border-color: #4a90e2;
-            position: relative;
-        }
-        
-        .package-option.selected::after {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #4a90e2;
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        
-        .package-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #2d3748;
-        }
-        
-        .package-description {
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-        
-        .action-group {
-            margin: 15px 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .action-group-title {
-            width: 100%;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #4a5568;
-            font-size: 0.95rem;
-        }
-        
-        .help-text {
-            font-size: 0.9rem;
-            color: #6b7280;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        
-        .help-text p {
-            margin-bottom: 8px;
-        }
-        
-        .help-text p:last-child {
-            margin-bottom: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .panels {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .panel.roles-panel {
-                flex: 1;
-                max-width: none;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .panel {
-                padding: 15px;
-            }
-            
-            .btn {
-                padding: 8px 15px;
-                font-size: 0.9rem;
-            }
-        }
+:root {
+    --bg-body: #f5f5f7;
+    --bg-card: #ffffff;
+    --bg-hover: #f5f5f7;
+    --bg-input: #f5f5f7;
+    --border: #e5e5e7;
+    --border-light: #d2d2d7;
+    --border-focus: #0071e3;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-muted: #aeaeb2;
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-light: rgba(0, 113, 227, 0.08);
+    --danger: #ff3b30;
+    --danger-hover: #e0352b;
+    --danger-light: rgba(255, 59, 48, 0.06);
+    --success: #34c759;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.08);
+    --transition: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-slow: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+    background: #ffffff;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 32px;
+    line-height: 1.47059;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+.container { max-width: 1440px; margin: 0 auto; }
+.main-container { display: flex; gap: 24px; max-width: 1440px; margin: 0 auto; flex-wrap: wrap; }
+.main-layout { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr 340px; gap: 24px; align-items: start; }
+.panels { display: grid; grid-template-columns: 240px 1fr 1fr 1fr; gap: 24px; }
+.panels .panel { flex: none; min-width: 0; }
+.grid { display: flex; flex-wrap: wrap; gap: 24px; }
+.card, .panel, .container, .daily-recharge-container, .uncommon-schemes-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    flex: 1;
+    min-width: 280px;
+    overflow: hidden;
+    animation: fadeUp 0.45s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+.card { border: 1px solid var(--border); }
+.panel { border: 1px solid var(--border); }
+.panel.roles-panel { flex: 0.7; max-width: 340px; }
+.card.roles-card { max-width: 340px; }
+.card:nth-child(2) { animation-delay: 0.06s; }
+.card:nth-child(3) { animation-delay: 0.12s; }
+.card:nth-child(4) { animation-delay: 0.18s; }
+.card-header, .panel-title, .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+.card-header { padding: 18px 24px; margin-bottom: 0; }
+.card-header .label {
+    font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); letter-spacing: -0.01em;
+}
+.card-title, .panel-title h3, .panel-title {
+    font-size: 1.25rem; font-weight: 600; color: var(--text-primary); letter-spacing: -0.015em;
+}
+.card-title i, .panel-title i { color: var(--accent); font-size: 1.1rem; }
+.panel-title h3 { margin: 0; }
+.card-body { padding: 20px 24px; }
+.card-body.no-pad { padding: 0; }
+.form-group { margin-bottom: 16px; }
+.form-group label, label {
+    display: block; font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary);
+    margin-bottom: 6px; letter-spacing: -0.01em;
+}
+input, textarea, select {
+    width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1px solid transparent;
+    border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.875rem;
+    transition: all var(--transition); font-family: inherit; letter-spacing: -0.01em;
+    -webkit-appearance: none;
+}
+input:hover, textarea:hover, select:hover { background: #ebebf0; }
+input:focus, textarea:focus, select:focus {
+    outline: none; background: #fff; border-color: var(--border-focus);
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+textarea { resize: vertical; min-height: 60px; }
+input[type="number"] { -webkit-appearance: none; }
+input[type="file"] { display: none; }
+.search-box { position: relative; }
+.search-box .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 0.875rem; pointer-events: none;
+}
+.search-box input { padding-left: 38px; }
+.search-container { position: relative; }
+.search-results, #itemList, #combineList {
+    max-height: 250px; overflow-y: auto; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-top: 8px; background: var(--bg-card);
+    display: none;
+}
+.result-item, .item-option {
+    padding: 10px 14px; cursor: pointer; font-size: 0.8125rem; transition: all var(--transition);
+    display: flex; justify-content: space-between; align-items: center; color: var(--text-primary);
+    border-bottom: 1px solid rgba(0,0,0,0.03); letter-spacing: -0.01em;
+}
+.result-item:last-child, .item-option:last-child { border-bottom: none; }
+.result-item:hover, .item-option:hover { background: var(--bg-hover); }
+.result-item.selected, .item-option.selected {
+    background: var(--accent-light); color: var(--accent);
+}
+.result-item .item-id, .item-option .item-id { color: var(--accent); font-family: monospace; font-size: 0.75rem; }
+.result-item .item-name { flex: 1; }
+.item-option .check-circle {
+    width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border-light);
+    flex-shrink: 0; transition: all var(--transition); display: flex; align-items: center;
+    justify-content: center; font-size: 11px; font-weight: 700; margin-right: 8px;
+}
+.item-option.selected .check-circle { border-color: var(--accent); background: var(--accent); color: #fff; }
+.list-container { max-height: 220px; overflow-y: auto; padding: 4px 0; }
+.list-item {
+    display: flex; align-items: center; justify-content: space-between; padding: 10px 24px;
+    font-size: 0.8125rem; transition: background var(--transition); border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: var(--bg-hover); }
+.list-item .item-label {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+    color: var(--text-primary); transition: color var(--transition); letter-spacing: -0.01em;
+}
+.list-item .item-label:hover { color: var(--accent); }
+.list-item .item-actions, .list-actions { display: flex; gap: 4px; flex-shrink: 0; margin-left: 12px; }
+.placeholder-text {
+    color: var(--text-muted); text-align: center; padding: 32px 20px; font-size: 0.8125rem; letter-spacing: -0.01em;
+}
+.selected-item, .selected-row, .item-row, .preset-item, .saved-result, .player-id-item {
+    padding: 12px 14px; margin-bottom: 10px; background: var(--bg-input); border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: space-between; transition: all var(--transition);
+    border: 1px solid var(--border); gap: 10px; flex-wrap: wrap;
+}
+.selected-item:hover, .item-row:hover, .preset-item:hover, .saved-result:hover, .player-id-item:hover {
+    background: var(--bg-hover);
+}
+.selected-item .item-info { display: flex; flex-direction: column; flex: 1; }
+.selected-item .item-id, .item-row .item-id { color: var(--accent); font-family: monospace; font-size: 0.8rem; font-weight: 600; }
+.selected-item .item-name, .item-row .item-name { font-size: 0.8125rem; color: var(--text-secondary); }
+.selected-item .item-actions, .item-row .item-actions { display: flex; align-items: center; gap: 8px; }
+.selected-item .btn-remove { width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 50%; font-size: 16px; line-height: 1; transition: all 0.15s; padding: 0; flex-shrink: 0; }
+.selected-item .btn-remove:hover { background: var(--danger-light); color: var(--danger); }
+.selected-item-header { display: flex; justify-content: space-between; margin-bottom: 5px; cursor: pointer; color: var(--text-primary); font-weight: 500; font-size: 0.8125rem; }
+.selected-item-qty { display: flex; align-items: center; gap: 5px; }
+.selected-item-qty input, .quantity-input { width: 80px; padding: 6px 8px; text-align: center; border-radius: 6px; }
+.selected-items-container, .saved-results-container, .player-ids-container {
+    max-height: 500px; overflow-y: auto; margin-bottom: 12px; flex: 1;
+}
+.preset-name, .saved-result-name { font-weight: 600; cursor: pointer; color: var(--text-primary); font-size: 0.875rem; flex: 1; }
+.preset-name:hover, .saved-result-name:hover { color: var(--accent); }
+.preset-name-input { width: 100%; padding: 8px; display: none; }
+.saved-result-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; font-size: 0.875rem; }
+.saved-result-content { font-family: monospace; white-space: pre-wrap; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+.saved-result-actions { display: flex; gap: 5px; margin-top: 8px; }
+.saved-result-actions button { padding: 4px 10px; font-size: 0.6875rem; margin: 0; }
+.player-id-info { color: var(--text-primary); font-size: 0.8125rem; flex: 1; }
+.player-id-item .delete-btn { color: var(--danger); background: none; font-weight: 600; padding: 4px 8px; border-radius: 6px; border: none; width: auto; font-size: 0.6875rem; cursor: pointer; }
+.player-id-item .delete-btn:hover { background: var(--danger-light); }
+#result {
+    margin: 16px 0; padding: 14px; background: var(--bg-input); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); font-family: monospace; white-space: pre-wrap; color: var(--text-primary);
+    min-height: 100px; outline: none; font-size: 0.8125rem; line-height: 1.6; transition: all var(--transition);
+}
+#result:focus { border-color: var(--border-focus); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1); background: #fff; }
+.btn, button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 8px 18px; border: none; border-radius: 980px; font-size: 0.8125rem; font-weight: 500;
+    cursor: pointer; transition: all var(--transition); background: var(--accent); color: #fff;
+    white-space: nowrap; font-family: inherit; letter-spacing: -0.01em; line-height: 1.3;
+}
+.btn { background: var(--bg-input); color: var(--text-primary); }
+.btn:hover, button:hover { transform: scale(0.97); }
+.btn:hover { background: #e8e8ed; }
+button:hover { background: var(--accent-hover); }
+.btn:active, button:active { transform: scale(0.97); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3); }
+.btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+.btn-outline:hover { background: var(--accent-light); }
+.btn-danger, .delete-saved-btn, .clear-selected-btn { background: var(--danger); color: #fff; }
+.btn-danger:hover, .delete-saved-btn:hover, .clear-selected-btn:hover { background: var(--danger-hover); }
+.btn-sm { padding: 4px 12px; font-size: 0.6875rem; }
+.btn-block { width: 100%; }
+.save-result-btn, .save-common-btn, .copy-saved-btn { background: var(--accent); color: #fff; }
+.save-result-btn:hover, .save-common-btn:hover, .copy-saved-btn:hover { background: var(--accent-hover); }
+.export-btn, .save-uncommon-btn { background: var(--accent); color: #fff; }
+.export-btn:hover, .save-uncommon-btn:hover { background: var(--accent-hover); }
+.import-btn, .add-player-btn { background: var(--text-secondary); color: #fff; }
+.import-btn:hover, .add-player-btn:hover { background: var(--text-primary); }
+.daily-recharge-btn { background: var(--accent); color: #fff; flex: 1; min-width: 120px; }
+.daily-recharge-btn:hover { background: var(--accent-hover); }
+.list-actions .btn-load { color: var(--accent); background: transparent; }
+.list-actions .btn-load:hover { background: var(--accent-light); }
+.list-actions .btn-del { color: var(--text-muted); background: transparent; }
+.list-actions .btn-del:hover { color: var(--danger); background: var(--danger-light); }
+.item-search-actions { display: flex; gap: 10px; padding: 16px 24px 20px; }
+.action-group { margin: 14px 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.action-group-title { width: 100%; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.8125rem; }
+.button-group { display: flex; gap: 10px; margin: 12px 0; }
+.button-group button { flex: 1; }
+.help-text { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; }
+.help-text p { margin-bottom: 6px; }
+.help-text p:last-child { margin-bottom: 0; }
+.package-header { font-weight: 600; margin-bottom: 12px; font-size: 0.875rem; color: var(--text-primary); width: 100%; }
+.package-option, .recharge-scheme-option {
+    padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px;
+    cursor: pointer; transition: all var(--transition); display: flex; align-items: center; gap: 12px;
+    font-size: 0.8125rem; color: var(--text-primary);
+}
+.package-option:hover, .recharge-scheme-option:hover { background: var(--bg-hover); border-color: var(--accent); }
+.package-option.selected { background: var(--accent-light); border-color: var(--accent); }
+.package-name { font-weight: 600; margin-bottom: 4px; }
+.package-description { font-size: 0.75rem; color: var(--text-secondary); }
+.package-list { flex: 1; overflow-y: auto; margin-bottom: 16px; padding-right: 4px; }
+.recharge-scheme-name { font-weight: 500; color: var(--accent); margin-bottom: 4px; }
+.recharge-scheme-desc { font-size: 0.75rem; color: var(--text-secondary); }
+#rechargeSchemeList { max-height: 300px; overflow-y: auto; margin: 12px 0; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px; }
+.daily-recharge-container, .uncommon-schemes-container { width: 100%; margin-top: 20px; }
+.daily-recharge-header, .uncommon-schemes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.daily-recharge-header h3, .uncommon-schemes-header h3 { margin: 0; font-size: 1.1rem; color: var(--text-primary); font-weight: 600; }
+.daily-recharge-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.uncommon-schemes-content { max-height: 600px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 10px; }
+#uncommonSavedResultsContainer .saved-result { width: 280px; box-sizing: border-box; }
+.import-export-buttons { display: flex; gap: 8px; margin-top: 10px; }
+.import-export-buttons button { flex: 1; padding: 8px; font-size: 0.8125rem; }
+.save-type-buttons { display: flex; gap: 10px; margin-top: 12px; }
+.save-type-buttons button { flex: 1; }
+.generate-section { padding: 0 0 16px 0; text-align: center; }
+.generate-section .btn-generate { width: 100%; padding: 10px 24px; background: var(--accent); color: #fff; border: none; border-radius: 980px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all var(--transition); font-family: inherit; position: relative; overflow: hidden; }
+.generate-section .btn-generate:hover { background: var(--accent-hover); box-shadow: 0 4px 16px rgba(0, 113, 227, 0.3); transform: translateY(-1px); }
+.selected-header-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; margin-top: 16px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.selected-count { font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500; }
+.selected-count strong { color: var(--accent); font-weight: 600; }
+.selected-items-list { max-height: 500px; overflow-y: auto; padding: 8px 0; }
+.selected-footer { display: flex; gap: 8px; padding: 12px 0 0 0; }
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    justify-content: center; align-items: center; z-index: 1000;
+}
+.modal.show { display: flex; animation: fadeIn 0.3s ease; }
+.modal-content {
+    background: var(--bg-card); border-radius: var(--radius-lg); padding: 28px; width: 90%; max-width: 480px;
+    max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    animation: scaleIn 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.modal-content h3 { margin-bottom: 16px; font-size: 1.2rem; font-weight: 600; color: var(--text-primary); flex-shrink: 0; }
+.modal-title { font-size: 1.2rem; margin-bottom: 16px; color: var(--text-primary); font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+.modal-buttons { display: flex; gap: 10px; margin-top: 16px; }
+.modal-buttons button { flex: 1; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; flex-shrink: 0; padding-top: 16px; border-top: 1px solid var(--border); }
+#addPlayerModal .modal-content { width: 380px; }
+/* toast capsule — positioning only, opacity/transform controlled via inline styles */
+.toast { position: fixed; top: 32px; left: 50%; color: #fff; padding: 10px 28px; border-radius: 980px; font-size: 0.8125rem; font-weight: 500; letter-spacing: -0.01em; z-index: 2001; pointer-events: none; box-shadow: 0 8px 32px rgba(0,0,0,0.18); white-space: nowrap; display: block; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.toast.show, .toast.error { /* handled by inline styles */ }
+.hidden { display: none; }
+hr { margin: 16px 0; border: none; border-top: 1px solid var(--border); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@media (max-width: 1200px) {
+    .panels { grid-template-columns: repeat(2, 1fr); }
+    .main-layout { grid-template-columns: 1fr 1fr; }
+    .sidebar-left { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .main-container { justify-content: center; }
+    .panel { width: 100%; max-width: 400px; }
+}
+@media (max-width: 768px) {
+    .panels { grid-template-columns: 1fr; }
+    .main-layout, .main-container { grid-template-columns: 1fr; flex-direction: column; }
+    .sidebar-left { grid-template-columns: 1fr; }
+    .panels { flex-direction: column; }
+    body { padding: 16px; }
+}
     </style>
 </head>
 <body>
     <div class="container">
-        
+
         <div class="panels">
-            <!-- 常用角色ID面板 - 添加了roles-panel类以控制宽度 -->
+
             <div class="panel roles-panel">
                 <h2 class="panel-title"><i class="fas fa-users"></i> 常用角色ID</h2>
-                
+
                 <button class="btn" onclick="openAddRoleModal()"><i class="fas fa-plus"></i> 添加常用角色</button>
-                
+
                 <div id="frequentlyUsedRoles" style="margin-top: 20px; max-height: 1000px; overflow-y: auto; padding-right: 5px;">
                     <div style="padding: 10px; color: #999;">暂无常用角色ID</div>
                 </div>
             </div>
-            
+
             <div class="panel">
                 <h2 class="panel-title"><i class="fas fa-cogs"></i> 配置参数</h2>
-                
+
+                <div class="form-group">
+                    <label for="playerServer">角色区服</label>
+                    <input type="text" id="playerServer" placeholder="例: 183服">
+                </div>
+
                 <div class="form-group">
                     <label for="playerIds">角色ID (多个用逗号分隔)</label>
                     <textarea id="playerIds" placeholder="例如: 1001,1002,1003"></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label>搜索并选择道具</label>
                     <input type="text" id="itemSearch" placeholder="搜索道具ID或名称..." oninput="searchItems()">
-                    
+
                     <div class="search-results" id="searchResults"></div>
-                    
+
                     <div class="action-group">
                         <div class="action-group-title">搜索结果操作</div>
                         <button class="btn" onclick="selectAllResults()"><i class="fas fa-check-square"></i> 全选</button>
                         <button class="btn btn-outline" onclick="deselectAllResults()"><i class="fas fa-square"></i> 全不选</button>
                         <button class="btn" onclick="addSelectedResults()"><i class="fas fa-plus-circle"></i> 添加选中道具</button>
                     </div>
-                    
+
                     <div style="display: flex; margin-top: 10px; gap: 10px;">
                         <input type="number" id="bulkQuantity" placeholder="批量设置数量" min="1" value="1" style="flex: 1;">
                         <button class="btn" onclick="applyBulkQuantity()"><i class="fas fa-sync-alt"></i> 应用</button>
                     </div>
                 </div>
-                
+
                 <div class="action-group">
                     <div class="action-group-title">常用方案</div>
                     <button class="btn" onclick="openPackageModal('单日500')"><i class="fas fa-calendar-day"></i> 单日500</button>
@@ -603,52 +360,56 @@
                     <button class="btn" onclick="openPackageModal('单日3000')"><i class="fas fa-calendar-day"></i> 单日3000</button>
                     <button class="btn btn-outline" onclick="clearItems()"><i class="fas fa-trash"></i> 清空道具</button>
                 </div>
-                
-                <div id="selectedItemsContainer"></div>
+
             </div>
-            
+
             <div class="panel">
                 <h2 class="panel-title"><i class="fas fa-bookmark"></i> 预设管理</h2>
-                
+
                 <div class="action-group">
                     <button class="btn" onclick="openSavePresetModal()"><i class="fas fa-save"></i> 保存</button>
                     <button class="btn btn-outline" onclick="exportPresets()"><i class="fas fa-download"></i> 导出</button>
                     <input type="file" id="importFile" accept=".json" onchange="importPresets(event)" style="display: none;">
                     <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> 导入</button>
                 </div>
-                
+
                 <div id="presetList" style="margin-top: 15px;"></div>
             </div>
-            
+
             <div class="panel">
                 <h2 class="panel-title"><i class="fas fa-code"></i> 生成代码</h2>
-                
+
                 <div class="help-text">
-                    <p>1. 填写角色ID（多个用逗号分隔）</p>
-                    <p>2. 搜索并添加需要的道具</p>
-                    <p>3. 设置每个道具的数量</p>
-                    <p>4. 点击生成填充代码按钮</p>
-                    <p>5. 复制生成的代码到伏魔诀中控执行</p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p style="color:var(--accent);font-weight:500;"></p>
                 </div>
-                
+
                 <div class="action-group">
-                    <button class="btn" onclick="generateCode()"><i class="fas fa-magic"></i> 生成填充代码</button>
-                    <button class="btn btn-outline" onclick="copyCode()" id="copyBtn"><i class="fas fa-copy"></i> 复制代码</button>
+                    <button class="btn" onclick="generateCode()"><i class="fas fa-magic"></i> 生成并复制脚本</button>
                     <button class="btn btn-danger" onclick="clearAll()"><i class="fas fa-redo"></i> 重置所有</button>
                 </div>
-                
-                <div id="generatedCode">// 点击"生成填充代码"按钮生成代码...</div>
+
+                <div class="selected-header-row">
+                    <span class="label" style="font-weight:600;color:var(--text-primary);">已选道具</span>
+                    <span class="selected-count">已选 <strong id="selectedCount2">0</strong> 个</span>
+                </div>
+                <div id="selectedItemsList2" class="selected-items-list">
+                    <div class="placeholder-text">暂无道具</div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- 添加角色模态窗口 -->
+
     <div class="modal" id="addRoleModal">
         <div class="modal-content">
             <h3><i class="fas fa-user-plus"></i> 添加常用角色</h3>
             <div class="form-group">
                 <label for="server">区服</label>
-                <input type="text" id="server" placeholder="例如：S1">
+                <input type="text" id="server" placeholder="输入角色区服">
             </div>
             <div class="form-group">
                 <label for="roleName">角色名</label>
@@ -664,8 +425,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- 套装选择模态窗口 -->
+
     <div class="modal" id="packageModal">
         <div class="modal-content">
             <h3><i class="fas fa-box-open"></i> 选择套装</h3>
@@ -676,9 +436,9 @@
             </div>
         </div>
     </div>
-    
-    <div class="notification" id="notification"></div>
-    
+
+    <div id="toast" class="toast"></div>
+
     <div class="modal" id="savePresetModal">
         <div class="modal-content">
             <h3><i class="fas fa-bookmark-plus"></i> 保存预设方案</h3>
@@ -10438,8 +10198,6 @@
             {id: "30089", name: "【圣域】圣莲蝶舞·藕", category: ""},
             {id: "30090", name: "【圣域】圣莲蝶舞·蝶", category: ""}
         ];
-        
-        // 套装数据库
         const packageDatabase = {
             "单日500": [
                 {
@@ -10605,45 +10363,34 @@
                 }
             ]
         };
-        
         let selectedItems = [];
         let searchResults = [];
         let selectedSearchItems = [];
         let currentPackageType = "";
         let selectedPackageId = "";
-        
-        // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             renderCustomPresets();
             renderFrequentlyUsedRoles();
         });
-        
-        // 常用角色ID管理功能
         function getFrequentlyUsedRoles() {
             const roles = localStorage.getItem('frequentlyUsedRoles');
             return roles ? JSON.parse(roles) : [];
         }
-        
         function saveFrequentlyUsedRoles(roles) {
             localStorage.setItem('frequentlyUsedRoles', JSON.stringify(roles));
         }
-        
         function renderFrequentlyUsedRoles() {
             const roles = getFrequentlyUsedRoles();
             const container = document.getElementById('frequentlyUsedRoles');
-            
             if (roles.length === 0) {
                 container.innerHTML = '<div style="padding: 10px; color: #999;">暂无常用角色ID</div>';
                 return;
             }
-            
             container.innerHTML = '';
             roles.forEach(role => {
                 const div = document.createElement('div');
                 div.className = 'selected-item';
-                // 添加点击事件，点击整个ID框任意区域都能选中该ID
                 div.onclick = function(e) {
-                    // 如果点击的是删除按钮，则不执行ID选择
                     if (!e.target.closest('.btn-danger')) {
                         setRoleIdToInput(role.id);
                     }
@@ -10660,75 +10407,57 @@
                 container.appendChild(div);
             });
         }
-        
         function openAddRoleModal() {
             document.getElementById('server').value = '';
             document.getElementById('roleName').value = '';
             document.getElementById('roleId').value = '';
             document.getElementById('addRoleModal').style.display = 'flex';
         }
-        
         function closeAddRoleModal() {
             document.getElementById('addRoleModal').style.display = 'none';
         }
-        
         function saveRole() {
             const server = document.getElementById('server').value.trim();
             const name = document.getElementById('roleName').value.trim();
             const id = document.getElementById('roleId').value.trim();
-            
             if (!server || !name || !id) {
-                showNotification('请填写完整的角色信息', 'error');
+                showToast('请填写完整的角色信息', true);
                 return;
             }
-            
             const roles = getFrequentlyUsedRoles();
-            
-            // 检查是否已存在相同ID的角色
             const existingIndex = roles.findIndex(role => role.id === id);
             if (existingIndex !== -1) {
                 roles[existingIndex] = { server, name, id };
             } else {
                 roles.push({ server, name, id });
             }
-            
             saveFrequentlyUsedRoles(roles);
             renderFrequentlyUsedRoles();
             closeAddRoleModal();
-            showNotification('角色添加成功');
+            showToast('角色添加成功');
         }
-        
         function deleteRole(id) {
             const roles = getFrequentlyUsedRoles();
             const newRoles = roles.filter(role => role.id !== id);
             saveFrequentlyUsedRoles(newRoles);
             renderFrequentlyUsedRoles();
-            showNotification('角色已删除');
+            showToast('角色已删除');
         }
-        
-        // 修改为设置ID而不是添加ID，覆盖原有内容
         function setRoleIdToInput(id) {
             const playerIdsInput = document.getElementById('playerIds');
             playerIdsInput.value = id;
-            showNotification(`已选择角色ID: ${id}`);
+            showToast(`已选择角色ID: ${id}`);
         }
-        
-        // 打开套装选择窗口
         function openPackageModal(type) {
             currentPackageType = type;
             const modal = document.getElementById('packageModal');
             const container = document.getElementById('packageOptionsContainer');
             container.innerHTML = '';
-            
-            // 获取对应类型的套装列表
             const packages = packageDatabase[type] || [];
-            
             if (packages.length === 0) {
                 container.innerHTML = '<div style="padding: 10px; color: #999;">暂无可用套装</div>';
             } else {
-                // 默认选中第一个套装
                 selectedPackageId = packages[0].id;
-                
                 packages.forEach(pkg => {
                     const div = document.createElement('div');
                     div.className = `package-option ${pkg.id === selectedPackageId ? 'selected' : ''}`;
@@ -10741,78 +10470,58 @@
                         </div>
                     `;
                     div.onclick = function() {
-                        // 移除其他选中状态
                         document.querySelectorAll('.package-option').forEach(el => {
                             el.classList.remove('selected');
                         });
-                        // 设置当前选中状态
                         this.classList.add('selected');
                         selectedPackageId = this.dataset.packageId;
                     };
                     container.appendChild(div);
                 });
             }
-            
             modal.style.display = 'flex';
         }
-        
-        // 关闭套装选择窗口
         function closePackageModal() {
             document.getElementById('packageModal').style.display = 'none';
             currentPackageType = "";
             selectedPackageId = "";
         }
-        
-        // 确认套装选择
         function confirmPackageSelection() {
             if (!currentPackageType || !selectedPackageId) {
-                showNotification('请选择一个套装', 'error');
+                showToast('请选择一个套装', true);
                 return;
             }
-            
-            // 查找选中的套装
             const packages = packageDatabase[currentPackageType] || [];
             const selectedPackage = packages.find(pkg => pkg.id === selectedPackageId);
-            
             if (selectedPackage) {
                 selectedItems = [...selectedPackage.items];
                 renderSelectedItems();
-                showNotification(`已加载 ${currentPackageType} - ${selectedPackage.name}`);
+                showToast(`已加载 ${currentPackageType} - ${selectedPackage.name}`);
             }
-            
             closePackageModal();
         }
-        
-        // 搜索道具
         function searchItems() {
             const searchTerm = document.getElementById('itemSearch').value.trim().toLowerCase();
             const resultsContainer = document.getElementById('searchResults');
-            
             if (!searchTerm) {
                 resultsContainer.style.display = 'none';
                 selectedSearchItems = [];
                 return;
             }
-            
-            searchResults = itemDatabase.filter(item => 
-                item.id.toLowerCase().includes(searchTerm) || 
+            searchResults = itemDatabase.filter(item =>
+                item.id.toLowerCase().includes(searchTerm) ||
                 item.name.toLowerCase().includes(searchTerm)
             );
-            
             renderSearchResults();
             resultsContainer.style.display = 'block';
         }
-        
-        // 渲染搜索结果
         function renderSearchResults() {
             const resultsContainer = document.getElementById('searchResults');
             resultsContainer.innerHTML = '';
-            
             if (searchResults.length === 0) {
                 resultsContainer.innerHTML = '<div style="padding: 10px; color: #999;">未找到匹配的道具</div>';
                 return;
             }
-            
             searchResults.forEach(item => {
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
@@ -10832,8 +10541,6 @@
                 resultsContainer.appendChild(resultItem);
             });
         }
-        
-        // 切换道具选中状态
         function toggleSelectItem(itemId) {
             const index = selectedSearchItems.indexOf(itemId);
             if (index === -1) {
@@ -10843,29 +10550,21 @@
             }
             renderSearchResults();
         }
-        
-        // 全选搜索结果
         function selectAllResults() {
             selectedSearchItems = searchResults.map(item => item.id);
             renderSearchResults();
         }
-        
-        // 全不选搜索结果
         function deselectAllResults() {
             selectedSearchItems = [];
             renderSearchResults();
         }
-        
-        // 添加选中的搜索结果
         function addSelectedResults() {
             if (selectedSearchItems.length === 0) {
-                showNotification('请选择至少一个道具', 'error');
+                showToast('请选择至少一个道具', true);
                 return;
             }
-            
             selectedSearchItems.forEach(itemId => {
                 const item = itemDatabase.find(i => i.id === itemId);
-                
                 if (item && !selectedItems.some(selected => selected.id === itemId)) {
                     selectedItems.push({
                         id: item.id,
@@ -10874,200 +10573,103 @@
                     });
                 }
             });
-            
             selectedSearchItems = [];
             renderSearchResults();
             renderSelectedItems();
-            showNotification(`已添加 ${selectedItems.length} 个道具`);
+            showToast(`已添加 ${selectedItems.length} 个道具`);
         }
-        
-        // 渲染已选道具
         function renderSelectedItems() {
-            const container = document.getElementById('selectedItemsContainer');
-            container.innerHTML = '';
-            
-            if (selectedItems.length === 0) {
-                container.innerHTML = '<div style="padding: 10px; color: #999;">没有选择任何道具</div>';
-                return;
-            }
-            
-            selectedItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'selected-item';
-                div.innerHTML = `
+            let c2 = document.getElementById('selectedItemsList2');
+            let c2count = document.getElementById('selectedCount2');
+            if(c2count) c2count.textContent = selectedItems.length;
+            if(!c2) return;
+            if(!selectedItems.length) { c2.innerHTML = '<div class="placeholder-text">暂无道具</div>'; return; }
+            c2.innerHTML = selectedItems.map(item => `
+                <div class="selected-item">
                     <div class="item-info">
                         <span class="item-id">${item.id}</span>
                         <span class="item-name">${item.name}</span>
                     </div>
                     <div class="item-actions">
-                        <input type="number" class="quantity-input" min="1" value="${item.quantity}" 
-                            onchange="updateItemQuantity('${item.id}', this.value)">
-                        <button class="btn btn-danger" onclick="removeSelectedItem('${item.id}')" style="padding: 4px 8px; margin-left: 5px;"><i class="fas fa-times"></i></button>
+                        <span style="color:var(--text-muted);font-size:0.8125rem;">x${item.quantity}</span>
+                        <button class="btn-remove" onclick="removeSelectedItem('${item.id}')" title="移除">×</button>
                     </div>
-                `;
-                container.appendChild(div);
-            });
+                </div>
+            `).join('');
         }
-        
-        // 更新道具数量
         function updateItemQuantity(itemId, quantity) {
             const item = selectedItems.find(item => item.id === itemId);
             if (item) {
                 item.quantity = parseInt(quantity) || 1;
             }
         }
-        
-        // 移除已选道具
         function removeSelectedItem(itemId) {
             selectedItems = selectedItems.filter(item => item.id !== itemId);
             renderSelectedItems();
         }
-        
-        // 应用批量数量
         function applyBulkQuantity() {
             const quantity = parseInt(document.getElementById('bulkQuantity').value) || 1;
-            
             selectedItems.forEach(item => {
                 item.quantity = quantity;
             });
-            
             renderSelectedItems();
-            showNotification(`已设置所有道具数量为 ${quantity}`);
+            showToast(`已设置所有道具数量为 ${quantity}`);
         }
-        
-        // 清空道具
         function clearItems() {
             if (confirm('确定要清空所有道具吗？')) {
                 selectedItems = [];
                 renderSelectedItems();
-                showNotification('已清空所有道具');
+                showToast('已清空所有道具');
             }
         }
-        
-        // 生成代码
         function generateCode() {
+            const server = document.getElementById('playerServer').value.trim();
             const playerIds = document.getElementById('playerIds').value.trim();
-            
+            if (!server) {
+                showToast('请填写区服', true);
+                return;
+            }
             if (!playerIds) {
-                showNotification('请填写角色ID', 'error');
+                showToast('请填写角色ID', true);
                 return;
             }
-            
             if (selectedItems.length === 0) {
-                showNotification('请选择至少一个道具', 'error');
+                showToast('请选择至少一个道具', true);
                 return;
             }
-            
             const invalidItems = selectedItems.filter(item => !item.quantity || item.quantity <= 0);
             if (invalidItems.length > 0) {
-                showNotification('请为所有道具设置有效的数量', 'error');
+                showToast('请为所有道具设置有效的数量', true);
                 return;
             }
-            
-            let itemsCode = selectedItems.map(item => 
-                `  {id: "${item.id}", quantity: ${item.quantity}}`
-            ).join(',\n');
-            
-            const code = `// 游戏道具邮件填充脚本
-// 在游戏管理后台控制台(F12)中粘贴执行此代码
-
-const playerIdsInput = document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]');
-playerIdsInput.value = \`${playerIds}\`;
-playerIdsInput.dispatchEvent(new Event('input', { bubbles: true }));
-playerIdsInput.dispatchEvent(new Event('change', { bubbles: true }));
-playerIdsInput.dispatchEvent(new Event('blur', { bubbles: true }));
-
-const titleInput = document.querySelector('input[placeholder="请填写标题信息"]');
-titleInput.value = "1";
-titleInput.dispatchEvent(new Event('input', { bubbles: true }));
-titleInput.dispatchEvent(new Event('change', { bubbles: true }));
-titleInput.dispatchEvent(new Event('blur', { bubbles: true }));
-
-const contentInput = document.querySelector('textarea[placeholder="邮件内容"]');
-contentInput.value = "1";
-contentInput.dispatchEvent(new Event('input', { bubbles: true }));
-contentInput.dispatchEvent(new Event('change', { bubbles: true }));
-contentInput.dispatchEvent(new Event('blur', { bubbles: true }));
-
-setTimeout(() => {
-    const errors = document.querySelectorAll('.el-form-item__error');
-    if (errors.length > 0) {
-        console.error('验证错误:', errors[0].textContent);
-        return;
-    }
-
-    const addItemBtn = document.querySelector('button.el-button--primary.el-button--small.is-circle');
-    const currentRowCount = document.querySelectorAll('tr.el-table__row').length;
-    const requiredRowCount = ${selectedItems.length};
-
-    if (currentRowCount < requiredRowCount) {
-        const rowsToAdd = requiredRowCount - currentRowCount;
-        for (let i = 0; i < rowsToAdd; i++) {
-            addItemBtn.click();
-        }
-    } else if (currentRowCount > requiredRowCount) {
-        const rowsToDelete = currentRowCount - requiredRowCount;
-        let btns = document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle');
-        for (let i = 0; i < rowsToDelete; i++) {
-            if (btns.length > i) {
-                btns[btns.length - 1 - i].click();
-            }
-        }
-    }
-
-    setTimeout(() => {
-        const nameInputs = document.querySelectorAll('input[placeholder="请输入道具ID"]');
-        const quantityInputs = document.querySelectorAll('input[placeholder="请输入数量"]');
-
-        const items = [
-${itemsCode}
-        ];
-
-        items.forEach((item, index) => {
-            if (nameInputs[index]) {
-                nameInputs[index].value = item.id;
-                nameInputs[index].dispatchEvent(new Event('input', { bubbles: true }));
-                nameInputs[index].dispatchEvent(new Event('change', { bubbles: true }));
-            }
-            
-            if (quantityInputs[index]) {
-                quantityInputs[index].value = item.quantity;
-                quantityInputs[index].dispatchEvent(new Event('input', { bubbles: true }));
-                quantityInputs[index].dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-
-        console.log('道具邮件填充完成！');
-    }, 100);
-}, 50);
-`;
-            
-            document.getElementById('generatedCode').textContent = code;
-            showNotification('代码生成成功！');
+            let itemsStr = selectedItems.map(i => `  ['${i.id}', ${i.quantity}]`).join(',\n');
+            const code = `// 道具邮件批量填充脚本
+(function(){
+    const TARGET_SERVER='${server}'; const ROLE_ID='${playerIds}'; const MAIL_TITLE='1'; const MAIL_CONTENT='1'; const BATCH_SIZE=10;
+    const ITEMS=[\n${itemsStr}\n];
+    let currentIndex=0, submitListener=null, isNavigating=false, completed=false;
+    function trigger(el){ if(!el)return; el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); el.dispatchEvent(new Event('blur',{bubbles:true})); }
+    function saveProgress(){ if(completed)return; localStorage.setItem('MailBatchProgress_FMJ',JSON.stringify({targetServer:TARGET_SERVER,roleId:ROLE_ID,items:ITEMS,currentIndex})); }
+    function clearProgress(){ localStorage.removeItem('MailBatchProgress_FMJ'); }
+    function loadProgress(){ let s=localStorage.getItem('MailBatchProgress_FMJ'); if(s){ try{ let d=JSON.parse(s); if(d.items&&d.currentIndex!==undefined) currentIndex=d.currentIndex; }catch(e){} } }
+    function isSendPage(){ return !!document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); }
+    function navigateToPersonalMail(){ if(isNavigating||completed)return; isNavigating=true; console.log('📍 返回个人邮件...'); let pm=Array.from(document.querySelectorAll('.el-menu-item')).find(el=>el.innerText.includes('个人邮件')); if(pm){ pm.click(); setTimeout(()=>{ isNavigating=false; if(!completed&&isSendPage()) continueFilling(); },1500); }else{ isNavigating=false; } }
+    async function selectServerExact(placeholder,keyword){ let inp=document.querySelector(\`.el-select input.el-input__inner[placeholder="\${placeholder}"]\`); if(!inp)return false; inp.click(); let opts=document.querySelectorAll('.el-select-dropdown__item'); if(!opts.length)return false; let match=keyword.replace(/\\D/g,'')+'服'; let target=null; for(let opt of opts) if(opt.textContent.trim().startsWith(match)){target=opt;break;} if(target){ target.click(); trigger(inp); } return true; }
+    function selectFirstDropdown(placeholder){ let inp=document.querySelector(\`.el-select input.el-input__inner[placeholder="\${placeholder}"]\`); if(!inp)return false; inp.click(); let opts=document.querySelectorAll('.el-select-dropdown__item'); if(opts.length){ opts[0].click(); trigger(inp); } return true; }
+    async function clearRows(){ let btns=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=btns.length-1;i>=0;i--){ btns[i].click(); await new Promise(r=>setTimeout(r,30)); } }
+    async function setRows(n){ let add=document.querySelector('button.el-button--primary.el-button--small.is-circle'); let cur=document.querySelectorAll('tr.el-table__row').length; if(cur===n)return; if(cur>n){ let del=document.querySelectorAll('button.el-button--danger.el-button--small.is-plain.is-circle'); for(let i=0;i<cur-n;i++) del[del.length-1-i]?.click(); } else for(let i=0;i<n-cur;i++) add.click(); await new Promise(r=>setTimeout(r,50)); }
+    async function fillBatch(){ if(completed)return false; let rem=ITEMS.length-currentIndex; if(rem<=0){ console.log('🎉 全部完成'); completed=true; clearProgress(); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; } let cnt=Math.min(BATCH_SIZE,rem); console.log(\`📦 第\${Math.floor(currentIndex/BATCH_SIZE)+1}批，\${cnt}个道具，剩余\${rem-cnt}\`); await clearRows(); await setRows(cnt); let idIns=document.querySelectorAll('input[placeholder="请输入道具ID"]'), qtyIns=document.querySelectorAll('input[placeholder="请输入数量"]'); for(let i=0;i<cnt;i++){ let idx=currentIndex+i; if(idIns[i]){ idIns[i].value=ITEMS[idx][0]; trigger(idIns[i]); } if(qtyIns[i]){ qtyIns[i].value=ITEMS[idx][1]; trigger(qtyIns[i]); } } currentIndex+=cnt; saveProgress(); if(currentIndex>=ITEMS.length){ console.log('✅ 全部填充完成'); completed=true; clearProgress(); if(submitListener) document.querySelector('button.el-button--primary.el-button--default')?.removeEventListener('click',submitListener); return false; } console.log(\`✅ 已填充\${currentIndex}/\${ITEMS.length}，请点击"提交"继续\`); return true; }
+    async function onSubmit(){ if(completed)return; saveProgress(); setTimeout(()=>{ if(completed)return; let active=document.querySelector('.el-menu-item.is-active'); if(active&&active.innerText.includes('邮件列表')) navigateToPersonalMail(); else if(!isSendPage()) navigateToPersonalMail(); else continueFilling(); },800); }
+    async function continueFilling(){ if(completed)return; await selectFirstDropdown('平台'); await new Promise(r=>setTimeout(r,80)); await selectServerExact('区服',TARGET_SERVER); await new Promise(r=>setTimeout(r,100)); let pid=document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); if(pid){ pid.value=ROLE_ID; trigger(pid); } let title=document.querySelector('input[placeholder="请填写标题信息"]'); if(title){ title.value=MAIL_TITLE; trigger(title); } let content=document.querySelector('textarea[placeholder="多服邮件内容"]'); if(content){ content.value=MAIL_CONTENT; trigger(content); } await new Promise(r=>setTimeout(r,80)); let more=await fillBatch(); if(more){ let btn=document.querySelector('button.el-button--primary.el-button--default'); if(btn&&!submitListener&&!completed){ submitListener=onSubmit; btn.addEventListener('click',submitListener); console.log('👂 已绑定提交按钮，请点击"提交"'); } } }
+    async function init(){ loadProgress(); if(currentIndex>=ITEMS.length){ console.log('✅ 之前已完成'); completed=true; clearProgress(); return; } if(!isSendPage()){ navigateToPersonalMail(); return; } await selectFirstDropdown('平台'); await new Promise(r=>setTimeout(r,80)); await selectServerExact('区服',TARGET_SERVER); await new Promise(r=>setTimeout(r,100)); let pid=document.querySelector('textarea[placeholder="角色ID(多个玩家,分割)"]'); if(pid){ pid.value=ROLE_ID; trigger(pid); } let title=document.querySelector('input[placeholder="请填写标题信息"]'); if(title){ title.value=MAIL_TITLE; trigger(title); } let content=document.querySelector('textarea[placeholder="多服邮件内容"]'); if(content){ content.value=MAIL_CONTENT; trigger(content); } await new Promise(r=>setTimeout(r,80)); let more=await fillBatch(); if(more){ let btn=document.querySelector('button.el-button--primary.el-button--default'); if(btn&&!submitListener){ submitListener=onSubmit; btn.addEventListener('click',submitListener); console.log('👂 请点击"提交"按钮继续'); } } else console.log('所有道具已处理完毕'); }
+    init();
+})();`;
+            navigator.clipboard.writeText(code).then(() => showToast('已复制到剪贴板')).catch(() => showToast('复制失败', true));
         }
         
-        // 复制代码
-        function copyCode() {
-            const codeElement = document.getElementById('generatedCode');
-            const textArea = document.createElement('textarea');
-            textArea.value = codeElement.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            
-            showNotification('代码已复制到剪贴板！');
-            
-            const copyBtn = document.getElementById('copyBtn');
-            copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
-            setTimeout(() => {
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制代码';
-            }, 2000);
-        }
-        
-        // 重置所有
         function clearAll() {
             if (confirm('确定要重置所有设置吗？')) {
+                document.getElementById('playerServer').value = '';
                 document.getElementById('playerIds').value = '';
                 selectedItems = [];
                 selectedSearchItems = [];
@@ -11075,56 +10677,50 @@ ${itemsCode}
                 document.getElementById('bulkQuantity').value = 1;
                 document.getElementById('itemSearch').value = '';
                 document.getElementById('searchResults').style.display = 'none';
-                document.getElementById('generatedCode').textContent = '// 点击"生成填充代码"按钮生成代码...';
-                showNotification('所有设置已重置');
+                
+                showToast('所有设置已重置');
             }
         }
-        
-        // 显示通知
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.className = type === 'error' ? 'notification error' : 'notification';
-            notification.innerHTML = type === 'error' ? `<i class="fas fa-exclamation-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
-            notification.style.display = 'flex';
-            
-            // 重置动画
-            notification.style.animation = 'none';
-            notification.offsetHeight; // 触发重绘
-            notification.style.animation = 'slideIn 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+        function showToast(msg, isErr) {
+            var t = document.getElementById('toast');
+            if (t._tid) clearTimeout(t._tid);
+            t.textContent = msg;
+            t.style.setProperty('transition', 'none', 'important');
+            t.style.setProperty('opacity', '0', 'important');
+            t.style.setProperty('transform', 'translateX(-50%) translateY(-16px)', 'important');
+            t.style.setProperty('background', isErr ? 'rgba(255, 59, 48, 0.92)' : 'rgba(29, 29, 31, 0.92)', 'important');
+            t.offsetHeight;
+            t.style.setProperty('transition', 'opacity 0.35s ease, transform 0.35s ease', 'important');
+            t.style.setProperty('opacity', '1', 'important');
+            t.style.setProperty('transform', 'translateX(-50%) translateY(0)', 'important');
+            t._tid = setTimeout(function() {
+                t.style.setProperty('transition', 'opacity 0.35s ease, transform 0.35s ease', 'important');
+                t.style.setProperty('opacity', '0', 'important');
+                t.style.setProperty('transform', 'translateX(-50%) translateY(-16px)', 'important');
+            }, 2200);
         }
-        
-        // 预设管理功能
         function getCustomPresets() {
             const presets = localStorage.getItem('customPresets');
             return presets ? JSON.parse(presets) : [];
         }
-        
         function saveCustomPresets(presets) {
             localStorage.setItem('customPresets', JSON.stringify(presets));
         }
-        
         function renderCustomPresets() {
             const presets = getCustomPresets();
             const container = document.getElementById('presetList');
             container.innerHTML = '';
-            
             if (presets.length === 0) {
                 container.innerHTML = '<div style="padding: 10px; color: #999;">暂无自定义预设</div>';
                 return;
             }
-            
             presets.forEach(preset => {
                 if (!preset || !preset.id || !preset.name || !preset.items) return;
-                
                 const div = document.createElement('div');
                 div.className = 'preset-item';
                 div.innerHTML = `
                     <div class="preset-name" onclick="startEditPresetName(this, '${preset.id}')">${preset.name}</div>
-                    <input type="text" class="preset-name-input" value="${preset.name}" 
+                    <input type="text" class="preset-name-input" value="${preset.name}"
                         onblur="finishEditPresetName(this, '${preset.id}')"
                         onkeypress="if(event.keyCode === 13) finishEditPresetName(this, '${preset.id}')">
                     <div style="margin-bottom: 5px; color: #6b7280; font-size: 0.9rem;">包含 ${preset.items.length} 个道具</div>
@@ -11136,149 +10732,118 @@ ${itemsCode}
                 container.appendChild(div);
             });
         }
-        
-        // 开始编辑预设名称
         function startEditPresetName(element, presetId) {
             const input = element.nextElementSibling;
             element.style.display = 'none';
             input.style.display = 'block';
             input.focus();
         }
-        
-        // 完成编辑预设名称
         function finishEditPresetName(input, presetId) {
             const newName = input.value.trim();
             const nameElement = input.previousElementSibling;
-            
             if (!newName) {
                 input.style.display = 'none';
                 nameElement.style.display = 'block';
                 return;
             }
-            
             const presets = getCustomPresets();
             const presetIndex = presets.findIndex(p => p.id === presetId);
-            
             if (presetIndex !== -1) {
                 presets[presetIndex].name = newName;
                 saveCustomPresets(presets);
                 nameElement.textContent = newName;
             }
-            
             input.style.display = 'none';
             nameElement.style.display = 'block';
         }
-        
         function openSavePresetModal() {
             if (selectedItems.length === 0) {
-                showNotification('请先选择道具', 'error');
+                showToast('请先选择道具', true);
                 return;
             }
-            
             document.getElementById('presetName').value = `预设_${new Date().getMonth()+1}${new Date().getDate()}`;
             document.getElementById('savePresetModal').style.display = 'flex';
         }
-        
         function closeSavePresetModal() {
             document.getElementById('savePresetModal').style.display = 'none';
         }
-        
         function saveCurrentPreset() {
             const name = document.getElementById('presetName').value.trim();
             if (!name) {
-                showNotification('请输入预设名称', 'error');
+                showToast('请输入预设名称', true);
                 return;
             }
-            
             const presets = getCustomPresets();
             const newPreset = {
                 id: Date.now().toString(),
                 name: name,
                 items: [...selectedItems]
             };
-            
             const existingIndex = presets.findIndex(p => p && p.name === name);
             if (existingIndex !== -1) {
                 presets[existingIndex] = newPreset;
-                showNotification('预设已更新');
+                showToast('预设已更新');
             } else {
                 presets.push(newPreset);
-                showNotification('预设已保存');
+                showToast('预设已保存');
             }
-            
             saveCustomPresets(presets);
             renderCustomPresets();
             closeSavePresetModal();
         }
-        
         function loadCustomPreset(presetId) {
             const presets = getCustomPresets();
             const preset = presets.find(p => p && p.id === presetId);
-            
             if (preset) {
                 selectedItems = [...preset.items];
                 renderSelectedItems();
-                showNotification(`已加载预设: ${preset.name}`);
+                showToast(`已加载预设: ${preset.name}`);
             }
         }
-        
         function deletePreset(presetId) {
             if (confirm('确定要删除此预设吗？')) {
                 const presets = getCustomPresets();
                 const newPresets = presets.filter(p => p && p.id !== presetId);
                 saveCustomPresets(newPresets);
                 renderCustomPresets();
-                showNotification('预设已删除');
+                showToast('预设已删除');
             }
         }
-        
         function exportPresets() {
             const presets = getCustomPresets();
-            
             if (presets.length === 0) {
-                showNotification('没有可导出的预设', 'error');
+                showToast('没有可导出的预设', true);
                 return;
             }
-            
             const dataStr = JSON.stringify(presets, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
             const exportFileDefaultName = `伏魔诀预设_${new Date().toISOString().slice(0,10)}.json`;
-            
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
             document.body.appendChild(linkElement);
             linkElement.click();
             document.body.removeChild(linkElement);
-            
-            showNotification('预设已导出');
+            showToast('预设已导出');
         }
-        
         function importPresets(event) {
             const file = event.target.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedPresets = JSON.parse(e.target.result);
-                    
                     if (!Array.isArray(importedPresets)) {
                         throw new Error('无效的预设文件格式');
                     }
-                    
-                    const validPresets = importedPresets.filter(preset => 
+                    const validPresets = importedPresets.filter(preset =>
                         preset && preset.id && preset.name && Array.isArray(preset.items)
                     );
-                    
                     if (validPresets.length === 0) {
                         throw new Error('文件中未找到有效预设');
                     }
-                    
                     const currentPresets = getCustomPresets();
                     const mergedPresets = [...currentPresets];
-                    
                     validPresets.forEach(imported => {
                         const existingIndex = mergedPresets.findIndex(p => p && p.id === imported.id);
                         if (existingIndex !== -1) {
@@ -11287,28 +10852,15 @@ ${itemsCode}
                             mergedPresets.push(imported);
                         }
                     });
-                    
                     saveCustomPresets(mergedPresets);
                     renderCustomPresets();
-                    showNotification(`成功导入 ${validPresets.length} 个预设`);
-                    
+                    showToast(`成功导入 ${validPresets.length} 个预设`);
                 } catch (error) {
-                    showNotification(`导入失败: ${error.message}`, 'error');
+                    showToast(`导入失败: ${error.message}`, true);
                 }
-                
                 event.target.value = '';
             };
-            
             reader.readAsText(file);
-        }
-    </script>
+        }</script>
 </body>
 </html>
-    
-
-
-
-
-
-
-
